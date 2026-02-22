@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/contexts/AuthContext";
 
+import { Toaster } from "@/components/ui/sonner";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -32,7 +33,10 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider initialUser={user}>{children}</AuthProvider>
+        <AuthProvider initialUser={user}>
+          {children}
+          <Toaster position="top-center" duration={3500} richColors />
+        </AuthProvider>
       </body>
     </html>
   );

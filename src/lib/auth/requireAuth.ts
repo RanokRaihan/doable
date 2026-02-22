@@ -1,15 +1,8 @@
 import { redirect } from "next/navigation";
+import { LoggedinUser } from "../types/auth";
 import { getCurrentUser } from "./getCurrentUser";
 
-type Role = "user" | "admin";
-
-interface User {
-  id: string;
-  email: string;
-  role: Role;
-  name: string;
-  image?: string;
-}
+type Role = "USER" | "ADMIN";
 
 interface RequireAuthOptions {
   roles?: Role[];
@@ -21,7 +14,7 @@ interface RequireAuthOptions {
 
 export async function requireAuth(
   options: RequireAuthOptions = {},
-): Promise<User> {
+): Promise<LoggedinUser> {
   const {
     roles,
     loginUrl = "/login",

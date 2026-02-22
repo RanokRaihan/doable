@@ -1,22 +1,15 @@
 import { cache } from "react";
 import { apiClient } from "../api";
-
-interface User {
-  id: string;
-  email: string;
-  role: "user" | "admin";
-  name: string;
-  image?: string;
-}
+import { LoggedinUser } from "../types/auth";
 
 interface GetMeResponse {
   success: boolean;
-  data: User;
+  data: LoggedinUser;
 }
 
-const getCurrentUser = cache(async (): Promise<User | null> => {
+const getCurrentUser = cache(async (): Promise<LoggedinUser | null> => {
   try {
-    const response = await apiClient.get<GetMeResponse>("/auth/me", {
+    const response = await apiClient.get<GetMeResponse>("/auth/current-user", {
       cache: "no-store",
       skipRefresh: false, // Allow token refresh if needed
     });

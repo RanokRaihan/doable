@@ -1,5 +1,6 @@
 "use client";
 
+import { LoggedinUser } from "@/lib/types/auth";
 import {
   createContext,
   ReactNode,
@@ -8,18 +9,10 @@ import {
   useState,
 } from "react";
 
-interface User {
-  id: string;
-  email: string;
-  role: "user" | "admin";
-  name: string;
-  image?: string;
-}
-
 interface AuthContextType {
-  user: User | null;
+  user: LoggedinUser | null;
   isAuthenticated: boolean;
-  setUser: (user: User | null) => void;
+  setUser: (user: LoggedinUser | null) => void;
   refreshUser: () => Promise<void>;
   clearUser: () => void;
 }
@@ -34,30 +27,31 @@ const AuthContext = createContext<AuthContextType>({
 
 interface AuthProviderProps {
   children: ReactNode;
-  initialUser: User | null;
+  initialUser: LoggedinUser | null;
 }
 
 interface GetMeResponse {
   success: boolean;
-  data: User;
+  data: LoggedinUser;
 }
 
 export function AuthProvider({ children, initialUser }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(initialUser);
+  const [user, setUser] = useState<LoggedinUser | null>(initialUser);
 
   // Call this after login if you don't have user data from response
   const refreshUser = useCallback(async () => {
+    const fetchUrl = new URL(
+      "/api/v1/auth/current-user",
+      process.env.NEXT_PUBLIC_BACKEND_URL,
+    );
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/V1/auth/me`,
-        {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
+      const response = await fetch(fetchUrl.toString(), {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-      );
+      });
 
       if (!response.ok) {
         setUser(null);

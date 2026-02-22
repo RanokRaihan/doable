@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/contexts/AuthContext";
 import { Menu, X, Zap } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ const navbarLinks = [
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   // Effect to handle scroll state for the glass effect
   useEffect(() => {
@@ -63,17 +65,26 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
-            >
-              Log In
-            </Link>
-            <Button asChild variant="default" className=" rounded-full">
-              <Link href="/register">Join Now</Link>
-            </Button>
-          </div>
+
+          {user ? (
+            <div className="hidden md:flex items-center gap-4">
+              <span className="text-sm font-medium text-gray-700">
+                Hello, {user.name}
+              </span>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center gap-4">
+              <Link
+                href="/login"
+                className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+              >
+                Log In
+              </Link>
+              <Button asChild variant="default" className=" rounded-full">
+                <Link href="/register">Join Now</Link>
+              </Button>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <button

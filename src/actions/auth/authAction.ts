@@ -1,5 +1,6 @@
 "use server";
 
+import { LoggedinUser } from "@/lib/types/auth";
 import { apiClient, ApiResponse } from "../../lib/api";
 import { actionHandler } from "../../lib/api/actionHandler";
 import { setTokens } from "../../lib/api/tokens";
@@ -9,14 +10,9 @@ type LoginData = {
   password: string;
   remember?: boolean;
 };
-type User = {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-};
+
 type LoginResponse = {
-  user: User;
+  user: LoggedinUser;
   accessToken: string;
   refreshToken: string;
 };

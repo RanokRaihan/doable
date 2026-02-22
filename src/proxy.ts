@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 const authRoutes = ["/login", "/register"];
 const protectedRoutes: Record<string, string[]> = {
-  "/dashboard": ["user", "admin"],
-  "/post-task": ["user", "admin"],
-  "/my-tasks": ["user", "admin"],
-  "/admin*": ["admin"],
+  "/dashboard": ["USER", "ADMIN"],
+  "/post-task": ["USER", "ADMIN"],
+  "/my-tasks": ["USER", "ADMIN"],
+  "/admin*": ["ADMIN"],
 };
 
 function matchesRoute(path: string, route: string): boolean {
@@ -22,6 +22,7 @@ function isAuthRoute(path: string): boolean {
 function getRequiredRoles(path: string): string[] | null {
   for (const [route, roles] of Object.entries(protectedRoutes)) {
     if (matchesRoute(path, route)) {
+      console.log("Matched protected route:", { route, roles });
       return roles;
     }
   }
@@ -46,17 +47,25 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
   const tokenData = accessToken ? decodeToken(accessToken) : null;
+
   const isAuthenticated = isTokenValid(tokenData);
   const userRole = tokenData?.role;
-
+  console.log(" Proxy middleware:", {
+    pathname,
+    isAuthRoute: isAuthRoute(pathname),
+    tokenData,
+  });
   if (isAuthRoute(pathname)) {
+    console.log("yes auth route");
     if (isAuthenticated) {
+      console.log("redirecting to dashboard");
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.next();
   }
 
   const requiredRoles = getRequiredRoles(pathname);
+  console.log("required roles", requiredRoles);
 
   if (requiredRoles) {
     if (!isAuthenticated) {
@@ -64,7 +73,9 @@ export function proxy(request: NextRequest) {
       loginUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(loginUrl);
     }
+
     if (!userRole || !requiredRoles.includes(userRole)) {
+      console.log("not satisfied,... redirecting");
       return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
   }
