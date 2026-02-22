@@ -1,5 +1,5 @@
 "use client";
-import { LoginAction } from "@/lib/actions/authAction";
+import { LoginAction } from "@/actions/auth/authAction";
 import LoginSchema from "@/schema/loginValidation";
 import { Mail } from "lucide-react";
 import z from "zod";

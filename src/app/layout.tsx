@@ -1,3 +1,6 @@
+import { AuthProvider } from "@/contexts/AuthContext";
+
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -17,17 +20,19 @@ export const metadata: Metadata = {
   description: "A marketplace to find helpers for your tasks.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider initialUser={user}>{children}</AuthProvider>
       </body>
     </html>
   );

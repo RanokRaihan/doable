@@ -1,0 +1,79 @@
+import { NextRequest, NextResponse } from "next/server";
+
+const authRoutes = ["/login", "/register"];
+const protectedRoutes: Record<string, string[]> = {
+  "/dashboard": ["user", "admin"],
+  "/post-task": ["user", "admin"],
+  "/my-tasks": ["user", "admin"],
+  "/admin*": ["admin"],
+};
+
+function matchesRoute(path: string, route: string): boolean {
+  if (route.endsWith("*")) {
+    return path.startsWith(route.slice(0, -1));
+  }
+  return path === route || path.startsWith(route + "/");
+}
+
+function isAuthRoute(path: string): boolean {
+  return authRoutes.some((route) => matchesRoute(path, route));
+}
+
+function getRequiredRoles(path: string): string[] | null {
+  for (const [route, roles] of Object.entries(protectedRoutes)) {
+    if (matchesRoute(path, route)) {
+      return roles;
+    }
+  }
+  return null;
+}
+
+function decodeToken(token: string): { role?: string; exp?: number } | null {
+  try {
+    const payload = token.split(".")[1];
+    const decoded = JSON.parse(Buffer.from(payload, "base64").toString());
+    return decoded;
+  } catch {
+    return null;
+  }
+}
+
+function isTokenValid(tokenData: { exp?: number } | null): boolean {
+  return !!(tokenData && tokenData.exp && tokenData.exp * 1000 > Date.now());
+}
+
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const accessToken = request.cookies.get("accessToken")?.value;
+  const tokenData = accessToken ? decodeToken(accessToken) : null;
+  const isAuthenticated = isTokenValid(tokenData);
+  const userRole = tokenData?.role;
+
+  if (isAuthRoute(pathname)) {
+    if (isAuthenticated) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  const requiredRoles = getRequiredRoles(pathname);
+
+  if (requiredRoles) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (!userRole || !requiredRoles.includes(userRole)) {
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\.png$|.*\.jpg$|.*\.svg$).*)",
+  ],
+};

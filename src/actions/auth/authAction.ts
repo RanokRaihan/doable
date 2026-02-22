@@ -1,8 +1,8 @@
 "use server";
 
-import { apiClient, ApiResponse } from "../api";
-import { actionHandler } from "../api/actionHandler";
-import { setTokens } from "../api/tokens";
+import { apiClient, ApiResponse } from "../../lib/api";
+import { actionHandler } from "../../lib/api/actionHandler";
+import { setTokens } from "../../lib/api/tokens";
 
 type LoginData = {
   email: string;
