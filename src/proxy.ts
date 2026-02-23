@@ -22,7 +22,6 @@ function isAuthRoute(path: string): boolean {
 function getRequiredRoles(path: string): string[] | null {
   for (const [route, roles] of Object.entries(protectedRoutes)) {
     if (matchesRoute(path, route)) {
-      console.log("Matched protected route:", { route, roles });
       return roles;
     }
   }
@@ -50,22 +49,15 @@ export function proxy(request: NextRequest) {
 
   const isAuthenticated = isTokenValid(tokenData);
   const userRole = tokenData?.role;
-  console.log(" Proxy middleware:", {
-    pathname,
-    isAuthRoute: isAuthRoute(pathname),
-    tokenData,
-  });
+
   if (isAuthRoute(pathname)) {
-    console.log("yes auth route");
     if (isAuthenticated) {
-      console.log("redirecting to dashboard");
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return NextResponse.next();
   }
 
   const requiredRoles = getRequiredRoles(pathname);
-  console.log("required roles", requiredRoles);
 
   if (requiredRoles) {
     if (!isAuthenticated) {
@@ -75,7 +67,6 @@ export function proxy(request: NextRequest) {
     }
 
     if (!userRole || !requiredRoles.includes(userRole)) {
-      console.log("not satisfied,... redirecting");
       return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
   }

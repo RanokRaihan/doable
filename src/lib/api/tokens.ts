@@ -48,7 +48,8 @@ async function setTokens(
         maxAge: 7 * 24 * 60 * 60,
       });
     }
-  } catch {
+  } catch (error) {
+    console.error("Unable to set tokens:", error);
     console.warn("Unable to set tokens - not in server context");
   }
 }
@@ -58,7 +59,8 @@ async function clearTokens(): Promise<void> {
     const cookieStore = await cookies();
     cookieStore.delete("accessToken");
     cookieStore.delete("refreshToken");
-  } catch {
+  } catch (error) {
+    console.error("Unable to clear tokens:", error);
     console.warn("Unable to clear tokens - not in server context");
   }
 }
@@ -73,7 +75,7 @@ async function refreshAccessToken(): Promise<boolean> {
   refreshPromise = (async () => {
     try {
       const refreshToken = await getRefreshToken();
-
+      console.log("trying refresh token ", refreshToken);
       if (!refreshToken) {
         await clearTokens();
         return false;
@@ -97,7 +99,10 @@ async function refreshAccessToken(): Promise<boolean> {
       }
 
       const data: TokenResponse = await response.json();
-
+      console.log("new tokens", {
+        accessToken: data.data.accessToken,
+        refreshToken: data.data.refreshToken,
+      });
       if (data.success && data.data.accessToken) {
         await setTokens(data.data.accessToken, data.data.refreshToken);
         return true;
