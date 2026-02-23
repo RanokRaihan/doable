@@ -1,5 +1,5 @@
 import { ApiError } from "./errors";
-import { clearTokens, getAuthToken, refreshAccessToken } from "./tokens";
+import { getAuthToken, refreshAccessToken } from "./tokens";
 import type { RequestConfig } from "./types";
 import {
   buildUrl,
@@ -29,17 +29,14 @@ async function request<T>(
 
   const url = buildUrl(endpoint, params);
 
-  const buildHeaders = async (): Promise<Record<string, string>> => {
+  const buildHeaders = (token?: string): Record<string, string> => {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       Accept: "application/json",
     };
 
-    if (!skipAuth) {
-      const token = await getAuthToken();
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
     if (customHeaders) {
@@ -54,10 +51,12 @@ async function request<T>(
     return headers;
   };
 
-  const buildFetchOptions = async (): Promise<
-    RequestInit & { next?: { tags?: string[]; revalidate?: number | false } }
-  > => {
-    const headers = await buildHeaders();
+  const buildFetchOptions = (
+    token?: string,
+  ): RequestInit & {
+    next?: { tags?: string[]; revalidate?: number | false };
+  } => {
+    const headers = buildHeaders(token);
 
     const fetchOptions: RequestInit & {
       next?: { tags?: string[]; revalidate?: number | false };
@@ -121,13 +120,19 @@ async function request<T>(
   let attempt = 0;
   let hasTriedRefresh = false;
 
+  // Get initial token
+  let token: string | undefined;
+  if (!skipAuth) {
+    token = await getAuthToken();
+  }
+
   while (attempt <= retries) {
     try {
-      const fetchOptions = await buildFetchOptions();
+      const fetchOptions = buildFetchOptions(token);
       const { response, data } = await executeRequest(fetchOptions);
 
       if (!response.ok) {
-        // Handle 401 Unauthorized - attempt token refresh
+        // Handle 401 Unauthorized - attempt token refresh via Route Handler
         if (
           response.status === 401 &&
           !skipAuth &&
@@ -136,11 +141,12 @@ async function request<T>(
         ) {
           hasTriedRefresh = true;
 
-          const refreshed = await refreshAccessToken();
+          const newToken = await refreshAccessToken();
 
-          if (refreshed) {
-            const newFetchOptions = await buildFetchOptions();
-            const retryResult = await executeRequest(newFetchOptions);
+          if (newToken) {
+            // Retry with the new token returned from refresh
+            const retryFetchOptions = buildFetchOptions(newToken);
+            const retryResult = await executeRequest(retryFetchOptions);
 
             if (retryResult.response.ok) {
               return retryResult.data as T;
@@ -247,14 +253,5 @@ export const apiClient = {
   delete: <T = void>(endpoint: string, config?: RequestConfig): Promise<T> =>
     request<T>("DELETE", endpoint, undefined, config),
 
-  /**
-   * Manually refresh the access token
-   * Useful for proactively refreshing before expiration
-   */
   refreshToken: refreshAccessToken,
-
-  /**
-   * Clear all auth tokens (logout)
-   */
-  clearAuth: clearTokens,
 };

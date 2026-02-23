@@ -1,10 +1,6 @@
 import { cookies } from "next/headers";
-import type { TokenResponse } from "./types";
-import { buildUrl } from "./utils";
 
-// Mutex to prevent multiple simultaneous refresh requests
-let isRefreshing = false;
-let refreshPromise: Promise<boolean> | null = null;
+// ─── Read-only token access (safe during Server Component render) ───
 
 async function getAuthToken(): Promise<string | undefined> {
   try {
@@ -24,48 +20,45 @@ async function getRefreshToken(): Promise<string | undefined> {
   }
 }
 
+// ─── Write tokens (ONLY works in Server Actions / Route Handlers) ───
+
 async function setTokens(
   accessToken: string,
   refreshToken?: string,
 ): Promise<void> {
-  try {
-    const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
-    cookieStore.set("accessToken", accessToken, {
+  cookieStore.set("accessToken", accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 15 * 60,
+  });
+
+  if (refreshToken) {
+    cookieStore.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 15 * 60,
+      maxAge: 7 * 24 * 60 * 60,
     });
-
-    if (refreshToken) {
-      cookieStore.set("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60,
-      });
-    }
-  } catch (error) {
-    console.error("Unable to set tokens:", error);
-    console.warn("Unable to set tokens - not in server context");
   }
 }
 
 async function clearTokens(): Promise<void> {
-  try {
-    const cookieStore = await cookies();
-    cookieStore.delete("accessToken");
-    cookieStore.delete("refreshToken");
-  } catch (error) {
-    console.error("Unable to clear tokens:", error);
-    console.warn("Unable to clear tokens - not in server context");
-  }
+  const cookieStore = await cookies();
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
 }
 
-async function refreshAccessToken(): Promise<boolean> {
+// ─── Token refresh (safe during render — delegates cookie writes to Route Handler) ───
+
+let isRefreshing = false;
+let refreshPromise: Promise<string | null> | null = null;
+
+async function refreshAccessToken(): Promise<string | null> {
   if (isRefreshing && refreshPromise) {
     return refreshPromise;
   }
@@ -75,45 +68,32 @@ async function refreshAccessToken(): Promise<boolean> {
   refreshPromise = (async () => {
     try {
       const refreshToken = await getRefreshToken();
-      console.log("trying refresh token ", refreshToken);
-      if (!refreshToken) {
-        await clearTokens();
-        return false;
-      }
+      if (!refreshToken) return null;
 
-      const url = buildUrl("/auth/refresh-token");
-
-      const response = await fetch(url, {
+      // Call internal Route Handler — it CAN write cookies
+      const baseUrl =
+        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const response = await fetch(`${baseUrl}/api/auth/refresh`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          Cookie: `refreshToken=${refreshToken}`,
         },
-        body: JSON.stringify({ refreshToken }),
         cache: "no-store",
       });
 
-      if (!response.ok) {
-        await clearTokens();
-        return false;
+      if (!response.ok) return null;
+
+      const data: { success: boolean; data?: { accessToken: string } } =
+        await response.json();
+
+      if (data.success && data.data?.accessToken) {
+        return data.data.accessToken;
       }
 
-      const data: TokenResponse = await response.json();
-      console.log("new tokens", {
-        accessToken: data.data.accessToken,
-        refreshToken: data.data.refreshToken,
-      });
-      if (data.success && data.data.accessToken) {
-        await setTokens(data.data.accessToken, data.data.refreshToken);
-        return true;
-      }
-
-      await clearTokens();
-      return false;
-    } catch (error) {
-      console.error("Token refresh failed:", error);
-      await clearTokens();
-      return false;
+      return null;
+    } catch {
+      return null;
     } finally {
       isRefreshing = false;
       refreshPromise = null;
