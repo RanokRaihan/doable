@@ -17,6 +17,7 @@ type LoginResponse = {
   refreshToken: string;
 };
 const LoginAction = async (loginData: LoginData) => {
+  console.log("LoginAction called with:", loginData); // Debug log
   // ignoring "remember" for now, as token handling is done via httpOnly cookies
   const { email, password } = loginData;
   const payload = { email, password };

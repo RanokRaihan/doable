@@ -24,6 +24,7 @@ const LoginForm = () => {
     },
     onSubmit: async (values) => {
       const res = await LoginAction(values.value);
+      console.log("LoginAction response:", res); // Debug log
       if (res?.success) {
         setUser(res.data.user);
         toast.success(res.message || "Logged in successfully!");

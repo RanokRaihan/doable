@@ -1,9 +1,19 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
+
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000/";
 
 // ─── Read-only token access (safe during Server Component render) ───
 
 async function getAuthToken(): Promise<string | undefined> {
   try {
+    // First check if the proxy forwarded a refreshed token via request header.
+    // This covers the case where the proxy just refreshed the access token —
+    // the new cookie isn't readable yet in this request cycle, but the header is.
+    const headerStore = await headers();
+    const refreshedToken = headerStore.get("x-refreshed-access-token");
+    if (refreshedToken) return refreshedToken;
+
     const cookieStore = await cookies();
     return cookieStore.get("accessToken")?.value;
   } catch {
@@ -53,54 +63,50 @@ async function clearTokens(): Promise<void> {
   cookieStore.delete("refreshToken");
 }
 
-// ─── Token refresh (safe during render — delegates cookie writes to Route Handler) ───
-
-let isRefreshing = false;
-let refreshPromise: Promise<string | null> | null = null;
+// ─── Token refresh ───
+// During Server Component rendering, cookies().set() is NOT allowed.
+// The proxy (middleware) already handles proactive refresh before the page renders.
+// This function is a fallback that:
+//   - In Server Actions / Route Handlers: calls backend directly & writes cookies via setTokens()
+//   - In Server Components: returns null (proxy should have already refreshed)
 
 async function refreshAccessToken(): Promise<string | null> {
-  if (isRefreshing && refreshPromise) {
-    return refreshPromise;
-  }
+  try {
+    const refreshToken = await getRefreshToken();
+    if (!refreshToken) return null;
 
-  isRefreshing = true;
+    const response = await fetch(`${BACKEND_URL}api/v1/auth/refresh-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+      cache: "no-store",
+    });
 
-  refreshPromise = (async () => {
-    try {
-      const refreshToken = await getRefreshToken();
-      if (!refreshToken) return null;
+    if (!response.ok) return null;
 
-      // Call internal Route Handler — it CAN write cookies
-      const baseUrl =
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const response = await fetch(`${baseUrl}/api/auth/refresh`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Cookie: `refreshToken=${refreshToken}`,
-        },
-        cache: "no-store",
-      });
+    const data = await response.json();
 
-      if (!response.ok) return null;
-
-      const data: { success: boolean; data?: { accessToken: string } } =
-        await response.json();
-
-      if (data.success && data.data?.accessToken) {
-        return data.data.accessToken;
+    if (data.success && data.data?.accessToken) {
+      // Try to write cookies — this will succeed in Server Actions / Route Handlers
+      // and silently fail (caught) in Server Components
+      try {
+        await setTokens(data.data.accessToken, data.data.refreshToken);
+      } catch {
+        // Cannot write cookies during Server Component render — that's expected.
+        // The proxy will handle it on the next request.
       }
 
-      return null;
-    } catch {
-      return null;
-    } finally {
-      isRefreshing = false;
-      refreshPromise = null;
+      // Return the token in-memory so the current request can retry
+      return data.data.accessToken;
     }
-  })();
 
-  return refreshPromise;
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 export {
