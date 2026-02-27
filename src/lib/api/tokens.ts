@@ -1,8 +1,5 @@
 import { cookies, headers } from "next/headers";
 
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000/";
-
 // ─── Read-only token access (safe during Server Component render) ───
 
 async function getAuthToken(): Promise<string | undefined> {
@@ -16,15 +13,6 @@ async function getAuthToken(): Promise<string | undefined> {
 
     const cookieStore = await cookies();
     return cookieStore.get("accessToken")?.value;
-  } catch {
-    return undefined;
-  }
-}
-
-async function getRefreshToken(): Promise<string | undefined> {
-  try {
-    const cookieStore = await cookies();
-    return cookieStore.get("refreshToken")?.value;
   } catch {
     return undefined;
   }
@@ -63,56 +51,4 @@ async function clearTokens(): Promise<void> {
   cookieStore.delete("refreshToken");
 }
 
-// ─── Token refresh ───
-// During Server Component rendering, cookies().set() is NOT allowed.
-// The proxy (middleware) already handles proactive refresh before the page renders.
-// This function is a fallback that:
-//   - In Server Actions / Route Handlers: calls backend directly & writes cookies via setTokens()
-//   - In Server Components: returns null (proxy should have already refreshed)
-
-async function refreshAccessToken(): Promise<string | null> {
-  try {
-    const refreshToken = await getRefreshToken();
-    if (!refreshToken) return null;
-
-    const response = await fetch(`${BACKEND_URL}api/v1/auth/refresh-token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ refreshToken }),
-      cache: "no-store",
-    });
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-
-    if (data.success && data.data?.accessToken) {
-      // Try to write cookies — this will succeed in Server Actions / Route Handlers
-      // and silently fail (caught) in Server Components
-      try {
-        await setTokens(data.data.accessToken, data.data.refreshToken);
-      } catch {
-        // Cannot write cookies during Server Component render — that's expected.
-        // The proxy will handle it on the next request.
-      }
-
-      // Return the token in-memory so the current request can retry
-      return data.data.accessToken;
-    }
-
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-export {
-  clearTokens,
-  getAuthToken,
-  getRefreshToken,
-  refreshAccessToken,
-  setTokens,
-};
+export { clearTokens, getAuthToken, setTokens };

@@ -24,7 +24,6 @@ const LoginAction = async (loginData: LoginData) => {
   const result = await actionHandler(() =>
     apiClient.post<ApiResponse<LoginResponse>>("/auth/login", payload, {
       skipAuth: true,
-      skipRefresh: true,
     }),
   );
 

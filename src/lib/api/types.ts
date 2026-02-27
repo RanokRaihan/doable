@@ -36,13 +36,4 @@ export interface RequestConfig {
   retries?: number;
   skipAuth?: boolean;
   cache?: RequestCache;
-  skipRefresh?: boolean;
-}
-
-export interface TokenResponse {
-  success: boolean;
-  data: {
-    accessToken: string;
-    refreshToken?: string;
-  };
 }

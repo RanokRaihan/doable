@@ -11,7 +11,6 @@ const getCurrentUser = cache(async (): Promise<LoggedinUser | null> => {
   try {
     const response = await apiClient.get<GetMeResponse>("/auth/current-user", {
       cache: "no-store",
-      skipRefresh: false, // Allow token refresh if needed
     });
 
     if (response.success && response.data) {

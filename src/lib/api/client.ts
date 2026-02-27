@@ -1,5 +1,5 @@
 import { ApiError } from "./errors";
-import { getAuthToken, refreshAccessToken } from "./tokens";
+import { getAuthToken } from "./tokens";
 import type { RequestConfig } from "./types";
 import {
   buildUrl,
@@ -24,7 +24,6 @@ async function request<T>(
     retries = 0,
     skipAuth = false,
     cache,
-    skipRefresh = false,
   } = config;
 
   const url = buildUrl(endpoint, params);
@@ -118,9 +117,8 @@ async function request<T>(
 
   let lastError: Error | null = null;
   let attempt = 0;
-  let hasTriedRefresh = false;
 
-  // Get initial token
+  // Get initial token (proxy may have forwarded a refreshed token via header)
   let token: string | undefined;
   if (!skipAuth) {
     token = await getAuthToken();
@@ -132,37 +130,11 @@ async function request<T>(
       const { response, data } = await executeRequest(fetchOptions);
 
       if (!response.ok) {
-        // Handle 401 Unauthorized - attempt token refresh via Route Handler
-        if (
-          response.status === 401 &&
-          !skipAuth &&
-          !skipRefresh &&
-          !hasTriedRefresh
-        ) {
-          hasTriedRefresh = true;
-
-          const newToken = await refreshAccessToken();
-
-          if (newToken) {
-            // Retry with the new token returned from refresh
-            const retryFetchOptions = buildFetchOptions(newToken);
-            const retryResult = await executeRequest(retryFetchOptions);
-
-            if (retryResult.response.ok) {
-              return retryResult.data as T;
-            }
-
-            // Retry after refresh still failed — throw backend error as-is
-            if (retryResult.data && typeof retryResult.data === "object") {
-              throw retryResult.data;
-            }
-          }
-
-          // Refresh failed — pass backend error through if available
+        // 401 means proxy already tried refresh and it failed — session is truly expired
+        if (response.status === 401 && !skipAuth) {
           if (data && typeof data === "object") {
             throw data;
           }
-
           throw new ApiError("Session expired. Please log in again.", 401);
         }
 
@@ -252,6 +224,4 @@ export const apiClient = {
 
   delete: <T = void>(endpoint: string, config?: RequestConfig): Promise<T> =>
     request<T>("DELETE", endpoint, undefined, config),
-
-  refreshToken: refreshAccessToken,
 };
