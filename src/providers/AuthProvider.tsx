@@ -1,21 +1,12 @@
 "use client";
 
-import { LoggedinUser } from "@/lib/types/auth";
 import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useState,
-} from "react";
-
-interface AuthContextType {
-  user: LoggedinUser | null;
-  isAuthenticated: boolean;
-  setUser: (user: LoggedinUser | null) => void;
-  refreshUser: () => Promise<void>;
-  clearUser: () => void;
-}
+  AuthContextType,
+  AuthProviderProps,
+  GetMeResponse,
+  LoggedinUser,
+} from "@/lib/types/auth";
+import { createContext, useCallback, useContext, useState } from "react";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -24,16 +15,6 @@ const AuthContext = createContext<AuthContextType>({
   refreshUser: async () => {},
   clearUser: () => {},
 });
-
-interface AuthProviderProps {
-  children: ReactNode;
-  initialUser: LoggedinUser | null;
-}
-
-interface GetMeResponse {
-  success: boolean;
-  data: LoggedinUser;
-}
 
 export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const [user, setUser] = useState<LoggedinUser | null>(initialUser);

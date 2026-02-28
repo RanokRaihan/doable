@@ -1,6 +1,6 @@
 "use client";
 import { LoginAction } from "@/actions/auth/authAction";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/providers/AuthProvider";
 import LoginSchema from "@/schema/loginValidation";
 import { Mail } from "lucide-react";
 import { redirect } from "next/navigation";

@@ -1,4 +1,4 @@
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 import { Toaster } from "@/components/ui/sonner";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
