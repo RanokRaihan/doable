@@ -1,4 +1,6 @@
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { env } from "@/lib/config";
+
+const BASE_URL = env.backendUrl;
 
 export const DEFAULT_TIMEOUT = 30000;
 export const RETRY_DELAY = 1000;

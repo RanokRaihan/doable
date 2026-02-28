@@ -1,3 +1,4 @@
+import { cookieConfig } from "@/lib/config";
 import { cookies, headers } from "next/headers";
 
 // ─── Read-only token access (safe during Server Component render) ───
@@ -27,20 +28,20 @@ async function setTokens(
   const cookieStore = await cookies();
 
   cookieStore.set("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 15 * 60,
+    httpOnly: cookieConfig.httpOnly,
+    secure: cookieConfig.secure,
+    sameSite: cookieConfig.sameSite,
+    path: cookieConfig.path,
+    maxAge: cookieConfig.accessTokenMaxAge,
   });
 
   if (refreshToken) {
     cookieStore.set("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
+      httpOnly: cookieConfig.httpOnly,
+      secure: cookieConfig.secure,
+      sameSite: cookieConfig.sameSite,
+      path: cookieConfig.path,
+      maxAge: cookieConfig.refreshTokenMaxAge,
     });
   }
 }

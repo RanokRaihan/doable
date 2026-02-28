@@ -1,7 +1,5 @@
+import { cookieConfig, env } from "@/lib/config";
 import { NextResponse } from "next/server";
-
-const BACKEND_URL =
-  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000/";
 
 export interface TokenPayload {
   role?: string;
@@ -37,7 +35,7 @@ export async function refreshTokens(
   refreshToken: string,
 ): Promise<RefreshedTokens | null> {
   try {
-    const response = await fetch(`${BACKEND_URL}api/v1/auth/refresh-token`, {
+    const response = await fetch(`${env.backendUrl}api/v1/auth/refresh-token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,20 +68,20 @@ export function setTokenCookies(
   refreshToken?: string,
 ): void {
   response.cookies.set("accessToken", accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 15 * 60,
+    httpOnly: cookieConfig.httpOnly,
+    secure: cookieConfig.secure,
+    sameSite: cookieConfig.sameSite,
+    path: cookieConfig.path,
+    maxAge: cookieConfig.accessTokenMaxAge,
   });
 
   if (refreshToken) {
     response.cookies.set("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
+      httpOnly: cookieConfig.httpOnly,
+      secure: cookieConfig.secure,
+      sameSite: cookieConfig.sameSite,
+      path: cookieConfig.path,
+      maxAge: cookieConfig.refreshTokenMaxAge,
     });
   }
 }

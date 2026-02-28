@@ -42,7 +42,7 @@ export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const refreshUser = useCallback(async () => {
     const fetchUrl = new URL(
       "/api/v1/auth/current-user",
-      process.env.NEXT_PUBLIC_BACKEND_URL,
+      process.env.NEXT_PUBLIC_BACKEND_URL!,
     );
     try {
       const response = await fetch(fetchUrl.toString(), {
