@@ -14,16 +14,10 @@ export interface AuthContextType {
   user: LoggedinUser | null;
   isAuthenticated: boolean;
   setUser: (user: LoggedinUser | null) => void;
-  refreshUser: () => Promise<void>;
+  refreshUser: () => void;
   clearUser: () => void;
 }
 export interface AuthProviderProps {
   children: ReactNode;
   initialUser: LoggedinUser | null;
-}
-export interface GetMeResponse {
-  success: boolean;
-  status: number;
-  message: string;
-  data: LoggedinUser;
 }

@@ -3,52 +3,38 @@
 import {
   AuthContextType,
   AuthProviderProps,
-  GetMeResponse,
   LoggedinUser,
 } from "@/lib/types/auth";
-import { createContext, useCallback, useContext, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
   setUser: () => {},
-  refreshUser: async () => {},
+  refreshUser: () => {},
   clearUser: () => {},
 });
 
 export function AuthProvider({ children, initialUser }: AuthProviderProps) {
   const [user, setUser] = useState<LoggedinUser | null>(initialUser);
+  const router = useRouter();
 
-  // Call this after login if you don't have user data from response
-  const refreshUser = useCallback(async () => {
-    const fetchUrl = new URL(
-      "/api/v1/auth/current-user",
-      process.env.NEXT_PUBLIC_BACKEND_URL!,
-    );
-    try {
-      const response = await fetch(fetchUrl.toString(), {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
+  // Sync state when server re-fetches initialUser
+  useEffect(() => {
+    setUser(initialUser);
+  }, [initialUser]);
 
-      if (!response.ok) {
-        setUser(null);
-        return;
-      }
-
-      const data: GetMeResponse = await response.json();
-      if (data.success && data.data) {
-        setUser(data.data);
-        return;
-      }
-      setUser(null);
-    } catch {
-      setUser(null);
-    }
-  }, []);
+  // Triggers a server-side re-fetch of initialUser via router refresh
+  const refreshUser = useCallback(() => {
+    router.refresh();
+  }, [router]);
 
   // Call this after logout
   const clearUser = useCallback(() => {
