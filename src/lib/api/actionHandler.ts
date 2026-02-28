@@ -2,10 +2,6 @@
 
 import type { BackendError } from "../api/types";
 
-export type ActionResult<T> =
-  | { success: true; message: string; statusCode: number; data: T }
-  | BackendError;
-
 export async function actionHandler<T>(
   fn: () => Promise<T>,
 ): Promise<T | BackendError> {
