@@ -3,7 +3,7 @@
 import { LoggedinUser } from "@/lib/types/auth";
 import { apiClient, ApiResponse } from "../../lib/api";
 import { actionHandler } from "../../lib/api/actionHandler";
-import { setTokens } from "../../lib/api/tokens";
+import { clearTokens, setTokens } from "../../lib/api/tokens";
 
 type LoginData = {
   email: string;
@@ -33,4 +33,8 @@ const LoginAction = async (loginData: LoginData) => {
   return result;
 };
 
-export { LoginAction };
+const logoutAction = async () => {
+  await clearTokens();
+  return { success: true };
+};
+export { LoginAction, logoutAction };

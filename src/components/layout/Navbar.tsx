@@ -1,5 +1,6 @@
 "use client";
 
+import { logoutAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import { LogOut, Menu, User, X, Zap } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +22,10 @@ const navbarLinks = [
   { name: "How it Works", href: "/how-it-works" },
   { name: "About Us", href: "/about" },
 ];
+
+const logoutHandler = async () => {
+  await logoutAction();
+};
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -86,7 +91,7 @@ const Navbar = () => {
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
             {isAuthenticated && user ? (
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
                     <span className="text-sm font-medium text-gray-700">
@@ -123,9 +128,7 @@ const Navbar = () => {
                   <DropdownMenuItem
                     variant="destructive"
                     className="cursor-pointer"
-                    onClick={() => {
-                      // TODO: implement logout
-                    }}
+                    onClick={logoutHandler}
                   >
                     <LogOut className="mr-2 size-4" />
                     Log Out
