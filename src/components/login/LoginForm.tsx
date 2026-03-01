@@ -10,7 +10,7 @@ import { useAppForm } from "../form/hooks";
 import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
 type FormData = z.infer<typeof LoginSchema>;
-const LoginForm = () => {
+const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   // const [serverError, setServerError] = useState<string | null>(null);
   const { setUser } = useAuth();
   const form = useAppForm({
@@ -23,12 +23,20 @@ const LoginForm = () => {
       onSubmit: LoginSchema,
     },
     onSubmit: async (values) => {
-      const res = await LoginAction(values.value);
-      console.log("LoginAction response:", res); // Debug log
+      const actionPayload = {
+        email: values.value.email,
+        password: values.value.password,
+        remember: values.value.remember,
+      };
+      const res = await LoginAction(actionPayload);
       if (res?.success) {
         setUser(res.data.user);
         toast.success(res.message || "Logged in successfully!");
-        redirect("/");
+        if (callbackUrl) {
+          redirect(callbackUrl);
+        } else {
+          redirect("/dashboard");
+        }
       } else {
         // setServerError(res?.message || "Login failed. Please try again.");
         toast.error(res?.message || "Login failed. Please try again.");

@@ -9,6 +9,7 @@ import {
 } from "@/lib/auth/proxy-utils";
 import { getRequiredRoles, isAuthRoute } from "@/lib/auth/routes-utils";
 import { NextRequest, NextResponse } from "next/server";
+import { setCookie } from "./actions/common/cookie";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -45,7 +46,6 @@ export async function proxy(request: NextRequest) {
     return response;
   };
 
-  // ─── Auth routes (login/register) ───
   if (isAuthRoute(pathname)) {
     if (isAuthenticated) {
       return withRefreshedCookies(
@@ -72,6 +72,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (!userRole || !requiredRoles.includes(userRole)) {
+      await setCookie("unauthorizedAttempt", "true", { maxAge: 60 });
       return withRefreshedCookies(
         NextResponse.redirect(new URL("/unauthorized", request.url)),
       );

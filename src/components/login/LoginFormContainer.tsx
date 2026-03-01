@@ -12,7 +12,7 @@ import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import LoginForm from "./LoginForm";
 
-const LoginFormContainer = () => {
+const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
   return (
     <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-gray-50">
       <div className="w-full max-w-md">
@@ -35,7 +35,7 @@ const LoginFormContainer = () => {
           </CardHeader>
 
           <CardContent className="space-y-5">
-            <LoginForm />
+            <LoginForm callbackUrl={callbackUrl} />
 
             {/* Divider */}
             <div className="relative">
