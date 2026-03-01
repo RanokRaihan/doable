@@ -7,7 +7,11 @@ import {
   setTokenCookies,
   type RefreshedTokens,
 } from "@/lib/auth/proxy-utils";
-import { getRequiredRoles, isAuthRoute } from "@/lib/auth/routes-utils";
+import {
+  getRequiredRoles,
+  isAuthRoute,
+  isAuthenticatedRoute,
+} from "@/lib/auth/routes-utils";
 import { NextRequest, NextResponse } from "next/server";
 import { setCookie } from "./actions/common/cookie";
 
@@ -55,7 +59,21 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ─── Protected routes ───
+  // ─── Authenticated-only routes (any logged-in user, no role check) ───
+  if (isAuthenticatedRoute(pathname)) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      const response = NextResponse.redirect(loginUrl);
+      if (accessToken || refreshToken) {
+        clearTokenCookies(response);
+      }
+      return response;
+    }
+    return withRefreshedCookies(NextResponse.next());
+  }
+
+  // ─── Protected routes (role-based) ───
   const requiredRoles = getRequiredRoles(pathname);
 
   if (requiredRoles) {

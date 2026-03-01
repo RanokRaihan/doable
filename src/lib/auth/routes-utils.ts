@@ -1,5 +1,8 @@
 const authRoutes = ["/login", "/register"];
 
+// Routes that require login but no specific role
+const authenticatedRoutes = ["/change-password"];
+
 const protectedRoutes: Record<string, string[]> = {
   "/dashboard": ["USER", "ADMIN"],
   "/post-task": ["USER", "ADMIN"],
@@ -16,6 +19,10 @@ function matchesRoute(path: string, route: string): boolean {
 
 export function isAuthRoute(path: string): boolean {
   return authRoutes.some((route) => matchesRoute(path, route));
+}
+
+export function isAuthenticatedRoute(path: string): boolean {
+  return authenticatedRoutes.some((route) => matchesRoute(path, route));
 }
 
 export function getRequiredRoles(path: string): string[] | null {
