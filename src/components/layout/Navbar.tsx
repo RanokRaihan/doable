@@ -66,25 +66,17 @@ const Navbar = () => {
 
           {/* Desktop Auth Buttons */}
 
-          {user ? (
-            <div className="hidden md:flex items-center gap-4">
-              <span className="text-sm font-medium text-gray-700">
-                Hello, {user.name}
-              </span>
-            </div>
-          ) : (
-            <div className="hidden md:flex items-center gap-4">
-              <Link
-                href="/login"
-                className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
-              >
-                Log In
-              </Link>
-              <Button asChild variant="default" className=" rounded-full">
-                <Link href="/register">Join Now</Link>
-              </Button>
-            </div>
-          )}
+          <div className="hidden md:flex items-center gap-4">
+            <Link
+              href="/login"
+              className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+            >
+              Log In
+            </Link>
+            <Button asChild variant="default" className=" rounded-full">
+              <Link href="/register">Join Now</Link>
+            </Button>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
