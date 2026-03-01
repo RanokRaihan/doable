@@ -92,19 +92,21 @@ const Navbar = () => {
                     <span className="text-sm font-medium text-gray-700">
                       {user.name}
                     </span>
-                    <Avatar size="default">
+                    <Avatar size="default" className="border border-gray-300 ">
                       <AvatarImage
+                        className="p-1"
                         src={user.image ?? undefined}
                         alt={user.name}
                       />
-                      <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                      <AvatarFallback className="p-1">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
                     </Avatar>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col gap-1">
-                      <p className="text-sm font-medium">{user.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {user.email}
                       </p>
