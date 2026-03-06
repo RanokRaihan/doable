@@ -1,6 +1,6 @@
 "use server";
 
-import { LoggedinUser } from "@/lib/types/auth";
+import { LoggedinUser, RegisteredUser } from "@/lib/types/auth";
 import { apiClient, ApiResponse } from "../../lib/api";
 import { actionHandler } from "../../lib/api/actionHandler";
 import { clearTokens, setTokens } from "../../lib/api/tokens";
@@ -22,6 +22,7 @@ type LoginResponse = {
   accessToken: string;
   refreshToken: string;
 };
+
 const LoginAction = async (loginData: LoginData) => {
   const { email, password } = loginData;
   const payload = { email, password };
@@ -44,15 +45,14 @@ const RegisterAction = async (registerData: RegisterData) => {
   const payload = { name, email, password };
 
   const result = await actionHandler(() =>
-    apiClient.post<ApiResponse<LoginResponse>>("/auth/register", payload, {
-      skipAuth: true,
-    }),
+    apiClient.post<ApiResponse<RegisteredUser>>(
+      "/user/register/credentials",
+      payload,
+      {
+        skipAuth: true,
+      },
+    ),
   );
-
-  // Set tokens on success so user is immediately authenticated after registration.
-  if (result.success && "data" in result && result.data.accessToken) {
-    await setTokens(result.data.accessToken, result.data.refreshToken);
-  }
 
   return result;
 };

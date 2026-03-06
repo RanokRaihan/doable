@@ -10,6 +10,15 @@ export interface LoggedinUser {
   emailVerified: boolean;
   provider: "CREDENTIALS" | "GOOGLE";
 }
+export interface RegisteredUser {
+  id: string;
+  email: string;
+  name: string;
+  role: "USER" | "ADMIN";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface AuthContextType {
   user: LoggedinUser | null;
   isAuthenticated: boolean;

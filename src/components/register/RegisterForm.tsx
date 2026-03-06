@@ -1,6 +1,6 @@
 "use client";
 
-import { RegisterAction } from "@/actions/auth/authAction";
+import { LoginAction, RegisterAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import RegisterSchema from "@/schema/registerValidation";
 import { Loader2, Mail, User, X } from "lucide-react";
@@ -16,6 +16,7 @@ type FormData = z.infer<typeof RegisterSchema>;
 
 const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const { setUser } = useAuth();
 
   const form = useAppForm({
@@ -39,16 +40,30 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         email: values.value.email,
         password: values.value.password,
       };
+      const loginPayload = {
+        email: values.value.email,
+        password: values.value.password,
+      };
 
       const res = await RegisterAction(actionPayload);
 
       if (res?.success) {
-        setUser(res.data.user);
         toast.success(res.message || "Account created successfully!");
-        if (callbackUrl) {
-          redirect(callbackUrl);
+        setLoadingMessage(" Logging you in...");
+        const loginRes = await LoginAction(loginPayload);
+        if (loginRes?.success) {
+          setLoadingMessage(null);
+          setUser(loginRes.data.user);
+          toast.success(loginRes.message || "Logged in successfully!");
+          if (callbackUrl) {
+            redirect(callbackUrl);
+          } else {
+            redirect("/dashboard");
+          }
         } else {
-          redirect("/dashboard");
+          setServerError(
+            loginRes?.message || "Login failed. Please try again.",
+          );
         }
       } else {
         setServerError(
@@ -120,7 +135,9 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
           {(isSubmitting) => (
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="size-4 animate-spin" />}
-              {isSubmitting ? "Creating Account..." : "Create Account"}
+              {isSubmitting
+                ? loadingMessage || "Creating Account..."
+                : "Create Account"}
             </Button>
           )}
         </form.Subscribe>
