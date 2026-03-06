@@ -2,7 +2,7 @@
 import { LoginAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import LoginSchema from "@/schema/loginValidation";
-import { Mail } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import z from "zod";
@@ -72,7 +72,14 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
             {serverError}
           </p>
         )} */}
-        <Button type="submit">Sign In</Button>
+        <form.Subscribe selector={(state) => state.isSubmitting}>
+          {(isSubmitting) => (
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="size-4 animate-spin" />}
+              {isSubmitting ? "Signing In..." : "Sign In"}
+            </Button>
+          )}
+        </form.Subscribe>
       </FieldGroup>
     </form>
   );
