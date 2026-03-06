@@ -2,8 +2,9 @@
 import { LoginAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import LoginSchema from "@/schema/loginValidation";
-import { Loader2, Mail } from "lucide-react";
+import { Loader2, Mail, X } from "lucide-react";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { useAppForm } from "../form/hooks";
@@ -11,7 +12,7 @@ import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
 type FormData = z.infer<typeof LoginSchema>;
 const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
-  // const [serverError, setServerError] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<string | null>(null);
   const { setUser } = useAuth();
   const form = useAppForm({
     defaultValues: {
@@ -21,6 +22,11 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
     } satisfies FormData as FormData,
     validators: {
       onSubmit: LoginSchema,
+    },
+    listeners: {
+      onChange: () => {
+        if (serverError) setServerError(null);
+      },
     },
     onSubmit: async (values) => {
       const actionPayload = {
@@ -38,8 +44,7 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
           redirect("/dashboard");
         }
       } else {
-        // setServerError(res?.message || "Login failed. Please try again.");
-        toast.error(res?.message || "Login failed. Please try again.");
+        setServerError(res?.message || "Login failed. Please try again.");
       }
     },
   });
@@ -67,11 +72,21 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         <form.AppField name="remember">
           {(field) => <field.Checkbox label="Remember me" />}
         </form.AppField>
-        {/* {serverError && (
-          <p className="text-red-500 bg-red-100 border border-red-500">
-            {serverError}
-          </p>
-        )} */}
+
+        {serverError && (
+          <div className="flex items-center justify-between gap-2 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <span>{serverError}</span>
+            <button
+              type="button"
+              onClick={() => setServerError(null)}
+              className="shrink-0 rounded p-0.5 hover:bg-red-100"
+              aria-label="Dismiss error"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        )}
+
         <form.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => (
             <Button type="submit" disabled={isSubmitting}>
