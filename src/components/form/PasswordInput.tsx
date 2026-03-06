@@ -12,7 +12,17 @@ import {
 } from "../ui/input-group";
 import { useFieldContext } from "./hooks";
 
-const PasswordInput = () => {
+type PasswordInputProps = {
+  label?: string;
+  placeholder?: string;
+  showForgotPassword?: boolean;
+};
+
+const PasswordInput = ({
+  label = "Password",
+  placeholder = "Enter your password",
+  showForgotPassword = true,
+}: PasswordInputProps) => {
   const [inputType, setInputType] = useState("password");
   const field = useFieldContext<string>();
   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
@@ -22,13 +32,15 @@ const PasswordInput = () => {
   return (
     <Field>
       <div className="flex items-center justify-between">
-        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-        <Link
-          href="/forgot-password"
-          className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
-        >
-          Forgot password?
-        </Link>
+        <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+        {showForgotPassword && (
+          <Link
+            href="/forgot-password"
+            className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+          >
+            Forgot password?
+          </Link>
+        )}
       </div>
       <InputGroup>
         <InputGroupInput
@@ -37,7 +49,7 @@ const PasswordInput = () => {
           name={field.name}
           onBlur={field.handleBlur}
           value={field.state.value}
-          placeholder="Enter your password"
+          placeholder={placeholder}
           onChange={(e) => field.handleChange(e.target.value)}
           aria-invalid={isInvalid}
           className="h-full"

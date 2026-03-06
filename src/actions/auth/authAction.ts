@@ -11,6 +11,12 @@ type LoginData = {
   remember?: boolean;
 };
 
+type RegisterData = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 type LoginResponse = {
   user: LoggedinUser;
   accessToken: string;
@@ -33,8 +39,26 @@ const LoginAction = async (loginData: LoginData) => {
   return result;
 };
 
+const RegisterAction = async (registerData: RegisterData) => {
+  const { name, email, password } = registerData;
+  const payload = { name, email, password };
+
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<LoginResponse>>("/auth/register", payload, {
+      skipAuth: true,
+    }),
+  );
+
+  // Set tokens on success so user is immediately authenticated after registration.
+  if (result.success && "data" in result && result.data.accessToken) {
+    await setTokens(result.data.accessToken, result.data.refreshToken);
+  }
+
+  return result;
+};
+
 const logoutAction = async () => {
   await clearTokens();
   return { success: true };
 };
-export { LoginAction, logoutAction };
+export { LoginAction, logoutAction, RegisterAction };
