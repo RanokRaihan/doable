@@ -80,7 +80,7 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         </form.AppField>
 
         <form.AppField name="password">
-          {(field) => <field.PasswordInput />}
+          {(field) => <field.PasswordInput showForgotPassword={false} />}
         </form.AppField>
 
         <form.AppField name="confirmPassword">
