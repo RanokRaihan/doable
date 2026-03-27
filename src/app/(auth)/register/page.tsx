@@ -9,7 +9,7 @@ export default async function RegisterPage({
   const { callbackUrl } = await searchParams;
 
   return (
-    <main className="min-h-screen flex ">
+    <main className="h-screen flex">
       <RegisterLeftSection />
       <RegisterFormContainer callbackUrl={callbackUrl} />
     </main>

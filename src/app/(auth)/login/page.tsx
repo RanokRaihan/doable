@@ -9,7 +9,7 @@ export default async function LoginPage({
   const { callbackUrl } = await searchParams;
   console.log("LoginPage searchParams:", { callbackUrl });
   return (
-    <main className="min-h-screen flex ">
+    <main className="h-screen flex">
       <LoginLeftSection />
       <LoginFormContainer callbackUrl={callbackUrl} />
     </main>

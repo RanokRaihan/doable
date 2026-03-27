@@ -18,7 +18,7 @@ const RegisterFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
     : "/login";
 
   return (
-    <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-gray-50">
+    <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-gray-50 overflow-y-auto">
       <div className="w-full max-w-md">
         {/* Mobile Logo */}
         <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
