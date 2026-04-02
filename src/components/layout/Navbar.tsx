@@ -1,9 +1,21 @@
 "use client";
 
-import { Menu, X, Zap } from "lucide-react";
+import { logoutAction } from "@/actions/auth/authAction";
+import { useAuth } from "@/providers/AuthProvider";
+import { LogOut, Menu, User, X, Zap } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Separator } from "../ui/separator";
 
 const navbarLinks = [
   { name: "Browse Tasks", href: "/tasks" },
@@ -11,9 +23,23 @@ const navbarLinks = [
   { name: "About Us", href: "/about" },
 ];
 
+const logoutHandler = async () => {
+  await logoutAction();
+};
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   // Effect to handle scroll state for the glass effect
   useEffect(() => {
@@ -64,15 +90,64 @@ const Navbar = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
-            >
-              Log In
-            </Link>
-            <Button asChild variant="default" className=" rounded-full">
-              <Link href="/register">Join Now</Link>
-            </Button>
+            {isAuthenticated && user ? (
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                    <span className="text-sm font-medium text-gray-700">
+                      {user.name}
+                    </span>
+                    <Avatar size="default" className="border border-gray-300 ">
+                      <AvatarImage
+                        className="p-1"
+                        src={user.image ?? undefined}
+                        alt={user.name}
+                      />
+                      <AvatarFallback className="p-1">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col gap-1">
+                      <p className="text-xs text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer">
+                      <User className="mr-2 size-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    variant="destructive"
+                    className="cursor-pointer"
+                    onClick={logoutHandler}
+                  >
+                    <LogOut className="mr-2 size-4" />
+                    Log Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                >
+                  Log In
+                </Link>
+                <Button asChild variant="default" className="rounded-full">
+                  <Link href="/register">Join Now</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -97,19 +172,58 @@ const Navbar = () => {
               </Link>
             ))}
 
-            <hr className="border-gray-100" />
-            <Link
-              href="/login"
-              className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-            >
-              Log In
-            </Link>
-            <Link
-              href="/register"
-              className="p-2 text-center bg-blue-600 text-white rounded-lg font-medium"
-            >
-              Join Now
-            </Link>
+            <Separator />
+
+            {isAuthenticated && user ? (
+              <>
+                <div className="flex items-center gap-3 p-2">
+                  <Avatar size="default">
+                    <AvatarImage
+                      src={user.image ?? undefined}
+                      alt={user.name}
+                    />
+                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-900">
+                      {user.name}
+                    </span>
+                    <span className="text-xs text-gray-500">{user.email}</span>
+                  </div>
+                </div>
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                >
+                  <User size={16} />
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    // TODO: implement logout
+                  }}
+                  className="flex items-center gap-2 p-2 text-red-600 hover:bg-red-50 rounded-lg text-left"
+                >
+                  <LogOut size={16} />
+                  Log Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/register"
+                  className="p-2 text-center bg-blue-600 text-white rounded-lg font-medium"
+                >
+                  Join Now
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>

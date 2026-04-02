@@ -1,8 +1,9 @@
 "use client";
-import { LoginAction } from "@/actions/auth/authAction";
+
+import { LoginAction, RegisterAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
-import LoginSchema from "@/schema/loginValidation";
-import { Loader2, Mail, X } from "lucide-react";
+import RegisterSchema from "@/schema/registerValidation";
+import { Loader2, Mail, User, X } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -10,18 +11,23 @@ import z from "zod";
 import { useAppForm } from "../form/hooks";
 import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
-type FormData = z.infer<typeof LoginSchema>;
-const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
+
+type FormData = z.infer<typeof RegisterSchema>;
+
+const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const { setUser } = useAuth();
+
   const form = useAppForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
-      remember: false,
+      confirmPassword: "",
     } satisfies FormData as FormData,
     validators: {
-      onSubmit: LoginSchema,
+      onSubmit: RegisterSchema,
     },
     listeners: {
       onChange: () => {
@@ -30,24 +36,43 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
     },
     onSubmit: async (values) => {
       const actionPayload = {
+        name: values.value.name,
         email: values.value.email,
         password: values.value.password,
-        remember: values.value.remember,
       };
-      const res = await LoginAction(actionPayload);
+      const loginPayload = {
+        email: values.value.email,
+        password: values.value.password,
+      };
+
+      const res = await RegisterAction(actionPayload);
+
       if (res?.success) {
-        setUser(res.data.user);
-        toast.success(res.message || "Logged in successfully!");
-        if (callbackUrl) {
-          redirect(callbackUrl);
+        toast.success(res.message || "Account created successfully!");
+        setLoadingMessage(" Logging you in...");
+        const loginRes = await LoginAction(loginPayload);
+        if (loginRes?.success) {
+          setLoadingMessage(null);
+          setUser(loginRes.data.user);
+          toast.success(loginRes.message || "Logged in successfully!");
+          if (callbackUrl) {
+            redirect(callbackUrl);
+          } else {
+            redirect("/dashboard");
+          }
         } else {
-          redirect("/dashboard");
+          setServerError(
+            loginRes?.message || "Login failed. Please try again.",
+          );
         }
       } else {
-        setServerError(res?.message || "Login failed. Please try again.");
+        setServerError(
+          res?.message || "Registration failed. Please try again.",
+        );
       }
     },
   });
+
   return (
     <form
       onSubmit={(e) => {
@@ -56,6 +81,17 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
       }}
     >
       <FieldGroup>
+        <form.AppField name="name">
+          {(field) => (
+            <field.InputWithIcon
+              label="Name"
+              placeholder="John Doe"
+              type="text"
+              icon={User}
+            />
+          )}
+        </form.AppField>
+
         <form.AppField name="email">
           {(field) => (
             <field.InputWithIcon
@@ -66,11 +102,19 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
             />
           )}
         </form.AppField>
+
         <form.AppField name="password">
-          {(field) => <field.PasswordInput />}
+          {(field) => <field.PasswordInput showForgotPassword={false} />}
         </form.AppField>
-        <form.AppField name="remember">
-          {(field) => <field.Checkbox label="Remember me" />}
+
+        <form.AppField name="confirmPassword">
+          {(field) => (
+            <field.PasswordInput
+              label="Confirm Password"
+              placeholder="Re-enter your password"
+              showForgotPassword={false}
+            />
+          )}
         </form.AppField>
 
         {serverError && (
@@ -91,7 +135,9 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
           {(isSubmitting) => (
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="size-4 animate-spin" />}
-              {isSubmitting ? "Signing In..." : "Sign In"}
+              {isSubmitting
+                ? loadingMessage || "Creating Account..."
+                : "Create Account"}
             </Button>
           )}
         </form.Subscribe>
@@ -100,4 +146,4 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

@@ -10,9 +10,13 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 
-const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
+const RegisterFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
+  const loginHref = callbackUrl
+    ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
+    : "/login";
+
   return (
     <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-gray-50 overflow-y-auto">
       <div className="w-full max-w-md">
@@ -27,15 +31,15 @@ const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
         <Card className="border-0 shadow-xl bg-white">
           <CardHeader className="space-y-1 pb-6">
             <CardTitle className="text-2xl font-bold text-center">
-              Sign in to your account
+              Create your account
             </CardTitle>
             <CardDescription className="text-center">
-              Enter your email and password to continue
+              Enter your details to get started
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-5">
-            <LoginForm callbackUrl={callbackUrl} />
+            <RegisterForm callbackUrl={callbackUrl} />
 
             {/* Divider */}
             <div className="relative">
@@ -49,7 +53,7 @@ const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
               </div>
             </div>
 
-            {/* Social Login Buttons */}
+            {/* Social Signup Buttons */}
             <div className="grid grid-cols-2 gap-4">
               <Button variant="outline" className="h-11">
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
@@ -87,12 +91,12 @@ const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
 
           <CardFooter className="flex justify-center pb-6">
             <p className="text-sm text-gray-600">
-              Don&apos;t have an account?{" "}
+              Already have an account?{" "}
               <Link
-                href="/register"
+                href={loginHref}
                 className="text-blue-600 hover:text-blue-700 font-semibold hover:underline"
               >
-                Sign up for free
+                Sign in
               </Link>
             </p>
           </CardFooter>
@@ -100,7 +104,7 @@ const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
 
         {/* Terms */}
         <p className="mt-6 text-center text-xs text-gray-500">
-          By signing in, you agree to our{" "}
+          By signing up, you agree to our{" "}
           <Link href="/terms" className="text-blue-600 hover:underline">
             Terms of Service
           </Link>{" "}
@@ -108,10 +112,11 @@ const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
           <Link href="/privacy" className="text-blue-600 hover:underline">
             Privacy Policy
           </Link>
+          .
         </p>
       </div>
     </div>
   );
 };
 
-export default LoginFormContainer;
+export default RegisterFormContainer;
