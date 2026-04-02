@@ -45,5 +45,5 @@ function getCurrentPath(): string {
   // In Server Components, we can't easily get the current path
   // The middleware already handles callback URLs, so we return a safe default
   // Or you can pass the path explicitly when needed
-  return "/dashboard";
+  return "/profile";
 }

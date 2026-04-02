@@ -150,7 +150,7 @@ Runs on every request. Logic:
 2. Decodes + validates the access token.
 3. If access token is missing, expired, or expiring soon **and** a refresh token exists → calls `refreshTokens()` from `proxy-utils.ts`.
 4. On successful refresh, attaches new cookies to the response **and** forwards `x-refreshed-access-token` header so Server Components can read the new token before the cookie is visible.
-5. **Auth routes** (`/login`, `/register`): redirect authenticated users to `/dashboard`.
+5. **Auth routes** (`/login`, `/register`): redirect authenticated users to `/profile`.
 6. **Authenticated-only routes** (`/change-password`): redirect unauthenticated users to `/login?callbackUrl=<path>`.
 7. **Protected routes** (role-based, see below): check role; redirect to `/unauthorized` on failure.
 
@@ -158,7 +158,7 @@ Runs on every request. Logic:
 
 ```ts
 const protectedRoutes = {
-  "/dashboard": ["USER", "ADMIN"],
+  "/profile": ["USER", "ADMIN"],
   "/post-task": ["USER", "ADMIN"],
   "/my-tasks": ["USER", "ADMIN"],
   "/admin/*": ["ADMIN"], // wildcard prefix match

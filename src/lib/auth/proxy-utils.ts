@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 export interface TokenPayload {
   role?: string;
   exp?: number;
+  emailVerified?: boolean;
+  profileStatus?: "INCOMPLETE" | "COMPLETE" | "SUSPENDED";
 }
 
 export interface RefreshedTokens {

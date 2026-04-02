@@ -41,7 +41,7 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         if (callbackUrl) {
           redirect(callbackUrl);
         } else {
-          redirect("/dashboard");
+          redirect("/profile");
         }
       } else {
         setServerError(res?.message || "Login failed. Please try again.");

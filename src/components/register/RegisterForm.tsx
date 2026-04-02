@@ -1,6 +1,10 @@
 "use client";
 
-import { LoginAction, RegisterAction } from "@/actions/auth/authAction";
+import {
+  LoginAction,
+  RegisterAction,
+  sendVerificationEmailAction,
+} from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import RegisterSchema from "@/schema/registerValidation";
 import { Loader2, Mail, User, X } from "lucide-react";
@@ -52,14 +56,15 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         setLoadingMessage(" Logging you in...");
         const loginRes = await LoginAction(loginPayload);
         if (loginRes?.success) {
-          setLoadingMessage(null);
+          setLoadingMessage("Sending verification email...");
           setUser(loginRes.data.user);
-          toast.success(loginRes.message || "Logged in successfully!");
-          if (callbackUrl) {
-            redirect(callbackUrl);
-          } else {
-            redirect("/dashboard");
-          }
+          await sendVerificationEmailAction();
+          setLoadingMessage(null);
+          toast.success("Account created! Please verify your email.");
+          const verifyUrl = callbackUrl
+            ? `/verify-email?callbackUrl=${encodeURIComponent(callbackUrl)}`
+            : "/verify-email";
+          redirect(verifyUrl);
         } else {
           setServerError(
             loginRes?.message || "Login failed. Please try again.",

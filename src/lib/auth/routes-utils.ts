@@ -1,15 +1,23 @@
 const authRoutes = ["/login", "/register"];
 
 // Routes that require login but no specific role
-const authenticatedRoutes = ["/change-password"];
+const authenticatedRoutes = [
+  "/change-password",
+  "/verify-email",
+  "/complete-profile",
+];
 
 // Use "/*" suffix for prefix matching, otherwise exact match
 const protectedRoutes: Record<string, string[]> = {
-  "/dashboard": ["USER", "ADMIN"],
+  "/profile": ["USER", "ADMIN"],
   "/post-task": ["USER", "ADMIN"],
   "/my-tasks": ["USER", "ADMIN"],
   "/admin/*": ["ADMIN"],
 };
+
+// Routes that require a verified email AND complete profile
+// (subset of protectedRoutes — role check still applies too)
+const onboardingGatedRoutes = ["/post-task", "/my-tasks"];
 
 function matchesRoute(path: string, route: string): boolean {
   // Wildcard: "/admin/*" matches "/admin", "/admin/users", etc.
@@ -36,4 +44,8 @@ export function getRequiredRoles(path: string): string[] | null {
     }
   }
   return null;
+}
+
+export function isOnboardingGatedRoute(path: string): boolean {
+  return onboardingGatedRoutes.some((route) => matchesRoute(path, route));
 }
