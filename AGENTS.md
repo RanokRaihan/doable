@@ -35,20 +35,23 @@ npm run start    # next start
 npm run lint     # eslint
 ```
 
+> **No test framework** — there are no test scripts or testing dependencies. Do not attempt to run or generate tests.
+
 ---
 
 ## 3. Environment Variables
 
 Defined and enforced in `src/lib/config.ts`. Missing required vars throw at startup.
 
-| Variable                | Required | Default           | Description                             |
-| ----------------------- | -------- | ----------------- | --------------------------------------- |
-| `BACKEND_URL`           | **Yes**  | —                 | Backend API base URL                    |
-| `NODE_ENV`              | No       | `"development"`   | Node environment                        |
-| `ACCESS_TOKEN_MAX_AGE`  | No       | `900` (15 min)    | Access token cookie max-age in seconds  |
-| `REFRESH_TOKEN_MAX_AGE` | No       | `604800` (7 days) | Refresh token cookie max-age in seconds |
+| Variable                  | Side   | Required | Default           | Description                                     |
+| ------------------------- | ------ | -------- | ----------------- | ----------------------------------------------- |
+| `BACKEND_URL`             | Server | **Yes**  | —                 | Backend API base URL (server-only)              |
+| `NEXT_PUBLIC_BACKEND_URL` | Client | No       | —                 | Backend URL for client-side fetches (if needed) |
+| `NODE_ENV`                | Both   | No       | `"development"`   | Node environment                                |
+| `ACCESS_TOKEN_MAX_AGE`    | Server | No       | `900` (15 min)    | Access token cookie max-age in seconds          |
+| `REFRESH_TOKEN_MAX_AGE`   | Server | No       | `604800` (7 days) | Refresh token cookie max-age in seconds         |
 
-Use `env.backendUrl`, `env.isProduction`, `cookieConfig.*` from `src/lib/config.ts` — never read `process.env` directly.
+Use `env.backendUrl`, `env.isProduction`, `cookieConfig.*` from `src/lib/config.ts` — never read `process.env` directly. `NEXT_PUBLIC_BACKEND_URL` is not enforced by `config.ts` and must be accessed via `process.env.NEXT_PUBLIC_BACKEND_URL` in client components only.
 
 ---
 
@@ -237,6 +240,8 @@ type BackendError = {
 
 Thrown errors are wrapped in `ApiError` (from `src/lib/api/errors.ts`). Use `ApiError.isApiError(e)` and `ApiError.isUnauthorized(e)` for type-safe checks.
 
+> **401 is terminal.** The middleware already attempted refresh before the request reached the Server Component. A 401 from the backend means the session is truly expired — never retry on 401. `getCurrentUser()` always returns `null` on any error (including 401) and never throws.
+
 ### Server Actions
 
 Always wrap callees in `actionHandler()`:
@@ -297,6 +302,17 @@ TaskStatus: OPEN | IN_PROGRESS | COMPLETED | CANCELLED | PAYMENT_PROCESSING;
 
 Key interfaces: `Task`, `TaskDetails` (extends Task with `postedBy`), `TaskPoster`, `TaskDetailsResponse`, `PaginationMeta`.
 
+Additional types used by the tasks browser:
+
+- `FilterState` — `{ categories, priorities, search, sortField, sortOrder, page, limit }`
+- `SortField` — `"createdAt" | "updatedAt" | "title"`
+- `SortOrder` — `"asc" | "desc"`
+- `TasksResponse` — paginated tasks API response
+
+> **`Task.baseCompensation` is typed as `string`**, not `number`. Do not do arithmetic on it without parsing.
+
+> **`/tasks` page is WIP** — `src/app/(main)/tasks/page.tsx` uses hardcoded `MOCK_TASKS` with a simulated 500 ms delay. When implementing real data fetching, replace the mock with `apiClient` calls.
+
 ---
 
 ## 9. UI & Styling Conventions
@@ -321,3 +337,5 @@ Key interfaces: `Task`, `TaskDetails` (extends Task with `postedBy`), `TaskPoste
 - **Adding a new API endpoint:** Call `apiClient` directly; wrap in `actionHandler()` inside a Server Action if triggered from a form.
 - **Image domains:** Only `images.unsplash.com` is allowed in `next.config.ts`. Add new hostnames there if needed.
 - **Markdown content:** Legal/static pages are rendered from `.md` files in `src/content/` using the `MarkdownArticle` component (`src/components/ui/MarkdownArticle.tsx`).
+- **`const enum` is forbidden** — `tsconfig.json` sets `isolatedModules: true`. Use `const` objects with `as const` instead (all existing domain types follow this pattern).
+- **`await searchParams` in page components** — Next.js 15+ requires `searchParams` (and `params`) to be awaited. Both auth pages already follow this pattern: `const { callbackUrl } = await searchParams;`
