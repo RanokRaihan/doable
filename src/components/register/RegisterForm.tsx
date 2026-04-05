@@ -1,14 +1,10 @@
 "use client";
 
-import {
-  LoginAction,
-  RegisterAction,
-  sendVerificationEmailAction,
-} from "@/actions/auth/authAction";
+import { LoginAction, RegisterAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import RegisterSchema from "@/schema/registerValidation";
 import { Loader2, Mail, User, X } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
@@ -22,6 +18,7 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const { setUser } = useAuth();
+  const router = useRouter();
 
   const form = useAppForm({
     defaultValues: {
@@ -56,19 +53,18 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         setLoadingMessage(" Logging you in...");
         const loginRes = await LoginAction(loginPayload);
         if (loginRes?.success) {
-          setLoadingMessage("Sending verification email...");
           setUser(loginRes.data.user);
-          await sendVerificationEmailAction();
           setLoadingMessage(null);
           toast.success("Account created! Please verify your email.");
           const verifyUrl = callbackUrl
             ? `/verify-email?callbackUrl=${encodeURIComponent(callbackUrl)}`
             : "/verify-email";
-          redirect(verifyUrl);
+          router.push(verifyUrl);
         } else {
           setServerError(
             loginRes?.message || "Login failed. Please try again.",
           );
+          return;
         }
       } else {
         setServerError(

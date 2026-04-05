@@ -1,7 +1,11 @@
-export default function ProfilePage() {
+import OnboardingBanner from "@/components/dashboard/OnboardingBanner";
+
+export default async function ProfilePage() {
   return (
     <div className="min-h-screen py-12 items-center justify-center">
-      <h1>This is ProfilePage</h1>
+      <div className="container mx-auto mt-6">
+        <OnboardingBanner />
+      </div>
     </div>
   );
 }

@@ -18,6 +18,13 @@ export default function VerifyEmailPrompt({ email }: { email: string }) {
     return () => clearInterval(timer);
   }, [cooldown]);
 
+  // Auto-send on first mount
+  useEffect(() => {
+    sendVerificationEmailAction().then((result) => {
+      if (result.success) setCooldown(RESEND_COOLDOWN);
+    });
+  }, []);
+
   const handleResend = async () => {
     setIsSending(true);
     const result = await sendVerificationEmailAction();

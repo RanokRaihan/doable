@@ -82,7 +82,7 @@ export default function OnboardingBanner() {
                 )}
                 <div className="flex-1 min-w-0">
                   <span
-                    className={`font-medium ${step.done ? "text-slate-500 line-through" : "text-slate-400"}`}
+                    className={`font-medium ${step.done ? "text-slate-500 " : "text-slate-400"}`}
                   >
                     {step.label}
                   </span>
