@@ -63,11 +63,10 @@ const logoutAction = async () => {
 };
 
 const sendVerificationEmailAction = async () => {
-  // const result = await actionHandler(() =>
-  //   apiClient.post<ApiResponse<null>>("/auth/send-verification-email"),
-  // );
-  // return result;
-  return { success: true, message: "Verification email sent (mocked)." };
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/send-verification-email"),
+  );
+  return result;
 };
 
 type VerifyEmailData = {

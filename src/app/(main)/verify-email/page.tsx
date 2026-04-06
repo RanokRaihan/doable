@@ -8,6 +8,7 @@ interface PageProps {
 
 export default async function VerifyEmailPage({ searchParams }: PageProps) {
   const user = await requireAuth();
+
   const { token, callbackUrl } = await searchParams;
 
   return (
