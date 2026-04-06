@@ -31,14 +31,10 @@ export default function VerifyEmailPrompt({
   const { user } = useAuth();
   const [state, setState] = useState<PromptState>(() => {
     if (verificationStatus?.emailVerified) return "already-verified";
-    if (
-      verificationStatus?.emailVerificationSentAt &&
-      getRemainingCooldown(verificationStatus.emailVerificationSentAt) > 0
-    ) {
-      return "prompt";
-    }
-    // Email never sent or cooldown expired — will auto-send
-    return "sending";
+    // Auto-send only if email was never sent
+    if (!verificationStatus?.emailVerificationSentAt) return "sending";
+    // Email was sent before — show prompt with remaining cooldown (or 0)
+    return "prompt";
   });
 
   const [cooldown, setCooldown] = useState(() => {
