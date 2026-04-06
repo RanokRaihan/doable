@@ -8,6 +8,19 @@ A Next.js task-marketplace where users post tasks and workers accept them. This 
 
 ---
 
+## Cross-Codebase Contract
+
+Before working on anything that touches the backend (API calls, auth flow,
+types, response shapes), read `api-contract.md` in the root of this repo.
+
+It is the source of truth for:
+
+- All endpoint paths and HTTP methods
+- Request and response shapes
+- Shared enums (TaskStatus, TaskCategory, etc.)
+- Auth token delivery and cookie behavior
+- Known mismatches between frontend and backend types
+
 ## 1. Tech Stack (exact versions)
 
 | Package              | Version                          |
