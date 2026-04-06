@@ -3,6 +3,7 @@
 import { verifyEmailAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -71,12 +72,12 @@ export default function VerifyEmailCheck({
             Verification failed
           </p>
           <p className="max-w-sm text-sm text-slate-500">{message}</p>
-          <a
+          <Link
             href="/verify-email"
             className="mt-2 text-sm font-medium text-blue-600 underline underline-offset-4 hover:text-blue-700"
           >
             Request a new verification link
-          </a>
+          </Link>
         </>
       )}
     </div>

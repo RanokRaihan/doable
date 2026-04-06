@@ -30,3 +30,10 @@ export interface AuthProviderProps {
   children: ReactNode;
   initialUser: LoggedinUser | null;
 }
+
+export interface EmailVerificationStatus {
+  emailVerified: boolean;
+  emailVerifiedAt: string | null;
+  emailVerificationSentAt: string | null;
+  emailVerificationExpiresAt: string | null;
+}

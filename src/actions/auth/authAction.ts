@@ -1,6 +1,10 @@
 "use server";
 
-import { LoggedinUser, RegisteredUser } from "@/lib/types/auth";
+import {
+  EmailVerificationStatus,
+  LoggedinUser,
+  RegisteredUser,
+} from "@/lib/types/auth";
 import { apiClient, ApiResponse } from "../../lib/api";
 import { actionHandler } from "../../lib/api/actionHandler";
 import { clearTokens, setTokens } from "../../lib/api/tokens";
@@ -62,6 +66,15 @@ const logoutAction = async () => {
   return { success: true };
 };
 
+const getEmailVerificationStatusAction = async () => {
+  const result = await actionHandler(() =>
+    apiClient.get<ApiResponse<EmailVerificationStatus>>(
+      "/auth/email-verification",
+    ),
+  );
+  return result;
+};
+
 const sendVerificationEmailAction = async () => {
   const result = await actionHandler(() =>
     apiClient.post<ApiResponse<null>>("/auth/send-verification-email"),
@@ -113,6 +126,7 @@ const completeProfileAction = async (data: CompleteProfileData) => {
 
 export {
   completeProfileAction,
+  getEmailVerificationStatusAction,
   LoginAction,
   logoutAction,
   RegisterAction,
