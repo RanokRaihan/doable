@@ -1,6 +1,6 @@
-import { getEmailVerificationStatusAction } from "@/actions/auth/authAction";
 import VerifyEmailCheck from "@/components/verify-email/VerifyEmailCheck";
 import VerifyEmailPrompt from "@/components/verify-email/VerifyEmailPrompt";
+import { getEmailVerificationStatus } from "@/lib/auth/getEmailVerificationStatus";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 interface PageProps {
@@ -25,9 +25,7 @@ export default async function VerifyEmailPage({ searchParams }: PageProps) {
     );
   }
 
-  const statusResult = await getEmailVerificationStatusAction();
-  const verificationStatus =
-    statusResult.success && "data" in statusResult ? statusResult.data : null;
+  const verificationStatus = await getEmailVerificationStatus();
 
   return (
     <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
