@@ -14,14 +14,21 @@ const CompleteProfileSchema = z.object({
   phone: z
     .string()
     .trim()
-    .min(1, "Phone number is required")
-    .regex(/^\+?[0-9\s\-().]{7,20}$/, "Please enter a valid phone number"),
+    .regex(/^01\d{9}$/, {
+      message:
+        "Phone must be 11 digits, start with 01 and contain only numbers",
+    }),
   address: z
     .string()
     .trim()
     .min(1, "Address is required")
-    .min(5, "Please enter a complete address"),
-  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"], {
+    .max(255, "Address must be less than 255 characters"),
+  bio: z
+    .string()
+    .trim()
+    .max(500, "Bio must be less than 500 characters")
+    .optional(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"], {
     error: "Please select a valid option",
   }),
 });

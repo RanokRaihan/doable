@@ -8,6 +8,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -32,7 +33,6 @@ const GENDER_OPTIONS = [
   { value: "MALE", label: "Male" },
   { value: "FEMALE", label: "Female" },
   { value: "OTHER", label: "Other" },
-  { value: "PREFER_NOT_TO_SAY", label: "Prefer not to say" },
 ];
 
 export default function CompleteProfileForm({
@@ -49,6 +49,7 @@ export default function CompleteProfileForm({
       dateOfBirth: "",
       phone: "",
       address: "",
+      bio: "",
       gender: "" as FormData["gender"],
     } satisfies FormData as FormData,
     validators: {
@@ -115,7 +116,7 @@ export default function CompleteProfileForm({
           {(field) => (
             <field.InputWithIcon
               label="Phone number"
-              placeholder="+1 (555) 000-0000"
+              placeholder="e.g. 01783687070"
               type="tel"
               icon={() => (
                 <span className="text-xs font-medium text-slate-400">TEL</span>
@@ -142,6 +143,35 @@ export default function CompleteProfileForm({
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   aria-invalid={isInvalid}
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        </form.Field>
+
+        {/* Bio */}
+        <form.Field name="bio">
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldContent>
+                  <FieldLabel htmlFor={field.name}>
+                    Bio{" "}
+                    <span className="text-slate-400 font-normal">(optional)</span>
+                  </FieldLabel>
+                </FieldContent>
+                <Textarea
+                  id={field.name}
+                  name={field.name}
+                  placeholder="Tell us a little about yourself..."
+                  value={field.state.value ?? ""}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                  rows={3}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>

@@ -94,11 +94,18 @@ type CompleteProfileData = {
   phone: string;
   address: string;
   gender: string;
+  bio?: string;
+};
+
+type CompleteProfileResponse = {
+  user: LoggedinUser;
+  accessToken: string;
+  refreshToken: string;
 };
 
 const completeProfileAction = async (data: CompleteProfileData) => {
   const result = await actionHandler(() =>
-    apiClient.patch<ApiResponse<{ accessToken: string; refreshToken: string }>>(
+    apiClient.post<ApiResponse<CompleteProfileResponse>>(
       "/user/complete-profile",
       data,
     ),
