@@ -1,3 +1,4 @@
+import { sendVerificationEmailAction } from "@/actions/auth/authAction";
 import VerifyEmailCheck from "@/components/verify-email/VerifyEmailCheck";
 import VerifyEmailPrompt from "@/components/verify-email/VerifyEmailPrompt";
 import { getEmailVerificationStatus } from "@/lib/auth/getEmailVerificationStatus";
@@ -36,6 +37,7 @@ export default async function VerifyEmailPage({ searchParams }: PageProps) {
         <VerifyEmailPrompt
           email={user.email}
           verificationStatus={verificationStatus}
+          sendVerificationEmail={sendVerificationEmailAction}
         />
       </div>
     </main>

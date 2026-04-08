@@ -1,6 +1,5 @@
 "use client";
 
-import { sendVerificationEmailAction } from "@/actions/auth/authAction";
 import { EmailVerificationStatus } from "@/lib/types/auth";
 import { useAuth } from "@/providers/AuthProvider";
 import { CheckCircle, Loader2, Mail, RefreshCw } from "lucide-react";
@@ -22,11 +21,13 @@ type PromptState = "already-verified" | "sending" | "prompt";
 interface Props {
   email: string;
   verificationStatus: EmailVerificationStatus | null;
+  sendVerificationEmail: () => Promise<{ success: boolean; message?: string }>;
 }
 
 export default function VerifyEmailPrompt({
   email,
   verificationStatus,
+  sendVerificationEmail,
 }: Props) {
   const { user } = useAuth();
   const [state, setState] = useState<PromptState>(() => {
@@ -59,7 +60,7 @@ export default function VerifyEmailPrompt({
     if (state !== "sending" || hasSentRef.current) return;
     hasSentRef.current = true;
 
-    sendVerificationEmailAction().then((result) => {
+    sendVerificationEmail().then((result) => {
       if (result.success) {
         setCooldown(RESEND_COOLDOWN);
         toast.success("Verification email sent! Check your inbox.");
@@ -70,11 +71,11 @@ export default function VerifyEmailPrompt({
       }
       setState("prompt");
     });
-  }, [state]);
+  }, [state, sendVerificationEmail]);
 
   const handleResend = async () => {
     setIsSending(true);
-    const result = await sendVerificationEmailAction();
+    const result = await sendVerificationEmail();
     setIsSending(false);
 
     if (result.success) {

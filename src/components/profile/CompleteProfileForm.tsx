@@ -8,7 +8,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -16,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/providers/AuthProvider";
 import CompleteProfileSchema from "@/schema/completeProfileValidation";
 import { Loader2, X } from "lucide-react";
@@ -68,6 +68,7 @@ export default function CompleteProfileForm({
         refreshUser();
         router.push(callbackUrl || "/profile");
       } else {
+        console.error("Failed to complete profile:", result);
         setServerError(
           "message" in result
             ? result.message
@@ -160,7 +161,9 @@ export default function CompleteProfileForm({
                 <FieldContent>
                   <FieldLabel htmlFor={field.name}>
                     Bio{" "}
-                    <span className="text-slate-400 font-normal">(optional)</span>
+                    <span className="text-slate-400 font-normal">
+                      (optional)
+                    </span>
                   </FieldLabel>
                 </FieldContent>
                 <Textarea

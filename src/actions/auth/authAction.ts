@@ -104,10 +104,14 @@ type CompleteProfileResponse = {
 };
 
 const completeProfileAction = async (data: CompleteProfileData) => {
+  const payload = {
+    ...data,
+    dateOfBirth: `${data.dateOfBirth}T00:00:00Z`,
+  };
   const result = await actionHandler(() =>
-    apiClient.post<ApiResponse<CompleteProfileResponse>>(
+    apiClient.patch<ApiResponse<CompleteProfileResponse>>(
       "/user/complete-profile",
-      data,
+      payload,
     ),
   );
 
