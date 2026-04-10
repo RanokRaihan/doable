@@ -2,6 +2,8 @@
 
 Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
 
+# for desiging component, it's mandatory use shadcnUI, if not possible then can move to custom design
+
 # Get It Done — Agent Codebase Reference
 
 A Next.js task-marketplace where users post tasks and workers accept them. This file is the authoritative guide for AI agents working in this repo.

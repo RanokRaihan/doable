@@ -1,21 +1,27 @@
 "use client";
 
 import { logoutAction } from "@/actions/auth/authAction";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import {
   ChevronDown,
   ClipboardList,
   FileText,
+  KeyRound,
   LogOut,
-  Settings,
   Star,
   User,
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 
 const navItems = [
   { label: "Overview", href: "/profile", icon: User },
@@ -23,18 +29,13 @@ const navItems = [
   { label: "Applications", href: "/profile/applications", icon: FileText },
   { label: "Reviews", href: "/profile/reviews", icon: Star },
   { label: "Wallet", href: "/profile/wallet", icon: Wallet },
-];
-
-const allNavItems = [
-  ...navItems,
-  { label: "Settings", href: "/profile/settings", icon: Settings },
+  { label: "Change Password", href: "/profile/change-password", icon: KeyRound },
 ];
 
 export function ProfileSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, clearUser } = useAuth();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/profile") return pathname === "/profile";
@@ -42,7 +43,7 @@ export function ProfileSidebar() {
   };
 
   const currentItem =
-    allNavItems.find((item) => isActive(item.href)) ?? allNavItems[0];
+    navItems.find((item) => isActive(item.href)) ?? navItems[0];
 
   const initials = user?.name
     ? user.name
@@ -61,59 +62,55 @@ export function ProfileSidebar() {
 
   return (
     <>
-      {/* ── Mobile collapsible menu ── */}
+      {/* ── Mobile dropdown (shadcn DropdownMenu) ── */}
       <div className="md:hidden mb-4">
-        <button
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-        >
-          <span className="flex items-center gap-2">
-            <currentItem.icon className="size-4 text-blue-600" />
-            {currentItem.label}
-          </span>
-          <ChevronDown
-            className={cn(
-              "size-4 text-slate-400 transition-transform duration-200",
-              mobileOpen && "rotate-180",
-            )}
-          />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="group w-full flex items-center justify-between px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+              <span className="flex items-center gap-2">
+                <currentItem.icon className="size-4 text-blue-600" />
+                {currentItem.label}
+              </span>
+              <ChevronDown className="size-4 text-slate-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+            </button>
+          </DropdownMenuTrigger>
 
-        {mobileOpen && (
-          <div className="mt-1 bg-white border border-slate-200 rounded-xl p-2 flex flex-col gap-0.5 shadow-sm">
-            {allNavItems.map(({ label, href, icon: Icon }) => (
-              <Link
+          <DropdownMenuContent align="start" className="min-w-56 p-1.5">
+            {navItems.map(({ label, href, icon: Icon }) => (
+              <DropdownMenuItem
                 key={href}
-                href={href}
-                onClick={() => setMobileOpen(false)}
+                asChild
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "gap-3 px-3 py-2.5 rounded-lg cursor-pointer",
                   isActive(href)
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
+                    ? "bg-blue-50 text-blue-700 focus:bg-blue-50 focus:text-blue-700"
+                    : "text-slate-600",
                 )}
               >
-                <Icon
-                  className={cn(
-                    "size-4 shrink-0",
-                    isActive(href) ? "text-blue-600" : "text-slate-400",
-                  )}
-                />
-                {label}
-              </Link>
+                <Link href={href}>
+                  <Icon
+                    className={cn(
+                      "size-4 shrink-0",
+                      isActive(href) ? "text-blue-600" : "text-slate-400",
+                    )}
+                  />
+                  {label}
+                </Link>
+              </DropdownMenuItem>
             ))}
 
-            <div className="my-1 border-t border-slate-100" />
+            <DropdownMenuSeparator />
 
-            <button
+            <DropdownMenuItem
+              variant="destructive"
+              className="gap-3 px-3 py-2.5 rounded-lg cursor-pointer"
               onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors w-full"
             >
-              <LogOut className="size-4 shrink-0 text-slate-400" />
+              <LogOut className="size-4 shrink-0" />
               Sign out
-            </button>
-          </div>
-        )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* ── Desktop sidebar ── */}
@@ -172,29 +169,9 @@ export function ProfileSidebar() {
 
           <div className="my-1 border-t border-slate-100" />
 
-          <Link
-            href="/profile/settings"
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
-              isActive("/profile/settings")
-                ? "bg-blue-50 text-blue-700"
-                : "text-slate-600 hover:text-slate-900 hover:bg-slate-50",
-            )}
-          >
-            <Settings
-              className={cn(
-                "size-4 shrink-0",
-                isActive("/profile/settings")
-                  ? "text-blue-600"
-                  : "text-slate-400",
-              )}
-            />
-            Settings
-          </Link>
-
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors w-full mt-0.5"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors w-full"
           >
             <LogOut className="size-4 shrink-0 text-slate-400" />
             Sign out

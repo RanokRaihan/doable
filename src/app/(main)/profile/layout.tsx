@@ -6,9 +6,9 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div data-profile-layout className="min-h-screen bg-slate-50">
+    <div data-profile-layout className="min-h-screen ">
       <div className="mx-auto max-w-6xl px-4 pt-24 pb-8">
-        <div className="flex flex-col md:flex-row gap-6 items-start">
+        <div className="flex flex-col md:flex-row gap-6 md:items-start">
           <ProfileSidebar />
           <main className="flex-1 min-w-0">{children}</main>
         </div>
