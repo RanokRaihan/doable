@@ -9,7 +9,7 @@ const authenticatedRoutes = [
 
 // Use "/*" suffix for prefix matching, otherwise exact match
 const protectedRoutes: Record<string, string[]> = {
-  "/profile": ["USER", "ADMIN"],
+  "/profile/*": ["USER", "ADMIN"],
   "/post-task": ["USER", "ADMIN"],
   "/my-tasks": ["USER", "ADMIN"],
   "/admin/*": ["ADMIN"],

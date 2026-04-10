@@ -122,7 +122,20 @@ const completeProfileAction = async (data: CompleteProfileData) => {
   return result;
 };
 
+type ChangePasswordData = {
+  oldPassword: string;
+  newPassword: string;
+};
+
+const changePasswordAction = async (data: ChangePasswordData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/update-password", data),
+  );
+  return result;
+};
+
 export {
+  changePasswordAction,
   completeProfileAction,
   LoginAction,
   logoutAction,
