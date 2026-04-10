@@ -1,4 +1,4 @@
-import OnboardingBanner from "@/components/dashboard/OnboardingBanner";
+import OnboardingBanner from "@/components/profile/OnboardingBanner";
 
 export default async function ProfilePage() {
   return (
