@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/providers/AuthProvider";
 
+import { NavigationProgress } from "@/components/layout/NavigationProgress";
 import { Toaster } from "@/components/ui/sonner";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import type { Metadata } from "next";
@@ -35,6 +36,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider initialUser={user}>
+          <NavigationProgress />
           {children}
           <Toaster position="top-center" duration={3500} richColors />
         </AuthProvider>
