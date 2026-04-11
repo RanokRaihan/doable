@@ -61,4 +61,115 @@ const logoutAction = async () => {
   await clearTokens();
   return { success: true };
 };
-export { LoginAction, logoutAction, RegisterAction };
+
+const sendVerificationEmailAction = async () => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/send-verification-email"),
+  );
+  return result;
+};
+
+type VerifyEmailData = {
+  token: string;
+};
+
+const verifyEmailAction = async (data: VerifyEmailData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<{ accessToken: string; refreshToken: string }>>(
+      "/auth/verify-email",
+      { token: data.token },
+      { skipAuth: true },
+    ),
+  );
+
+  if (result.success && "data" in result && result.data?.accessToken) {
+    await setTokens(result.data.accessToken, result.data.refreshToken);
+  }
+
+  return result;
+};
+
+type CompleteProfileData = {
+  dateOfBirth: string;
+  phone: string;
+  address: string;
+  gender: string;
+  bio?: string;
+};
+
+type CompleteProfileResponse = {
+  user: LoggedinUser;
+  accessToken: string;
+  refreshToken: string;
+};
+
+const completeProfileAction = async (data: CompleteProfileData) => {
+  const payload = {
+    ...data,
+    dateOfBirth: `${data.dateOfBirth}T00:00:00Z`,
+  };
+  const result = await actionHandler(() =>
+    apiClient.patch<ApiResponse<CompleteProfileResponse>>(
+      "/user/complete-profile",
+      payload,
+    ),
+  );
+
+  if (result.success && "data" in result && result.data?.accessToken) {
+    await setTokens(result.data.accessToken, result.data.refreshToken);
+  }
+
+  return result;
+};
+
+type ChangePasswordData = {
+  oldPassword: string;
+  newPassword: string;
+};
+
+const changePasswordAction = async (data: ChangePasswordData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/update-password", data),
+  );
+  return result;
+};
+
+type ForgotPasswordData = {
+  email: string;
+};
+
+const forgotPasswordAction = async (data: ForgotPasswordData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/forgot-password", data, {
+      skipAuth: true,
+    }),
+  );
+  return result;
+};
+
+type ResetPasswordData = {
+  email: string;
+  newPassword: string;
+  resetToken: string;
+};
+
+const resetPasswordAction = async (data: ResetPasswordData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/reset-password", data, {
+      skipAuth: true,
+    }),
+  );
+  return result;
+};
+
+export {
+  changePasswordAction,
+  completeProfileAction,
+  forgotPasswordAction,
+  LoginAction,
+  logoutAction,
+  RegisterAction,
+  resetPasswordAction,
+  sendVerificationEmailAction,
+  verifyEmailAction,
+};

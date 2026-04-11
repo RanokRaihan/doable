@@ -4,6 +4,7 @@ import { logoutAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import { LogOut, Menu, User, X, Zap } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -23,14 +24,17 @@ const navbarLinks = [
   { name: "About Us", href: "/about" },
 ];
 
-const logoutHandler = async () => {
-  await logoutAction();
-};
-
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, clearUser } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutAction();
+    clearUser();
+    router.refresh();
+  };
 
   const getInitials = (name: string) => {
     return name
@@ -128,7 +132,7 @@ const Navbar = () => {
                   <DropdownMenuItem
                     variant="destructive"
                     className="cursor-pointer"
-                    onClick={logoutHandler}
+                    onClick={handleLogout}
                   >
                     <LogOut className="mr-2 size-4" />
                     Log Out
@@ -199,9 +203,7 @@ const Navbar = () => {
                   Profile
                 </Link>
                 <button
-                  onClick={() => {
-                    // TODO: implement logout
-                  }}
+                  onClick={handleLogout}
                   className="flex items-center gap-2 p-2 text-red-600 hover:bg-red-50 rounded-lg text-left"
                 >
                   <LogOut size={16} />

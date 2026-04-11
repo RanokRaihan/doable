@@ -11,6 +11,7 @@ import {
   getRequiredRoles,
   isAuthRoute,
   isAuthenticatedRoute,
+  isOnboardingGatedRoute,
 } from "@/lib/auth/routes-utils";
 import { NextRequest, NextResponse } from "next/server";
 import { setCookie } from "./actions/common/cookie";
@@ -53,7 +54,7 @@ export async function proxy(request: NextRequest) {
   if (isAuthRoute(pathname)) {
     if (isAuthenticated) {
       return withRefreshedCookies(
-        NextResponse.redirect(new URL("/dashboard", request.url)),
+        NextResponse.redirect(new URL("/profile", request.url)),
       );
     }
     return NextResponse.next();
@@ -70,6 +71,29 @@ export async function proxy(request: NextRequest) {
       }
       return response;
     }
+
+    // Redirect away from /verify-email if already verified
+    if (pathname === "/verify-email" && tokenData?.emailVerified === true) {
+      if (tokenData?.profileStatus === "INCOMPLETE") {
+        return withRefreshedCookies(
+          NextResponse.redirect(new URL("/complete-profile", request.url)),
+        );
+      }
+      return withRefreshedCookies(
+        NextResponse.redirect(new URL("/profile", request.url)),
+      );
+    }
+
+    // Redirect away from /complete-profile if profile is already complete
+    if (
+      pathname === "/complete-profile" &&
+      tokenData?.profileStatus === "COMPLETE"
+    ) {
+      return withRefreshedCookies(
+        NextResponse.redirect(new URL("/profile", request.url)),
+      );
+    }
+
     return withRefreshedCookies(NextResponse.next());
   }
 
@@ -94,6 +118,20 @@ export async function proxy(request: NextRequest) {
       return withRefreshedCookies(
         NextResponse.redirect(new URL("/unauthorized", request.url)),
       );
+    }
+
+    // ─── Onboarding gate (after role check passes) ───
+    if (isOnboardingGatedRoute(pathname)) {
+      if (tokenData?.emailVerified === false) {
+        const verifyUrl = new URL("/verify-email", request.url);
+        verifyUrl.searchParams.set("callbackUrl", pathname);
+        return withRefreshedCookies(NextResponse.redirect(verifyUrl));
+      }
+      if (tokenData?.profileStatus === "INCOMPLETE") {
+        const profileUrl = new URL("/complete-profile", request.url);
+        profileUrl.searchParams.set("callbackUrl", pathname);
+        return withRefreshedCookies(NextResponse.redirect(profileUrl));
+      }
     }
   }
 

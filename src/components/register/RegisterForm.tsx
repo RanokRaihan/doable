@@ -49,21 +49,19 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
 
       if (res?.success) {
         toast.success(res.message || "Account created successfully!");
-        setLoadingMessage(" Logging you in...");
+        setLoadingMessage("logging in...");
         const loginRes = await LoginAction(loginPayload);
+        setLoadingMessage(null);
         if (loginRes?.success) {
-          setLoadingMessage(null);
           setUser(loginRes.data.user);
           toast.success(loginRes.message || "Logged in successfully!");
-          if (callbackUrl) {
-            redirect(callbackUrl);
-          } else {
-            redirect("/dashboard");
-          }
+          const verifyUrl = callbackUrl
+            ? `/verify-email?callbackUrl=${encodeURIComponent(callbackUrl)}`
+            : "/verify-email";
+          redirect(verifyUrl);
         } else {
-          setServerError(
-            loginRes?.message || "Login failed. Please try again.",
-          );
+          toast.error(loginRes?.message || "Login failed. ");
+          redirect("/login");
         }
       } else {
         setServerError(

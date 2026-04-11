@@ -1,27 +1,26 @@
 "use client";
-import { LoginAction } from "@/actions/auth/authAction";
-import { useAuth } from "@/providers/AuthProvider";
-import LoginSchema from "@/schema/loginValidation";
-import { Loader2, Mail, X } from "lucide-react";
-import { redirect } from "next/navigation";
+import { forgotPasswordAction } from "@/actions/auth/authAction";
+import ForgotPasswordSchema from "@/schema/forgotPasswordValidation";
+import { CheckCircle2, Loader2, Mail, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
 import z from "zod";
 import { useAppForm } from "../form/hooks";
 import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
-type FormData = z.infer<typeof LoginSchema>;
-const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
+
+type FormData = z.infer<typeof ForgotPasswordSchema>;
+
+const ForgotPasswordForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
-  const { setUser } = useAuth();
+  const [submitted, setSubmitted] = useState(false);
+
   const form = useAppForm({
     defaultValues: {
       email: "",
-      password: "",
-      remember: false,
     } satisfies FormData as FormData,
     validators: {
-      onSubmit: LoginSchema,
+      onSubmit: ForgotPasswordSchema,
     },
     listeners: {
       onChange: () => {
@@ -29,25 +28,40 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
       },
     },
     onSubmit: async (values) => {
-      const actionPayload = {
-        email: values.value.email,
-        password: values.value.password,
-        remember: values.value.remember,
-      };
-      const res = await LoginAction(actionPayload);
+      const res = await forgotPasswordAction({ email: values.value.email });
       if (res?.success) {
-        setUser(res.data.user);
-        toast.success(res.message || "Logged in successfully!");
-        if (callbackUrl) {
-          redirect(callbackUrl);
-        } else {
-          redirect("/profile");
-        }
+        setSubmitted(true);
       } else {
-        setServerError(res?.message || "Login failed. Please try again.");
+        setServerError(
+          res?.message || "Something went wrong. Please try again.",
+        );
       }
     },
   });
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-4 text-center">
+        <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 rounded-full flex items-center justify-center">
+          <CheckCircle2 className="w-7 h-7 text-emerald-500" />
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold text-gray-900">Check your inbox</p>
+          <p className="text-sm text-gray-500">
+            If an account exists for that email, we&apos;ve sent a password
+            reset link. The link expires in 15 minutes.
+          </p>
+        </div>
+        <Link
+          href="/login"
+          className="mt-2 text-sm text-blue-600 hover:text-blue-700 font-semibold hover:underline"
+        >
+          Back to Sign In
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <form
       onSubmit={(e) => {
@@ -65,12 +79,6 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
               icon={Mail}
             />
           )}
-        </form.AppField>
-        <form.AppField name="password">
-          {(field) => <field.PasswordInput />}
-        </form.AppField>
-        <form.AppField name="remember">
-          {(field) => <field.Checkbox label="Remember me" />}
         </form.AppField>
 
         {serverError && (
@@ -91,7 +99,7 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
           {(isSubmitting) => (
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting && <Loader2 className="size-4 animate-spin" />}
-              {isSubmitting ? "Signing In..." : "Sign In"}
+              {isSubmitting ? "Sending..." : "Send Reset Link"}
             </Button>
           )}
         </form.Subscribe>
@@ -100,4 +108,4 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;
