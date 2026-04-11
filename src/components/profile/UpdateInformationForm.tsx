@@ -75,7 +75,6 @@ export default function UpdateInformationForm(props: Props) {
         toast.success("Profile updated successfully!");
         refreshUser();
       } else {
-        console.error("Failed to update profile:", result);
         setServerError(
           "message" in result
             ? result.message

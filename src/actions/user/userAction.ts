@@ -20,7 +20,7 @@ export type MyProfile = {
   gender: "MALE" | "FEMALE" | "OTHER" | null;
 };
 
-export const getMyProfileAction = async () =>
+const getMyProfileAction = async () =>
   actionHandler(() =>
     apiClient.get<ApiResponse<MyProfile>>("/user/my-profile"),
   );
@@ -48,7 +48,7 @@ export type UpdatedProfile = {
   updatedAt: string;
 };
 
-export const updateProfileAction = async (payload: UpdateProfilePayload) => {
+const updateProfileAction = async (payload: UpdateProfilePayload) => {
   let updatedPayload;
   if (payload.dateOfBirth && !payload.dateOfBirth.includes("T")) {
     updatedPayload = {
@@ -58,7 +58,7 @@ export const updateProfileAction = async (payload: UpdateProfilePayload) => {
   } else {
     updatedPayload = payload;
   }
-  console.log({ updatedPayload });
+
   return actionHandler(() =>
     apiClient.patch<ApiResponse<UpdatedProfile>>(
       "/user/update-profile",
@@ -66,3 +66,5 @@ export const updateProfileAction = async (payload: UpdateProfilePayload) => {
     ),
   );
 };
+
+export { getMyProfileAction, updateProfileAction };
