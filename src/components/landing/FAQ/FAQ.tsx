@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Accordion,
   AccordionContent,
@@ -7,6 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Briefcase, User } from "lucide-react";
+import Link from "next/link";
 
 const posterFaqs = [
   {
@@ -141,12 +140,12 @@ const FAQ = () => {
         <div className="text-center mt-16">
           <p className="text-gray-600">
             Still have questions?{" "}
-            <a
+            <Link
               href="/contact"
               className="text-blue-600 font-semibold hover:underline"
             >
               Contact our support team
-            </a>
+            </Link>
           </p>
         </div>
       </div>

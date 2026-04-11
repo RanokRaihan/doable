@@ -1,3 +1,8 @@
+import { AuthProvider } from "@/providers/AuthProvider";
+
+import { NavigationProgress } from "@/components/layout/NavigationProgress";
+import { Toaster } from "@/components/ui/sonner";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -17,17 +22,24 @@ export const metadata: Metadata = {
   description: "A marketplace to find helpers for your tasks.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+  console.log(user);
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider initialUser={user}>
+          <NavigationProgress />
+          {children}
+          <Toaster position="top-center" duration={3500} richColors />
+        </AuthProvider>
       </body>
     </html>
   );

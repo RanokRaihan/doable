@@ -1,12 +1,19 @@
 "use client";
+import { LoginAction } from "@/actions/auth/authAction";
+import { useAuth } from "@/providers/AuthProvider";
 import LoginSchema from "@/schema/loginValidation";
-import { Mail } from "lucide-react";
+import { Loader2, Mail, X } from "lucide-react";
+import { redirect } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import z from "zod";
 import { useAppForm } from "../form/hooks";
 import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
 type FormData = z.infer<typeof LoginSchema>;
-const LoginForm = () => {
+const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
+  const [serverError, setServerError] = useState<string | null>(null);
+  const { setUser } = useAuth();
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -16,9 +23,29 @@ const LoginForm = () => {
     validators: {
       onSubmit: LoginSchema,
     },
+    listeners: {
+      onChange: () => {
+        if (serverError) setServerError(null);
+      },
+    },
     onSubmit: async (values) => {
-      // Handle form submission, e.g., call an API to authenticate the user
-      console.log("Form submitted with values:", values);
+      const actionPayload = {
+        email: values.value.email,
+        password: values.value.password,
+        remember: values.value.remember,
+      };
+      const res = await LoginAction(actionPayload);
+      if (res?.success) {
+        setUser(res.data.user);
+        toast.success(res.message || "Logged in successfully!");
+        if (callbackUrl) {
+          redirect(callbackUrl);
+        } else {
+          redirect("/profile");
+        }
+      } else {
+        setServerError(res?.message || "Login failed. Please try again.");
+      }
     },
   });
   return (
@@ -42,64 +69,35 @@ const LoginForm = () => {
         <form.AppField name="password">
           {(field) => <field.PasswordInput />}
         </form.AppField>
-        <Button type="submit">Sign In</Button>
+        <form.AppField name="remember">
+          {(field) => <field.Checkbox label="Remember me" />}
+        </form.AppField>
+
+        {serverError && (
+          <div className="flex items-center justify-between gap-2 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <span>{serverError}</span>
+            <button
+              type="button"
+              onClick={() => setServerError(null)}
+              className="shrink-0 rounded p-0.5 hover:bg-red-100"
+              aria-label="Dismiss error"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        )}
+
+        <form.Subscribe selector={(state) => state.isSubmitting}>
+          {(isSubmitting) => (
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="size-4 animate-spin" />}
+              {isSubmitting ? "Signing In..." : "Sign In"}
+            </Button>
+          )}
+        </form.Subscribe>
       </FieldGroup>
     </form>
   );
 };
 
 export default LoginForm;
-
-//    <div className="space-y-6">
-//       {/* Email Field */}
-//       <div className="space-y-2">
-//         <Label htmlFor="email">Email address</Label>
-//         <div className="relative">
-//           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-//           <Input
-//             id="email"
-//             type="email"
-//             placeholder="name@example.com"
-//             className="pl-10 h-11"
-//           />
-//         </div>
-//       </div>
-
-//       {/* Password Field */}
-//       <div className="space-y-2">
-//         <div className="flex items-center justify-between">
-//           <Label htmlFor="password">Password</Label>
-//           <Link
-//             href="/forgot-password"
-//             className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
-//           >
-//             Forgot password?
-//           </Link>
-//         </div>
-//         <div className="relative">
-//           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-//           <Input
-//             id="password"
-//             type="password"
-//             placeholder="Enter your password"
-//             className="pl-10 h-11"
-//           />
-//         </div>
-//       </div>
-
-//       {/* Remember Me */}
-//       <div className="flex items-center space-x-2">
-//         <Checkbox id="remember" />
-//         <Label
-//           htmlFor="remember"
-//           className="text-sm font-normal text-gray-600 cursor-pointer"
-//         >
-//           Remember me for 30 days
-//         </Label>
-//       </div>
-
-//       {/* Sign In Button */}
-//       <Button className="w-full h-11 text-base font-semibold bg-blue-600 hover:bg-blue-700">
-//         Sign in
-//       </Button>
-//     </div>

@@ -1,5 +1,3 @@
-"use client";
-
 import { Github, Heart, Linkedin, Twitter, Zap } from "lucide-react";
 import Link from "next/link";
 
@@ -23,24 +21,24 @@ const Footer = () => {
               skilled helpers in your neighborhood instantly and securely.
             </p>
             <div className="flex gap-4">
-              <a
+              <Link
                 href="#"
                 className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
               >
                 <Twitter size={18} />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-white hover:text-slate-950 hover:border-white transition-all"
               >
                 <Github size={18} />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="w-10 h-10 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all"
               >
                 <Linkedin size={18} />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -162,7 +160,7 @@ const Footer = () => {
           <div className="flex items-center gap-1 text-sm text-slate-500">
             <span>Made with</span>
             <Heart size={14} className="text-red-500 fill-current" />
-            <span>by RanokRaihan</span>
+            <span>by Ranok Raihan</span>
           </div>
         </div>
       </div>

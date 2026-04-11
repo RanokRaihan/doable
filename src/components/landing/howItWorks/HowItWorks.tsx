@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ClipboardList, ShieldCheck, Users } from "lucide-react";
 import Link from "next/link";
@@ -41,8 +39,8 @@ const HowItWorks = () => {
             How it works
           </h2>
           <p className="text-lg text-gray-600">
-            Getting help shouldn't be complicated. We've streamlined the process
-            to be fast, safe, and transparent.
+            Getting help shouldn&apos;t be complicated. We&apos;ve streamlined
+            the process to be fast, safe, and transparent.
           </p>
         </div>
 
@@ -88,11 +86,7 @@ const HowItWorks = () => {
 
         {/* Bottom CTA */}
         <div className="mt-20 text-center">
-          <Button
-            size="lg"
-            className="rounded-full px-8 py-6 text-lg bg-gray-900 hover:bg-gray-800 shadow-xl shadow-gray-900/10 hover:shadow-gray-900/20 transition-all"
-            asChild
-          >
+          <Button size="lg" variant="default" asChild>
             <Link href="/post-task">
               Start your first task
               <ArrowRight className="ml-2 w-5 h-5" />

@@ -1,5 +1,3 @@
-"use client";
-
 import { Code, Home, Move, Smartphone, Truck, Wrench } from "lucide-react";
 import CategoryCard from "./CategoryCard";
 
@@ -62,8 +60,8 @@ const CategoryGrid = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {categories.map((cat, idx) => (
-            <CategoryCard key={idx} cat={cat} />
+          {categories.map((cat) => (
+            <CategoryCard key={cat.label} cat={cat} />
           ))}
         </div>
       </div>

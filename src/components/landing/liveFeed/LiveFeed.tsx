@@ -1,13 +1,9 @@
-"use client";
-
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-// Shadcn UI Imports
 import { Button } from "@/components/ui/button";
 import LiveFeedTaskCard from "./LiveFeedTaskCard";
 
-// YOUR SPECIFIC DUMMY DATA
 const MOCK_TASKS = [
   {
     id: "cmj0tjgji000d2g1ut8cwiaqu",
@@ -59,7 +55,7 @@ const LiveFeed = () => {
             </p>
           </div>
           <Button
-            variant="ghost"
+            variant="link"
             className="hidden md:flex text-blue-600 hover:text-blue-700 hover:bg-blue-50"
             asChild
           >

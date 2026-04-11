@@ -1,4 +1,5 @@
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import { FormCheckbox } from "./FormCheckbox";
 import InputWithIcon from "./InputWithIcon";
 import PasswordInput from "./PasswordInput";
 
@@ -7,8 +8,9 @@ const { fieldContext, formContext, useFieldContext, useFormContext } =
 
 const { useAppForm } = createFormHook({
   fieldComponents: {
-    InputWithIcon: InputWithIcon,
-    PasswordInput: PasswordInput,
+    InputWithIcon,
+    PasswordInput,
+    Checkbox: FormCheckbox,
   },
   formComponents: {},
   fieldContext,
