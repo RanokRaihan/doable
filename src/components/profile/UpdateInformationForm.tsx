@@ -47,7 +47,7 @@ export default function UpdateInformationForm(props: Props) {
   const form = useAppForm({
     defaultValues: {
       name: props.name ?? "",
-      dateOfBirth: props.dateOfBirth ?? "",
+      dateOfBirth: props.dateOfBirth ? props.dateOfBirth.split("T")[0] : "",
       phone: props.phone ?? "",
       address: props.address ?? "",
       bio: props.bio ?? "",
