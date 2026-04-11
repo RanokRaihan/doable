@@ -13,7 +13,7 @@ A Next.js task-marketplace where users post tasks and workers accept them. This 
 ## Cross-Codebase Contract
 
 Before working on anything that touches the backend (API calls, auth flow,
-types, response shapes), read `api-contract.md` in the root of this repo.
+types, response shapes), mandatory read `api-contract.md` in the root of this repo.
 
 It is the source of truth for:
 

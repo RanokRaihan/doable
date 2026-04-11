@@ -134,12 +134,42 @@ const changePasswordAction = async (data: ChangePasswordData) => {
   return result;
 };
 
+type ForgotPasswordData = {
+  email: string;
+};
+
+const forgotPasswordAction = async (data: ForgotPasswordData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/forgot-password", data, {
+      skipAuth: true,
+    }),
+  );
+  return result;
+};
+
+type ResetPasswordData = {
+  email: string;
+  newPassword: string;
+  resetToken: string;
+};
+
+const resetPasswordAction = async (data: ResetPasswordData) => {
+  const result = await actionHandler(() =>
+    apiClient.post<ApiResponse<null>>("/auth/reset-password", data, {
+      skipAuth: true,
+    }),
+  );
+  return result;
+};
+
 export {
   changePasswordAction,
   completeProfileAction,
+  forgotPasswordAction,
   LoginAction,
   logoutAction,
   RegisterAction,
+  resetPasswordAction,
   sendVerificationEmailAction,
   verifyEmailAction,
 };

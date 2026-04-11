@@ -16,6 +16,7 @@ import {
   FileText,
   KeyRound,
   LogOut,
+  Pencil,
   Star,
   User,
   Wallet,
@@ -30,6 +31,7 @@ const navItems = [
   { label: "Reviews", href: "/profile/reviews", icon: Star },
   { label: "Wallet", href: "/profile/wallet", icon: Wallet },
   { label: "Change Password", href: "/profile/change-password", icon: KeyRound },
+  { label: "Update Information", href: "/profile/update-information", icon: Pencil },
 ];
 
 export function ProfileSidebar() {
