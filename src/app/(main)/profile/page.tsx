@@ -26,6 +26,18 @@ function getInitials(name: string) {
     .slice(0, 2);
 }
 
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function formatGender(gender: string) {
+  return gender.charAt(0) + gender.slice(1).toLowerCase();
+}
+
 export default async function ProfilePage() {
   const result = await getMyProfileAction();
 
@@ -38,7 +50,9 @@ export default async function ProfilePage() {
             Failed to load profile
           </p>
           <p className="text-xs text-red-500 mt-0.5">
-            {"message" in result ? result.message : "Something went wrong. Please try again."}
+            {"message" in result
+              ? result.message
+              : "Something went wrong. Please try again."}
           </p>
         </div>
       </div>
@@ -80,7 +94,6 @@ export default async function ProfilePage() {
                   {initials}
                 </div>
               )}
-              {/* Verified badge overlay */}
               {user.emailVerified && (
                 <BadgeCheck className="absolute -bottom-1 -right-1 size-6 text-blue-600 bg-white rounded-full" />
               )}
@@ -101,6 +114,36 @@ export default async function ProfilePage() {
               <InfoRow label="Full Name" value={user.name} />
 
               <InfoRow label="Email" value={user.email} />
+
+              {user.phone && (
+                <InfoRow label="Phone" value={user.phone} />
+              )}
+
+              {user.dateOfBirth && (
+                <InfoRow
+                  label="Date of Birth"
+                  value={formatDate(user.dateOfBirth)}
+                />
+              )}
+
+              {user.address && (
+                <InfoRow label="Address" value={user.address} />
+              )}
+
+              {user.gender && (
+                <InfoRow label="Gender" value={formatGender(user.gender)} />
+              )}
+
+              {user.bio && (
+                <div className="flex items-start py-3 gap-4">
+                  <dt className="w-32 shrink-0 text-xs font-medium text-slate-400 uppercase tracking-wide mt-0.5">
+                    Bio
+                  </dt>
+                  <dd className="text-sm text-slate-800 font-medium leading-relaxed">
+                    {user.bio}
+                  </dd>
+                </div>
+              )}
 
               <div className="flex items-center py-3 gap-4">
                 <dt className="w-32 shrink-0 text-xs font-medium text-slate-400 uppercase tracking-wide">
