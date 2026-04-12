@@ -96,6 +96,26 @@ export interface TasksResponse {
   meta: PaginationMeta;
 }
 
+// Task returned by POST /task/post-task
+export interface CreatedTask {
+  id: string;
+  title: string;
+  description: string;
+  category: TaskCategoryType;
+  priority: TaskPriorityType;
+  status: TaskStatusType;
+  location: string;
+  latitude: number | null;
+  longitude: number | null;
+  baseCompensation: string;
+  scheduledAt: string;
+  estimatedDuration: number | null;
+  expiresAt: string | null;
+  postedById: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Sort Options
 export type SortField = "createdAt" | "updatedAt" | "title";
 export type SortOrder = "asc" | "desc";
