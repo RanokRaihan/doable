@@ -57,6 +57,8 @@ const SECTION_TITLE_CLASSES = "flex items-center gap-2 text-base font-semibold";
 const PostTaskForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [coords, setCoords] = useState<{ latitude?: number; longitude?: number }>({});
+  const [coordsError, setCoordsError] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const form = useAppForm({
@@ -66,8 +68,6 @@ const PostTaskForm = () => {
       category: "" as TaskCategoryType,
       priority: "MEDIUM" as TaskPriorityType,
       location: "",
-      latitude: undefined as number | undefined,
-      longitude: undefined as number | undefined,
       baseCompensation: 0,
       scheduledAt: "",
       estimatedDuration: 0,
@@ -94,7 +94,11 @@ const PostTaskForm = () => {
       },
     },
     onSubmit: async ({ value }) => {
-      const res = await postTaskAction(value as PostTaskPayload);
+      if (coords.latitude === undefined || coords.longitude === undefined) {
+        setCoordsError("Please select a location from the suggestions so we can resolve its coordinates.");
+        return;
+      }
+      const res = await postTaskAction({ ...value, ...coords } as PostTaskPayload);
 
       if (!res?.success) {
         setServerError(
@@ -156,10 +160,9 @@ const PostTaskForm = () => {
       longitude?: number;
     }) => {
       form.setFieldValue("location", location);
-      form.setFieldValue("latitude", latitude as unknown as number);
-      form.setFieldValue("longitude", longitude as unknown as number);
-      // Mark location as touched so validation runs
       form.setFieldMeta("location", (prev) => ({ ...prev, isTouched: true }));
+      setCoords({ latitude, longitude });
+      if (latitude !== undefined && longitude !== undefined) setCoordsError(null);
     },
     [form],
   );
@@ -286,6 +289,9 @@ const PostTaskForm = () => {
                 <p className="text-destructive text-sm">
                   {field.state.meta.errors[0]?.message}
                 </p>
+              )}
+              {coordsError && (
+                <p className="text-destructive text-sm">{coordsError}</p>
               )}
             </div>
           )}

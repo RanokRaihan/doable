@@ -18,8 +18,6 @@ const PostTaskSchema = z.object({
     .string()
     .min(1, "Location is required")
     .max(255, "Location must be 255 characters or less"),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
   baseCompensation: z
     .number({ error: "Please enter a valid amount" })
     .positive("Base compensation must be positive"),

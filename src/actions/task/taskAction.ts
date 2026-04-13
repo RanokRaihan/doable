@@ -11,8 +11,8 @@ export type PostTaskPayload = {
   category: TaskCategoryType;
   priority: TaskPriorityType;
   location: string;
-  latitude?: number;
-  longitude?: number;
+  latitude: number;
+  longitude: number;
   baseCompensation: number;
   scheduledAt: string;
   estimatedDuration: number;
@@ -46,18 +46,6 @@ const postTaskAction = async (data: PostTaskPayload) => {
         : data.estimatedDuration,
     scheduledAt: toIsoDateTime(data.scheduledAt),
     expiresAt: data.expiresAt ? toIsoDateTime(data.expiresAt) : undefined,
-    latitude:
-      data.latitude !== undefined && data.latitude !== null
-        ? typeof data.latitude === "string"
-          ? parseFloat(data.latitude as unknown as string)
-          : data.latitude
-        : undefined,
-    longitude:
-      data.longitude !== undefined && data.longitude !== null
-        ? typeof data.longitude === "string"
-          ? parseFloat(data.longitude as unknown as string)
-          : data.longitude
-        : undefined,
   };
 
   return actionHandler(() =>
