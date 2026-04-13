@@ -53,12 +53,6 @@ const SECTION_CLASSES = "rounded-xl border bg-card p-5 space-y-5 shadow-xs";
 
 const SECTION_TITLE_CLASSES = "flex items-center gap-2 text-base font-semibold";
 
-// Minimum datetime-local value: now
-function getNowLocal(): string {
-  const now = new Date();
-  now.setSeconds(0, 0);
-  return now.toISOString().slice(0, 16);
-}
 
 const PostTaskForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -170,8 +164,6 @@ const PostTaskForm = () => {
     [form],
   );
 
-  const nowLocal = getNowLocal();
-
   return (
     <form
       onSubmit={(e) => {
@@ -243,10 +235,7 @@ const PostTaskForm = () => {
         <FieldGroup>
           <form.AppField name="scheduledAt">
             {(field) => (
-              <field.DateTimeField
-                label="Scheduled Date & Time"
-                min={nowLocal}
-              />
+              <field.DateTimeField label="Scheduled Date & Time" />
             )}
           </form.AppField>
 
@@ -265,7 +254,6 @@ const PostTaskForm = () => {
             {(field) => (
               <field.DateTimeField
                 label="Listing Expires At (optional)"
-                min={nowLocal}
               />
             )}
           </form.AppField>
