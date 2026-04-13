@@ -72,19 +72,25 @@ const ImageUploader = ({ onImagesChange }: ImageUploaderProps) => {
         return;
       }
       setUploaded(stored.images);
-      onImagesChange(stored.images.map((i) => i.url));
     } catch {
       localStorage.removeItem(STORAGE_KEY);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Persist whenever uploaded list changes
   useEffect(() => {
     if (uploaded.length === 0) return;
-    const stored: StoredImages = { images: uploaded, savedAt: new Date().toISOString() };
+    const stored: StoredImages = {
+      images: uploaded,
+      savedAt: new Date().toISOString(),
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
   }, [uploaded]);
+
+  // Sync uploaded images to parent
+  useEffect(() => {
+    onImagesChange(uploaded.map((i) => i.url));
+  }, [uploaded, onImagesChange]);
 
   const handleFiles = useCallback(
     async (files: FileList | null) => {
@@ -105,11 +111,7 @@ const ImageUploader = ({ onImagesChange }: ImageUploaderProps) => {
           const entry = newUploading[idx];
           try {
             const result = await uploadToCloudinary(file);
-            setUploaded((prev) => {
-              const next = [...prev, result];
-              onImagesChange(next.map((i) => i.url));
-              return next;
-            });
+            setUploaded((prev) => [...prev, result]);
           } catch {
             setUploading((prev) =>
               prev.map((u) =>
@@ -119,20 +121,27 @@ const ImageUploader = ({ onImagesChange }: ImageUploaderProps) => {
               ),
             );
           } finally {
-            setUploading((prev) => prev.filter((u) => u.id !== entry.id || uploading.find(u2 => u2.id === entry.id && u2.status === "error")));
+            setUploading((prev) =>
+              prev.filter(
+                (u) =>
+                  u.id !== entry.id ||
+                  uploading.find(
+                    (u2) => u2.id === entry.id && u2.status === "error",
+                  ),
+              ),
+            );
           }
         }),
       );
       // Clean up successful uploading entries
       setUploading((prev) => prev.filter((u) => u.status === "error"));
     },
-    [uploaded, uploading, onImagesChange],
+    [uploaded, uploading],
   );
 
   const removeUploaded = (publicId: string) => {
     setUploaded((prev) => {
       const next = prev.filter((i) => i.publicId !== publicId);
-      onImagesChange(next.map((i) => i.url));
       if (next.length === 0) localStorage.removeItem(STORAGE_KEY);
       return next;
     });
@@ -170,7 +179,10 @@ const ImageUploader = ({ onImagesChange }: ImageUploaderProps) => {
 
       <div
         ref={dragRef}
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
@@ -234,7 +246,10 @@ const ImageUploader = ({ onImagesChange }: ImageUploaderProps) => {
                   src={u.preview}
                   alt="Uploading"
                   fill
-                  className={cn("object-cover", u.status === "error" && "opacity-40")}
+                  className={cn(
+                    "object-cover",
+                    u.status === "error" && "opacity-40",
+                  )}
                   sizes="(max-width: 640px) 50vw, 20vw"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30">
