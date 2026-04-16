@@ -53,11 +53,13 @@ const SECTION_CLASSES = "rounded-xl border bg-card p-5 space-y-5 shadow-xs";
 
 const SECTION_TITLE_CLASSES = "flex items-center gap-2 text-base font-semibold";
 
-
 const PostTaskForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [coords, setCoords] = useState<{ latitude?: number; longitude?: number }>({});
+  const [coords, setCoords] = useState<{
+    latitude?: number;
+    longitude?: number;
+  }>({});
   const [coordsError, setCoordsError] = useState<string | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -95,10 +97,15 @@ const PostTaskForm = () => {
     },
     onSubmit: async ({ value }) => {
       if (coords.latitude === undefined || coords.longitude === undefined) {
-        setCoordsError("Please select a location from the suggestions so we can resolve its coordinates.");
+        setCoordsError(
+          "Please select a location from the suggestions so we can resolve its coordinates.",
+        );
         return;
       }
-      const res = await postTaskAction({ ...value, ...coords } as PostTaskPayload);
+      const res = await postTaskAction({
+        ...value,
+        ...coords,
+      } as PostTaskPayload);
 
       if (!res?.success) {
         setServerError(
@@ -162,7 +169,8 @@ const PostTaskForm = () => {
       form.setFieldValue("location", location);
       form.setFieldMeta("location", (prev) => ({ ...prev, isTouched: true }));
       setCoords({ latitude, longitude });
-      if (latitude !== undefined && longitude !== undefined) setCoordsError(null);
+      if (latitude !== undefined && longitude !== undefined)
+        setCoordsError(null);
     },
     [form],
   );
@@ -237,9 +245,7 @@ const PostTaskForm = () => {
         </h2>
         <FieldGroup>
           <form.AppField name="scheduledAt">
-            {(field) => (
-              <field.DateTimeField label="Scheduled Date & Time" />
-            )}
+            {(field) => <field.DateTimeField label="Scheduled Date & Time" />}
           </form.AppField>
 
           <form.AppField name="estimatedDuration">
@@ -255,9 +261,7 @@ const PostTaskForm = () => {
 
           <form.AppField name="expiresAt">
             {(field) => (
-              <field.DateTimeField
-                label="Listing Expires At (optional)"
-              />
+              <field.DateTimeField label="Listing Expires At (optional)" />
             )}
           </form.AppField>
         </FieldGroup>
