@@ -3,7 +3,13 @@
 import { actionHandler } from "@/lib/api/actionHandler";
 import { apiClient } from "@/lib/api/client";
 import { ApiResponse } from "@/lib/api/types";
-import { CreatedTask, TaskCategoryType, TaskPriorityType } from "@/lib/types";
+import {
+  CreatedTask,
+  TaskCategoryType,
+  TaskDetails,
+  TaskImage,
+  TaskPriorityType,
+} from "@/lib/types";
 
 export type PostTaskPayload = {
   title: string;
@@ -17,15 +23,6 @@ export type PostTaskPayload = {
   scheduledAt: string;
   estimatedDuration: number;
   expiresAt?: string;
-};
-
-export type TaskImage = {
-  id: string;
-  url: string;
-  altText: string | null;
-  taskId: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
 function toIsoDateTime(val: string): string {
@@ -64,4 +61,10 @@ const postTaskImagesAction = async (
   );
 };
 
-export { postTaskAction, postTaskImagesAction };
+const getTaskAction = async (taskId: string) => {
+  return actionHandler(() =>
+    apiClient.get<ApiResponse<TaskDetails>>(`/task/${taskId}`),
+  );
+};
+
+export { postTaskAction, postTaskImagesAction, getTaskAction };

@@ -10,6 +10,7 @@ import Link from "next/link";
 
 // Shadcn UI Imports
 import { Badge } from "@/components/ui/badge";
+import { TaskImage } from "@/lib/types";
 
 // Task type definition
 interface Task {
@@ -22,7 +23,7 @@ interface Task {
   baseCompensation: string;
   scheduledAt: string;
   createdAt: string;
-  images?: string[];
+  images?: TaskImage[];
 }
 
 // Category-based placeholder images
@@ -67,7 +68,7 @@ const LiveFeedTaskCard = ({ task }: { task: Task }) => {
   // Get image - use first task image, or category-based placeholder
   const imageUrl =
     task.images && task.images.length > 0
-      ? task.images[0]
+      ? task.images[0].url
       : categoryImages[task.category || "DEFAULT"] || categoryImages.DEFAULT;
 
   return (

@@ -34,6 +34,16 @@ export const TaskStatus = {
 
 export type TaskStatusType = (typeof TaskStatus)[keyof typeof TaskStatus];
 
+// Task Image (returned by task details endpoint)
+export interface TaskImage {
+  id: string;
+  url: string;
+  altText: string | null;
+  taskId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Task Interface
 export interface Task {
   id: string;
@@ -51,7 +61,7 @@ export interface Task {
   expiresAt?: string;
   createdAt: string;
   updatedAt: string;
-  images: string[];
+  images: TaskImage[];
 }
 
 // User info for task poster
