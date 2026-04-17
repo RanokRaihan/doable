@@ -38,11 +38,11 @@ const postTaskAction = async (data: PostTaskPayload) => {
     ...data,
     baseCompensation:
       typeof data.baseCompensation === "string"
-        ? parseFloat(data.baseCompensation as unknown as string)
+        ? parseFloat(data.baseCompensation as string)
         : data.baseCompensation,
     estimatedDuration:
       typeof data.estimatedDuration === "string"
-        ? parseInt(data.estimatedDuration as unknown as string, 10)
+        ? parseInt(data.estimatedDuration as string, 10)
         : data.estimatedDuration,
     scheduledAt: toIsoDateTime(data.scheduledAt),
     expiresAt: data.expiresAt ? toIsoDateTime(data.expiresAt) : undefined,
@@ -58,7 +58,7 @@ const postTaskImagesAction = async (
   images: Array<{ url: string; altText?: string }>,
 ) => {
   return actionHandler(() =>
-    apiClient.post<ApiResponse<TaskImage[]>>(`/task/${taskId}/images`, {
+    apiClient.post<ApiResponse<TaskImage[]>>(`/task/${taskId}/image`, {
       images,
     }),
   );
