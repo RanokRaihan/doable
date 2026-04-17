@@ -9,6 +9,10 @@ import {
   TaskDetails,
   TaskImage,
   TaskPriorityType,
+  TasksResponse,
+  SortField,
+  SortOrder,
+  TaskStatusType,
 } from "@/lib/types";
 
 export type PostTaskPayload = {
@@ -67,4 +71,20 @@ const getTaskAction = async (taskId: string) => {
   );
 };
 
-export { postTaskAction, postTaskImagesAction, getTaskAction };
+export type MyPostedTasksParams = {
+  page?: number;
+  limit?: number;
+  sortBy?: SortField;
+  sortOrder?: SortOrder;
+  status?: TaskStatusType;
+  category?: TaskCategoryType;
+  searchTerm?: string;
+};
+
+const getMyPostedTasksAction = async (params: MyPostedTasksParams) => {
+  return actionHandler(() =>
+    apiClient.get<TasksResponse>("/task/my-posted-tasks", { params }),
+  );
+};
+
+export { postTaskAction, postTaskImagesAction, getTaskAction, getMyPostedTasksAction };
