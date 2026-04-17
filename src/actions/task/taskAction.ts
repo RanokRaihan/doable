@@ -5,6 +5,7 @@ import { apiClient } from "@/lib/api/client";
 import { ApiResponse } from "@/lib/api/types";
 import {
   CreatedTask,
+  MyPostedTask,
   TaskCategoryType,
   TaskDetails,
   TaskImage,
@@ -94,7 +95,7 @@ export type UpdateTaskImagesPayload = {
 
 const getMyPostedTaskAction = async (taskId: string) => {
   return actionHandler(() =>
-    apiClient.get<ApiResponse<TaskDetails>>(`/task/my-posted-task/${taskId}`),
+    apiClient.get<ApiResponse<MyPostedTask>>(`/task/my-posted-task/${taskId}`),
   );
 };
 

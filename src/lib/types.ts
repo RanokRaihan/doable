@@ -106,6 +106,22 @@ export interface TasksResponse {
   meta: PaginationMeta;
 }
 
+// Minimal application shape (owner sees list of applicants)
+export interface TaskApplication {
+  id: string;
+  status: string;
+  applicantId: string;
+  createdAt: string;
+}
+
+// Task as returned by GET /task/my-posted-task/:id (owner view)
+export interface MyPostedTask extends Task {
+  postedById: string;
+  agreedCompensation: string | null;
+  approvedApplicationId: string | null;
+  applications: TaskApplication[];
+}
+
 // Task returned by POST /task/post-task
 export interface CreatedTask {
   id: string;

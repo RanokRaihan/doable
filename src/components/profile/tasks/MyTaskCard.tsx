@@ -121,7 +121,7 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">
             <DropdownMenuItem asChild>
-              <Link href={`/tasks/${task.id}`} className="flex items-center gap-2 cursor-pointer">
+              <Link href={`/profile/tasks/${task.id}`} className="flex items-center gap-2 cursor-pointer">
                 <Eye className="h-4 w-4" />
                 View
               </Link>

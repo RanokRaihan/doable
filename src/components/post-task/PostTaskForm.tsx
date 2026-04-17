@@ -317,8 +317,8 @@ const PostTaskForm = () => {
                 <field.NumberInputField
                   label="Base Compensation"
                   placeholder="0.00"
-                  description="Amount you're offering to pay (BDT)"
-                  prefix="৳"
+                  description="Amount you're offering to pay (USD)"
+                  prefix="$"
                   min={1}
                   step={0.01}
                 />

@@ -10,7 +10,7 @@ import { useAppForm } from "@/components/form/hooks";
 import LocationPicker from "@/components/post-task/LocationPicker";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { TaskCategory, TaskDetails, TaskPriority } from "@/lib/types";
+import { MyPostedTask, TaskCategory, TaskPriority } from "@/lib/types";
 import PostTaskSchema, { PostTaskFormData } from "@/schema/postTaskValidation";
 import { AlertCircle, Briefcase, Loader2, MapPin, X } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -72,7 +72,7 @@ async function uploadToCloudinary(file: File): Promise<UploadedImage> {
 }
 
 interface EditTaskFormProps {
-  task: TaskDetails;
+  task: MyPostedTask;
 }
 
 export function EditTaskForm({ task }: EditTaskFormProps) {
@@ -398,8 +398,8 @@ export function EditTaskForm({ task }: EditTaskFormProps) {
                 <field.NumberInputField
                   label="Base Compensation"
                   placeholder="0.00"
-                  description="Amount you're offering to pay (BDT)"
-                  prefix="৳"
+                  description="Amount you're offering to pay (USD)"
+                  prefix="$"
                   min={1}
                   step={0.01}
                 />
