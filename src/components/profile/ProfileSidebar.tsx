@@ -21,6 +21,7 @@ import {
   User,
   Wallet,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -30,8 +31,16 @@ const navItems = [
   { label: "Applications", href: "/profile/applications", icon: FileText },
   { label: "Reviews", href: "/profile/reviews", icon: Star },
   { label: "Wallet", href: "/profile/wallet", icon: Wallet },
-  { label: "Change Password", href: "/profile/change-password", icon: KeyRound },
-  { label: "Update Information", href: "/profile/update-information", icon: Pencil },
+  {
+    label: "Change Password",
+    href: "/profile/change-password",
+    icon: KeyRound,
+  },
+  {
+    label: "Update Information",
+    href: "/profile/update-information",
+    icon: Pencil,
+  },
 ];
 
 export function ProfileSidebar() {
@@ -120,9 +129,19 @@ export function ProfileSidebar() {
         {/* Profile card */}
         <div className="bg-white rounded-xl border border-slate-200 px-4 py-5 mb-3">
           <div className="flex flex-col items-center text-center gap-2">
-            <div className="size-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-lg select-none">
-              {initials}
-            </div>
+            {user?.image ? (
+              <Image
+                src={user.image}
+                alt={user.name}
+                className="size-14 rounded-full object-cover"
+                width={56}
+                height={56}
+              />
+            ) : (
+              <div className="size-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-lg select-none">
+                {initials}
+              </div>
+            )}
 
             <div>
               <p className="text-sm font-semibold text-slate-800 leading-snug">
