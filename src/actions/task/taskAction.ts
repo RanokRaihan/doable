@@ -87,4 +87,54 @@ const getMyPostedTasksAction = async (params: MyPostedTasksParams) => {
   );
 };
 
-export { postTaskAction, postTaskImagesAction, getTaskAction, getMyPostedTasksAction };
+export type UpdateTaskImagesPayload = {
+  keepImageIds: string[];
+  newImages: Array<{ url: string; altText?: string }>;
+};
+
+const getMyPostedTaskAction = async (taskId: string) => {
+  return actionHandler(() =>
+    apiClient.get<ApiResponse<TaskDetails>>(`/task/my-posted-task/${taskId}`),
+  );
+};
+
+const updateTaskImagesAction = async (
+  taskId: string,
+  payload: UpdateTaskImagesPayload,
+) => {
+  return actionHandler(() =>
+    apiClient.patch<ApiResponse<TaskImage[]>>(`/task/${taskId}/image`, payload),
+  );
+};
+
+const updateTaskAction = async (taskId: string, data: PostTaskPayload) => {
+  const payload = {
+    ...data,
+    baseCompensation:
+      typeof data.baseCompensation === "string"
+        ? parseFloat(data.baseCompensation as string)
+        : data.baseCompensation,
+    estimatedDuration:
+      typeof data.estimatedDuration === "string"
+        ? parseInt(data.estimatedDuration as string, 10)
+        : data.estimatedDuration,
+    scheduledAt: toIsoDateTime(data.scheduledAt),
+    expiresAt: data.expiresAt ? toIsoDateTime(data.expiresAt) : undefined,
+  };
+  return actionHandler(() =>
+    apiClient.patch<ApiResponse<TaskDetails>>(
+      `/task/update-task/${taskId}`,
+      payload,
+    ),
+  );
+};
+
+export {
+  postTaskAction,
+  postTaskImagesAction,
+  getTaskAction,
+  getMyPostedTasksAction,
+  getMyPostedTaskAction,
+  updateTaskImagesAction,
+  updateTaskAction,
+};

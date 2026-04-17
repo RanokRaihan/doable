@@ -124,7 +124,7 @@ export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProp
     updateURL({ status: undefined, category: undefined, searchTerm: undefined, page: 1 });
 
   const handleEdit = (taskId: string) => {
-    router.push(`/post-task?edit=${taskId}`);
+    router.push(`/profile/tasks/edit/${taskId}`);
   };
 
   const handleDeleteRequest = (taskId: string) => {
