@@ -88,6 +88,22 @@ const getMyPostedTasksAction = async (params: MyPostedTasksParams) => {
   );
 };
 
+export type AllTasksParams = {
+  page?: number;
+  limit?: number;
+  sortBy?: SortField;
+  sortOrder?: SortOrder;
+  category?: TaskCategoryType;
+  priority?: TaskPriorityType;
+  searchTerm?: string;
+};
+
+const getAllTasksAction = async (params: AllTasksParams) => {
+  return actionHandler(() =>
+    apiClient.get<TasksResponse>("/task/all-task", { params }),
+  );
+};
+
 export type UpdateTaskImagesPayload = {
   keepImageIds: string[];
   newImages: Array<{ url: string; altText?: string }>;
@@ -135,6 +151,7 @@ export {
   postTaskImagesAction,
   getTaskAction,
   getMyPostedTasksAction,
+  getAllTasksAction,
   getMyPostedTaskAction,
   updateTaskImagesAction,
   updateTaskAction,

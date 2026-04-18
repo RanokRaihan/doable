@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { apiClient } from "@/lib/api/client";
 import type { ApiResponse } from "@/lib/api/types";
 import type { Task } from "@/lib/types";
-import LiveFeedTaskCard from "./LiveFeedTaskCard";
+import TaskCard from "@/components/common/TaskCard";
 
 async function getRecentlyPostedTasks(): Promise<Task[]> {
   try {
@@ -50,7 +50,7 @@ const LiveFeed = async () => {
         {tasks.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tasks.map((task) => (
-              <LiveFeedTaskCard key={task.id} task={task} />
+              <TaskCard key={task.id} task={task} />
             ))}
           </div>
         ) : (

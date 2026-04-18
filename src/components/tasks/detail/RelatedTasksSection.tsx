@@ -1,4 +1,4 @@
-import LiveFeedTaskCard from "@/components/landing/liveFeed/LiveFeedTaskCard";
+import TaskCard from "@/components/common/TaskCard";
 import { Button } from "@/components/ui/button";
 import { Task } from "@/lib/types";
 import Link from "next/link";
@@ -59,7 +59,7 @@ export function RelatedTasksSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {RELATED_TASKS.map((task) => (
-          <LiveFeedTaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
     </section>
