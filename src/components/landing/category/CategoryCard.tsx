@@ -1,15 +1,18 @@
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 type CategoryProps = {
+  value: string;
   label: string;
   icon: React.ElementType;
   bg: string;
   color: string;
   count: string;
+  href?: string;
 };
 const CategoryCard = ({ cat }: { cat: CategoryProps }) => {
+  const href = cat.href ?? (cat.value ? `/tasks?category=${cat.value}` : "/tasks");
   return (
-    <Link href={`/tasks?category=${cat.label}`} className="block h-full">
+    <Link href={href} className="block h-full">
       <Card className="h-full hover:border-blue-200 hover:shadow-md transition-all cursor-pointer group border-gray-100">
         <CardContent className="flex flex-col items-center justify-center p-6 text-center h-full">
           <div

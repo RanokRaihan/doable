@@ -34,26 +34,78 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 const categoryOptions = [
-  { value: TaskCategory.DELIVERY, label: "Delivery", icon: <Truck className="h-4 w-4" /> },
-  { value: TaskCategory.CLEANING, label: "Cleaning", icon: <Sparkles className="h-4 w-4" /> },
-  { value: TaskCategory.REPAIR, label: "Repair", icon: <Wrench className="h-4 w-4" /> },
-  { value: TaskCategory.TUTORING, label: "Tutoring", icon: <Briefcase className="h-4 w-4" /> },
-  { value: TaskCategory.GARDENING, label: "Gardening", icon: <Flower2 className="h-4 w-4" /> },
-  { value: TaskCategory.MOVING, label: "Moving", icon: <Box className="h-4 w-4" /> },
-  { value: TaskCategory.PET_CARE, label: "Pet Care", icon: <Dog className="h-4 w-4" /> },
-  { value: TaskCategory.TECH_SUPPORT, label: "Tech Support", icon: <Laptop className="h-4 w-4" /> },
-  { value: TaskCategory.OTHER, label: "Other", icon: <ClipboardList className="h-4 w-4" /> },
+  {
+    value: TaskCategory.DELIVERY,
+    label: "Delivery",
+    icon: <Truck className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.CLEANING,
+    label: "Cleaning",
+    icon: <Sparkles className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.REPAIR,
+    label: "Repair",
+    icon: <Wrench className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.TUTORING,
+    label: "Tutoring",
+    icon: <Briefcase className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.GARDENING,
+    label: "Gardening",
+    icon: <Flower2 className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.MOVING,
+    label: "Moving",
+    icon: <Box className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.PET_CARE,
+    label: "Pet Care",
+    icon: <Dog className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.TECH_SUPPORT,
+    label: "Tech Support",
+    icon: <Laptop className="h-4 w-4" />,
+  },
+  {
+    value: TaskCategory.OTHER,
+    label: "Other",
+    icon: <ClipboardList className="h-4 w-4" />,
+  },
 ];
 
 const priorityOptions = [
-  { value: TaskPriority.URGENT, label: "Urgent", icon: <AlertTriangle className="h-4 w-4 text-red-500" /> },
-  { value: TaskPriority.HIGH, label: "High", icon: <ArrowUp className="h-4 w-4 text-orange-500" /> },
+  {
+    value: TaskPriority.URGENT,
+    label: "Urgent",
+    icon: <AlertTriangle className="h-4 w-4 text-red-500" />,
+  },
+  {
+    value: TaskPriority.HIGH,
+    label: "High",
+    icon: <ArrowUp className="h-4 w-4 text-orange-500" />,
+  },
   {
     value: TaskPriority.MEDIUM,
     label: "Medium",
-    icon: <span className="h-4 w-4 flex items-center justify-center text-yellow-500">●</span>,
+    icon: (
+      <span className="h-4 w-4 flex items-center justify-center text-yellow-500">
+        ●
+      </span>
+    ),
   },
-  { value: TaskPriority.LOW, label: "Low", icon: <ArrowDown className="h-4 w-4 text-green-500" /> },
+  {
+    value: TaskPriority.LOW,
+    label: "Low",
+    icon: <ArrowDown className="h-4 w-4 text-green-500" />,
+  },
 ];
 
 type URLUpdates = {
@@ -71,19 +123,27 @@ export function TasksControlBar() {
   const pathname = usePathname();
 
   const currentSearch = searchParams.get("searchTerm") ?? "";
-  const currentSortBy = (searchParams.get("sortBy") as SortField) ?? "createdAt";
-  const currentSortOrder = (searchParams.get("sortOrder") as SortOrder) ?? "desc";
+  const currentSortBy =
+    (searchParams.get("sortBy") as SortField) ?? "createdAt";
+  const currentSortOrder =
+    (searchParams.get("sortOrder") as SortOrder) ?? "desc";
   const currentCategories = useMemo(
     () =>
       searchParams.get("category")
-        ? (searchParams.get("category")!.split(",").filter(Boolean) as TaskCategoryType[])
+        ? (searchParams
+            .get("category")!
+            .split(",")
+            .filter(Boolean) as TaskCategoryType[])
         : [],
     [searchParams],
   );
   const currentPriorities = useMemo(
     () =>
       searchParams.get("priority")
-        ? (searchParams.get("priority")!.split(",").filter(Boolean) as TaskPriorityType[])
+        ? (searchParams
+            .get("priority")!
+            .split(",")
+            .filter(Boolean) as TaskPriorityType[])
         : [],
     [searchParams],
   );
@@ -106,7 +166,9 @@ export function TasksControlBar() {
       if (current.get("sortOrder") === "desc") current.delete("sortOrder");
 
       const query = current.toString();
-      router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+      router.replace(query ? `${pathname}?${query}` : pathname, {
+        scroll: false,
+      });
     },
     [searchParams, pathname, router],
   );
@@ -118,13 +180,19 @@ export function TasksControlBar() {
 
   const handleCategoryChange = useCallback(
     (vals: string[]) =>
-      updateURL({ category: vals.length ? vals.join(",") : undefined, page: 1 }),
+      updateURL({
+        category: vals.length ? vals.join(",") : undefined,
+        page: 1,
+      }),
     [updateURL],
   );
 
   const handlePriorityChange = useCallback(
     (vals: string[]) =>
-      updateURL({ priority: vals.length ? vals.join(",") : undefined, page: 1 }),
+      updateURL({
+        priority: vals.length ? vals.join(",") : undefined,
+        page: 1,
+      }),
     [updateURL],
   );
 
@@ -137,7 +205,10 @@ export function TasksControlBar() {
   const handleRemoveCategory = useCallback(
     (cat: string) => {
       const next = currentCategories.filter((c) => c !== cat);
-      updateURL({ category: next.length ? next.join(",") : undefined, page: 1 });
+      updateURL({
+        category: next.length ? next.join(",") : undefined,
+        page: 1,
+      });
     },
     [currentCategories, updateURL],
   );
@@ -145,54 +216,58 @@ export function TasksControlBar() {
   const handleRemovePriority = useCallback(
     (pri: string) => {
       const next = currentPriorities.filter((p) => p !== pri);
-      updateURL({ priority: next.length ? next.join(",") : undefined, page: 1 });
+      updateURL({
+        priority: next.length ? next.join(",") : undefined,
+        page: 1,
+      });
     },
     [currentPriorities, updateURL],
   );
 
   const handleClearAll = useCallback(
-    () => updateURL({ searchTerm: undefined, category: undefined, priority: undefined, page: 1 }),
+    () =>
+      updateURL({
+        searchTerm: undefined,
+        category: undefined,
+        priority: undefined,
+        page: 1,
+      }),
     [updateURL],
   );
 
   const isLoading = false;
 
   return (
-    <div className="space-y-4">
-      {/* Search — full width on mobile, constrained on desktop */}
-      <TaskSearch
-        value={currentSearch}
-        onChange={handleSearchChange}
-        placeholder="Search by title, description, or location..."
-        className="w-full lg:max-w-md"
-      />
-
-      {/* Filters + sort row */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <MultiSelectFilter
-            title="Category"
-            options={categoryOptions}
-            selectedValues={currentCategories}
-            onSelectionChange={handleCategoryChange}
-          />
-          <MultiSelectFilter
-            title="Priority"
-            options={priorityOptions}
-            selectedValues={currentPriorities}
-            onSelectionChange={handlePriorityChange}
-          />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.refresh()}
-            className="shrink-0"
-            title="Refresh results"
-          >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-          </Button>
-        </div>
-
+    <div className="space-y-3">
+      {/* Single control row: search | filters | sort */}
+      <div className="flex flex-wrap items-center gap-2">
+        <TaskSearch
+          value={currentSearch}
+          onChange={handleSearchChange}
+          placeholder="Search by title, description, or location..."
+          className="flex-1 min-w-45"
+        />
+        <MultiSelectFilter
+          title="Category"
+          options={categoryOptions}
+          selectedValues={currentCategories}
+          onSelectionChange={handleCategoryChange}
+        />
+        <MultiSelectFilter
+          title="Priority"
+          options={priorityOptions}
+          selectedValues={currentPriorities}
+          onSelectionChange={handlePriorityChange}
+        />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.refresh()}
+          className="shrink-0"
+          title="Refresh results"
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+        </Button>
         <TaskSort
           sortField={currentSortBy}
           sortOrder={currentSortOrder}
