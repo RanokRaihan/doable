@@ -8,6 +8,7 @@ import {
   ApplicationStatusType,
   ApplicationsResponse,
   SortOrder,
+  TaskApplicationsResponse,
 } from "@/lib/types";
 import { ApplyTaskFormData } from "@/schema/applyTaskValidation";
 
@@ -29,4 +30,21 @@ const getMyApplicationsAction = async (params: MyApplicationsParams = {}) =>
     apiClient.get<ApplicationsResponse>("/application/my-applications", { params }),
   );
 
-export { applyTaskAction, getMyApplicationsAction };
+export type TaskApplicationsParams = {
+  page?: number;
+  limit?: number;
+  sortBy?: ApplicationSortField;
+  sortOrder?: SortOrder;
+  status?: ApplicationStatusType;
+  searchTerm?: string;
+};
+
+const getTaskApplicationsAction = async (
+  taskId: string,
+  params: TaskApplicationsParams = {},
+) =>
+  actionHandler(() =>
+    apiClient.get<TaskApplicationsResponse>(`/application/task/${taskId}`, { params }),
+  );
+
+export { applyTaskAction, getMyApplicationsAction, getTaskApplicationsAction };

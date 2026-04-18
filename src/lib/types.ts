@@ -86,6 +86,35 @@ export interface TaskDetailsResponse {
   timestamp: string;
 }
 
+// Applicant info embedded in task owner's application list
+export interface TaskApplicant {
+  id: string;
+  name: string;
+}
+
+// Full application shape returned by GET /application/task/:taskId (owner view)
+export interface TaskApplicationDetail {
+  id: string;
+  message: string;
+  proposedCompensation: string;
+  status: ApplicationStatusType;
+  withdrawalReason: string | null;
+  rejectionReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  applicant: TaskApplicant;
+}
+
+// Paginated response from GET /application/task/:taskId
+export interface TaskApplicationsResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: TaskApplicationDetail[];
+  timestamp: string;
+  meta: PaginationMeta;
+}
+
 // Pagination Meta
 export interface PaginationMeta {
   total: number;

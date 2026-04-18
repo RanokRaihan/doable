@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  Calendar,
+  ClipboardList,
   Eye,
   MapPin,
   MoreHorizontal,
   Pencil,
   Trash2,
-  Calendar,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -119,11 +120,23 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
               <span className="sr-only">Task actions</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-40">
+          <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem asChild>
               <Link href={`/profile/tasks/${task.id}`} className="flex items-center gap-2 cursor-pointer">
                 <Eye className="h-4 w-4" />
                 View
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/tasks/${task.id}`} className="flex items-center gap-2 cursor-pointer">
+                <Eye className="h-4 w-4" />
+                Preview
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href={`/profile/tasks/${task.id}/applications`} className="flex items-center gap-2 cursor-pointer">
+                <ClipboardList className="h-4 w-4" />
+                Applications
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem

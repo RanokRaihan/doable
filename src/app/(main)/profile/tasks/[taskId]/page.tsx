@@ -135,14 +135,23 @@ export default async function OwnerTaskDetailPage({ params }: Props) {
                     <Users className="w-4 h-4" />
                     Applications
                   </h3>
-                  <Badge
-                    variant={applicationCount > 0 ? "default" : "secondary"}
-                    className={applicationCount > 0 ? "bg-blue-600" : ""}
-                  >
-                    {applicationCount === 0
-                      ? "No applications yet"
-                      : `${applicationCount} applicant${applicationCount !== 1 ? "s" : ""}`}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant={applicationCount > 0 ? "default" : "secondary"}
+                      className={applicationCount > 0 ? "bg-blue-600" : ""}
+                    >
+                      {applicationCount === 0
+                        ? "No applications yet"
+                        : `${applicationCount} applicant${applicationCount !== 1 ? "s" : ""}`}
+                    </Badge>
+                    {applicationCount > 0 && (
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/profile/tasks/${taskId}/applications`}>
+                          View All
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
                 </div>
 
                 {applicationCount === 0 ? (
