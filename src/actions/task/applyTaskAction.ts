@@ -3,7 +3,12 @@
 import { actionHandler } from "@/lib/api/actionHandler";
 import { apiClient } from "@/lib/api/client";
 import { ApiResponse } from "@/lib/api/types";
-import { MyApplication } from "@/lib/types";
+import {
+  ApplicationSortField,
+  ApplicationStatusType,
+  ApplicationsResponse,
+  SortOrder,
+} from "@/lib/types";
 import { ApplyTaskFormData } from "@/schema/applyTaskValidation";
 
 const applyTaskAction = async (taskId: string, data: ApplyTaskFormData) =>
@@ -11,9 +16,17 @@ const applyTaskAction = async (taskId: string, data: ApplyTaskFormData) =>
     apiClient.post<ApiResponse<unknown>>(`/application/${taskId}`, data),
   );
 
-const getMyApplicationsAction = async () =>
+export type MyApplicationsParams = {
+  page?: number;
+  limit?: number;
+  sortBy?: ApplicationSortField;
+  sortOrder?: SortOrder;
+  status?: ApplicationStatusType;
+};
+
+const getMyApplicationsAction = async (params: MyApplicationsParams = {}) =>
   actionHandler(() =>
-    apiClient.get<ApiResponse<MyApplication[]>>("/application/my-applications"),
+    apiClient.get<ApplicationsResponse>("/application/my-applications", { params }),
   );
 
 export { applyTaskAction, getMyApplicationsAction };

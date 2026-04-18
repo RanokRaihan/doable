@@ -123,6 +123,9 @@ export const ApplicationStatus = {
 } as const;
 export type ApplicationStatusType = (typeof ApplicationStatus)[keyof typeof ApplicationStatus];
 
+// Sort fields supported by GET /application/my-applications
+export type ApplicationSortField = "createdAt" | "updatedAt" | "proposedCompensation" | "status";
+
 // Embedded task shape returned in /application/my-applications
 export interface ApplicationTask {
   id: string;
@@ -141,6 +144,16 @@ export interface MyApplication {
   createdAt: string;
   updatedAt: string;
   task: ApplicationTask;
+}
+
+// Paginated response from GET /application/my-applications
+export interface ApplicationsResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: MyApplication[];
+  timestamp: string;
+  meta: PaginationMeta;
 }
 
 // Task as returned by GET /task/my-posted-task/:id (owner view)

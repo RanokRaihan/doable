@@ -2,11 +2,30 @@ import { AlertCircle } from "lucide-react";
 
 import { getMyApplicationsAction } from "@/actions/task/applyTaskAction";
 import { ApplicationsClient } from "@/components/profile/applications/ApplicationsClient";
-import { ApiResponse } from "@/lib/api/types";
-import { MyApplication } from "@/lib/types";
+import {
+  ApplicationSortField,
+  ApplicationStatusType,
+  ApplicationsResponse,
+  SortOrder,
+} from "@/lib/types";
 
-export default async function ApplicationsPage() {
-  const result = await getMyApplicationsAction();
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function ApplicationsPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+
+  const page = Number(params.page) || 1;
+  const limit = Number(params.limit) || 10;
+  const sortBy = (params.sortBy as ApplicationSortField) || "createdAt";
+  const sortOrder = (params.sortOrder as SortOrder) || "desc";
+  const status =
+    typeof params.status === "string"
+      ? (params.status as ApplicationStatusType)
+      : undefined;
+
+  const result = await getMyApplicationsAction({ page, limit, sortBy, sortOrder, status });
 
   if (!result.success) {
     return (
@@ -22,6 +41,14 @@ export default async function ApplicationsPage() {
     );
   }
 
-  const applications = (result as ApiResponse<MyApplication[]>).data;
-  return <ApplicationsClient initialApplications={applications} />;
+  const { data: applications, meta } = result as ApplicationsResponse;
+  const currentFilters = { page, limit, sortBy, sortOrder, status };
+
+  return (
+    <ApplicationsClient
+      applications={applications}
+      meta={meta}
+      currentFilters={currentFilters}
+    />
+  );
 }

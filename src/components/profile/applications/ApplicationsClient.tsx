@@ -1,111 +1,193 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, Search } from "lucide-react";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { FileText, Search, X } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
 
+import { TaskPagination } from "@/components/tasks/TaskPagination";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ApplicationStatusType, MyApplication } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ApplicationSortField,
+  ApplicationStatus,
+  ApplicationStatusType,
+  MyApplication,
+  PaginationMeta,
+  SortOrder,
+} from "@/lib/types";
 import { ApplicationCard } from "./ApplicationCard";
+import { ApplicationSort } from "./ApplicationSort";
 
-type FilterTab = "ALL" | ApplicationStatusType;
-
-const FILTER_TABS: { value: FilterTab; label: string }[] = [
-  { value: "ALL",       label: "All"       },
-  { value: "PENDING",   label: "Pending"   },
-  { value: "APPROVED",  label: "Approved"  },
-  { value: "REJECTED",  label: "Rejected"  },
-  { value: "WITHDRAWN", label: "Withdrawn" },
-];
-
-interface ApplicationsClientProps {
-  initialApplications: MyApplication[];
+interface CurrentFilters {
+  page: number;
+  limit: number;
+  sortBy: ApplicationSortField;
+  sortOrder: SortOrder;
+  status: ApplicationStatusType | undefined;
 }
 
-export function ApplicationsClient({ initialApplications }: ApplicationsClientProps) {
-  const [applications, setApplications] = useState<MyApplication[]>(initialApplications);
-  const [activeFilter, setActiveFilter] = useState<FilterTab>("ALL");
+interface ApplicationsClientProps {
+  applications: MyApplication[];
+  meta: PaginationMeta;
+  currentFilters: CurrentFilters;
+}
+
+const statusLabels: Record<ApplicationStatusType, string> = {
+  PENDING:   "Pending",
+  APPROVED:  "Approved",
+  REJECTED:  "Rejected",
+  WITHDRAWN: "Withdrawn",
+};
+
+export function ApplicationsClient({
+  applications,
+  meta,
+  currentFilters,
+}: ApplicationsClientProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [withdrawingId, setWithdrawingId] = useState<string | null>(null);
 
-  const filtered =
-    activeFilter === "ALL"
-      ? applications
-      : applications.filter((a) => a.status === activeFilter);
+  function updateURL(updates: Partial<CurrentFilters>) {
+    const merged = { ...currentFilters, ...updates };
+    const params = new URLSearchParams();
 
-  const countFor = (tab: FilterTab) =>
-    tab === "ALL"
-      ? applications.length
-      : applications.filter((a) => a.status === tab).length;
+    if (merged.page !== 1) params.set("page", String(merged.page));
+    if (merged.limit !== 10) params.set("limit", String(merged.limit));
+    if (merged.sortBy !== "createdAt") params.set("sortBy", merged.sortBy);
+    if (merged.sortOrder !== "desc") params.set("sortOrder", merged.sortOrder);
+    if (merged.status) params.set("status", merged.status);
+
+    const query = params.toString();
+    router.replace(`${pathname}${query ? `?${query}` : ""}`);
+  }
+
+  const handleStatusChange = (value: string) =>
+    updateURL({ status: value === "ALL" ? undefined : (value as ApplicationStatusType), page: 1 });
+
+  const handleSortChange = (sortBy: ApplicationSortField, sortOrder: SortOrder) =>
+    updateURL({ sortBy, sortOrder, page: 1 });
+
+  const handlePageChange = (page: number) => {
+    updateURL({ page });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleClearFilters = () => updateURL({ status: undefined, page: 1 });
 
   const handleWithdraw = async (id: string) => {
     setWithdrawingId(id);
-    // Placeholder until withdraw endpoint is confirmed
     toast.info("Withdraw functionality coming soon.");
     setWithdrawingId(null);
   };
 
+  const hasActiveFilters = !!currentFilters.status;
+
   return (
-    <div>
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-          <FileText className="h-5 w-5 text-blue-600" />
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+            <FileText className="h-5 w-5 text-blue-600" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-slate-900">My Applications</h1>
+            <p className="text-sm text-slate-500 mt-0.5">
+              {meta.total} application{meta.total !== 1 ? "s" : ""} total
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-xl font-bold text-slate-900">My Applications</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            {applications.length} application{applications.length !== 1 ? "s" : ""} total
-          </p>
-        </div>
+        <Link href="/tasks">
+          <Button size="sm" variant="outline" className="shrink-0">
+            Browse Tasks
+          </Button>
+        </Link>
       </div>
 
-      {/* Filter pills */}
-      <div className="flex flex-wrap gap-2 mb-5">
-        {FILTER_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setActiveFilter(tab.value)}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors border",
-              activeFilter === tab.value
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300 hover:text-slate-900",
-            )}
-          >
-            {tab.label}
-            <span
-              className={cn(
-                "px-1.5 py-0.5 rounded-full text-xs",
-                activeFilter === tab.value
-                  ? "bg-blue-500 text-white"
-                  : "bg-slate-100 text-slate-500",
-              )}
+      {/* Filter bar */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Status filter */}
+        <Select
+          value={currentFilters.status ?? "ALL"}
+          onValueChange={handleStatusChange}
+        >
+          <SelectTrigger className="w-full sm:w-44 bg-white">
+            <SelectValue placeholder="All Statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Statuses</SelectItem>
+            {Object.values(ApplicationStatus).map((s) => (
+              <SelectItem key={s} value={s}>
+                {statusLabels[s]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <div className="flex gap-3 items-center">
+          {/* Sort */}
+          <ApplicationSort
+            sortField={currentFilters.sortBy}
+            sortOrder={currentFilters.sortOrder}
+            onSortChange={handleSortChange}
+          />
+
+          {/* Clear filters */}
+          {hasActiveFilters && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="text-slate-500 hover:text-slate-900"
             >
-              {countFor(tab.value)}
-            </span>
-          </button>
-        ))}
+              <X className="h-4 w-4 mr-1" />
+              Clear
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* List or empty state */}
-      {filtered.length === 0 ? (
-        activeFilter !== "ALL" ? (
+      {/* Active filter chips */}
+      {hasActiveFilters && (
+        <div className="flex flex-wrap gap-2">
+          {currentFilters.status && (
+            <Badge variant="secondary" className="gap-1.5 pr-1.5">
+              {statusLabels[currentFilters.status]}
+              <button
+                onClick={() => updateURL({ status: undefined, page: 1 })}
+                className="rounded-full hover:bg-slate-300 transition-colors p-0.5"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
+        </div>
+      )}
+
+      {/* Application list or empty state */}
+      {applications.length === 0 ? (
+        hasActiveFilters ? (
           <div className="flex flex-col items-center justify-center py-16 text-center rounded-xl border border-dashed border-slate-200 bg-slate-50">
             <Search className="h-10 w-10 text-slate-300 mb-3" />
             <h3 className="text-base font-semibold text-slate-700">
-              No {activeFilter.toLowerCase()} applications
+              No applications match your filters
             </h3>
             <p className="text-sm text-slate-500 mt-1">
-              You have no applications with this status.
+              Try adjusting your filters.
             </p>
-            <button
-              onClick={() => setActiveFilter("ALL")}
-              className="mt-4 text-sm text-blue-600 hover:underline"
-            >
-              View all applications
-            </button>
+            <Button variant="outline" className="mt-4" onClick={handleClearFilters}>
+              Clear filters
+            </Button>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 text-center rounded-xl border border-dashed border-slate-200 bg-slate-50">
@@ -121,7 +203,7 @@ export function ApplicationsClient({ initialApplications }: ApplicationsClientPr
         )
       ) : (
         <div className="space-y-3">
-          {filtered.map((application) => (
+          {applications.map((application) => (
             <ApplicationCard
               key={application.id}
               application={application}
@@ -129,6 +211,13 @@ export function ApplicationsClient({ initialApplications }: ApplicationsClientPr
               isWithdrawing={withdrawingId === application.id}
             />
           ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {meta.total > 0 && (
+        <div className="border-t border-slate-100 pt-4">
+          <TaskPagination meta={meta} onPageChange={handlePageChange} />
         </div>
       )}
     </div>
