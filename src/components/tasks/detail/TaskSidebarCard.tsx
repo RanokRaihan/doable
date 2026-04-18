@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { TaskPoster } from "@/lib/types";
+import { ApplyTaskDialog } from "./ApplyTaskDialog";
 
 interface TaskSidebarCardProps {
   baseCompensation: string;
@@ -10,6 +10,7 @@ interface TaskSidebarCardProps {
   createdAt: string;
   expiresAt?: string | null;
   taskId: string;
+  currentUserId?: string;
 }
 
 function getInitials(name: string): string {
@@ -27,6 +28,7 @@ export function TaskSidebarCard({
   createdAt,
   expiresAt,
   taskId,
+  currentUserId,
 }: TaskSidebarCardProps) {
   return (
     <Card>
@@ -38,13 +40,9 @@ export function TaskSidebarCard({
         </div>
 
         {/* Apply Button */}
-        <Button className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700">
-          Apply Now
-        </Button>
-
-        <p className="text-xs text-center text-gray-500">
-          By applying, you agree to our Terms of Service
-        </p>
+        {currentUserId && currentUserId !== postedBy.id && (
+          <ApplyTaskDialog taskId={taskId} />
+        )}
 
         <Separator />
 

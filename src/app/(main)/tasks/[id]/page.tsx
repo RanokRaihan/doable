@@ -1,10 +1,11 @@
 import { getTaskAction } from "@/actions/task/taskAction";
-import { SafetyCard } from "@/components/tasks/detail/SafetyCard";
 import { RelatedTasksSection } from "@/components/tasks/detail/RelatedTasksSection";
+import { SafetyCard } from "@/components/tasks/detail/SafetyCard";
 import { TaskInfoCard } from "@/components/tasks/detail/TaskInfoCard";
 import { TaskSidebarCard } from "@/components/tasks/detail/TaskSidebarCard";
 import { ImageGallery } from "@/components/tasks/ImageGallery";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import { ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,7 +16,10 @@ interface PageProps {
 
 export default async function TaskDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const result = await getTaskAction(id);
+  const [result, user] = await Promise.all([
+    getTaskAction(id),
+    getCurrentUser(),
+  ]);
 
   if (!result.success || !("data" in result)) {
     if ("statusCode" in result && result.statusCode === 404) {
@@ -64,6 +68,7 @@ export default async function TaskDetailsPage({ params }: PageProps) {
               createdAt={task.createdAt}
               expiresAt={task.expiresAt}
               taskId={task.id}
+              currentUserId={user?.id}
             />
             <SafetyCard />
           </div>

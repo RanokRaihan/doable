@@ -114,6 +114,35 @@ export interface TaskApplication {
   createdAt: string;
 }
 
+// Application status
+export const ApplicationStatus = {
+  PENDING:   "PENDING",
+  APPROVED:  "APPROVED",
+  REJECTED:  "REJECTED",
+  WITHDRAWN: "WITHDRAWN",
+} as const;
+export type ApplicationStatusType = (typeof ApplicationStatus)[keyof typeof ApplicationStatus];
+
+// Embedded task shape returned in /application/my-applications
+export interface ApplicationTask {
+  id: string;
+  title: string;
+  description: string;
+  status: TaskStatusType;
+  postedById: string;
+}
+
+// Full application shape returned by GET /application/my-applications
+export interface MyApplication {
+  id: string;
+  message: string;
+  proposedCompensation: string;
+  status: ApplicationStatusType;
+  createdAt: string;
+  updatedAt: string;
+  task: ApplicationTask;
+}
+
 // Task as returned by GET /task/my-posted-task/:id (owner view)
 export interface MyPostedTask extends Task {
   postedById: string;
