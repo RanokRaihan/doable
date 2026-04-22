@@ -13,6 +13,7 @@ import { toast } from "sonner";
 
 import withdrawApplicationAction from "@/actions/application/withdrawApplicationAction";
 import ServerErrorDisplay from "@/components/form/ServerErrorDisplay";
+import { useAppForm } from "@/components/form/hooks";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,10 +30,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { BackendError } from "@/lib/api/types";
 import { ApplicationStatusType, MyApplication } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import WithdrawApplicationSchema, {
+  WithdrawApplicationFormData,
+} from "@/schema/withdrawApplicationValidation";
 
 const statusConfig: Record<
   ApplicationStatusType,
@@ -74,36 +77,41 @@ export function ApplicationCard({
 }: ApplicationCardProps) {
   const status = statusConfig[application.status];
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [withdrawalReason, setWithdrawalReason] = useState("");
-  const [reasonError, setReasonError] = useState<string | null>(null);
 
-  const handleConfirmWithdraw = async () => {
-    if (!withdrawalReason.trim()) {
-      setReasonError("Please provide a reason for withdrawing.");
-      return;
-    }
-    setIsWithdrawing(true);
-    setServerError(null);
-    const result = await withdrawApplicationAction(
-      application.id,
-      withdrawalReason.trim(),
-    );
-    setIsWithdrawing(false);
+  const form = useAppForm({
+    defaultValues: { withdrawalReason: "" } as WithdrawApplicationFormData,
+    validators: { onSubmit: WithdrawApplicationSchema },
+    onSubmit: async ({ value }) => {
+      const result = await withdrawApplicationAction(
+        application.id,
+        value.withdrawalReason,
+      );
+      if (!result.success) {
+        const error = result as BackendError;
+        setServerError(
+          error.errorSources?.length
+            ? error.errorSources[0].message
+            : error.message,
+        );
+        return;
+      }
+      setConfirmOpen(false);
+      form.reset();
+      toast.success("Application withdrawn successfully.");
+      onWithdrawSuccess();
+    },
+    listeners: {
+      onChange: () => {
+        if (serverError) setServerError(null);
+      },
+    },
+  });
 
-    if (!result.success) {
-      const msg =
-        "errorSources" in result && result.errorSources?.length
-          ? result.errorSources[0].message
-          : result.message;
-      setServerError(msg);
-      return;
-    }
-
+  const closeDialog = () => {
     setConfirmOpen(false);
-    toast.success("Application withdrawn successfully.");
-    onWithdrawSuccess();
+    form.reset();
+    setServerError(null);
   };
 
   return (
@@ -169,18 +177,11 @@ export function ApplicationCard({
         </div>
       </div>
 
-      {/* Confirmation dialog */}
+      {/* Withdraw confirmation dialog */}
       <Dialog
         open={confirmOpen}
         onOpenChange={(open) => {
-          if (!isWithdrawing) {
-            setConfirmOpen(open);
-            if (!open) {
-              setServerError(null);
-              setWithdrawalReason("");
-              setReasonError(null);
-            }
-          }
+          if (!open) closeDialog();
         }}
       >
         <DialogContent className="sm:max-w-md">
@@ -192,64 +193,66 @@ export function ApplicationCard({
               <DialogTitle>Withdraw Application</DialogTitle>
             </div>
             <DialogDescription>
-              Are you sure you ? This action cannot be undone.
+              Are you sure you want to withdraw your application for{" "}
+              <span className="font-medium text-slate-700">
+                &ldquo;{application.task.title}&rdquo;
+              </span>
+              ? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-1.5">
-            <Label
-              htmlFor="withdrawalReason"
-              className="text-sm font-medium text-slate-700"
-            >
-              Reason for withdrawal <span className="text-red-500">*</span>
-            </Label>
-            <Textarea
-              id="withdrawalReason"
-              placeholder="Please explain why you are withdrawing this application…"
-              value={withdrawalReason}
-              onChange={(e) => {
-                setWithdrawalReason(e.target.value);
-                if (reasonError) setReasonError(null);
-              }}
-              disabled={isWithdrawing}
-              rows={4}
-              className="resize-none"
-            />
-            {reasonError && (
-              <p className="text-xs text-red-600">{reasonError}</p>
-            )}
-          </div>
-
-          {serverError && (
-            <ServerErrorDisplay
-              serverError={serverError}
-              setServerError={setServerError}
-            />
-          )}
-
-          <DialogFooter className="gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={() => setConfirmOpen(false)}
-              disabled={isWithdrawing}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleConfirmWithdraw}
-              disabled={isWithdrawing}
-            >
-              {isWithdrawing ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                  Withdrawing…
-                </>
-              ) : (
-                "Withdraw"
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+            className="space-y-4"
+          >
+            <form.AppField name="withdrawalReason">
+              {(field) => (
+                <field.TextAreaField
+                  label="Reason for withdrawal"
+                  placeholder="Please explain why you are withdrawing this application…"
+                  rows={4}
+                />
               )}
-            </Button>
-          </DialogFooter>
+            </form.AppField>
+
+            {serverError && (
+              <ServerErrorDisplay
+                serverError={serverError}
+                setServerError={setServerError}
+              />
+            )}
+
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={closeDialog}
+              >
+                Cancel
+              </Button>
+              <form.Subscribe selector={(s) => s.isSubmitting}>
+                {(isSubmitting) => (
+                  <Button
+                    type="submit"
+                    variant="destructive"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        Withdrawing…
+                      </>
+                    ) : (
+                      "Withdraw"
+                    )}
+                  </Button>
+                )}
+              </form.Subscribe>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>
