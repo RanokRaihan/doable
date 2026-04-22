@@ -1,10 +1,18 @@
 "use client";
 
+import {
+  Calendar,
+  FileText,
+  Loader2,
+  MoreVertical,
+  TriangleAlert,
+} from "lucide-react";
 import Link from "next/link";
-import { Calendar, FileText, Loader2, MoreVertical, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import withdrawApplicationAction from "@/actions/application/withdrawApplicationAction";
+import ServerErrorDisplay from "@/components/form/ServerErrorDisplay";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,16 +29,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import ServerErrorDisplay from "@/components/form/ServerErrorDisplay";
-import withdrawApplicationAction from "@/actions/application/withdrawApplicationAction";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { ApplicationStatusType, MyApplication } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const statusConfig: Record<ApplicationStatusType, { label: string; className: string }> = {
-  PENDING:   { label: "Pending",   className: "bg-amber-100 text-amber-700 border-amber-200" },
-  APPROVED:  { label: "Approved",  className: "bg-green-100 text-green-700 border-green-200" },
-  REJECTED:  { label: "Rejected",  className: "bg-red-100   text-red-700   border-red-200"   },
-  WITHDRAWN: { label: "Withdrawn", className: "bg-gray-100  text-gray-600  border-gray-200"  },
+const statusConfig: Record<
+  ApplicationStatusType,
+  { label: string; className: string }
+> = {
+  PENDING: {
+    label: "Pending",
+    className: "bg-amber-100 text-amber-700 border-amber-200",
+  },
+  APPROVED: {
+    label: "Approved",
+    className: "bg-green-100 text-green-700 border-green-200",
+  },
+  REJECTED: {
+    label: "Rejected",
+    className: "bg-red-100   text-red-700   border-red-200",
+  },
+  WITHDRAWN: {
+    label: "Withdrawn",
+    className: "bg-gray-100  text-gray-600  border-gray-200",
+  },
 };
 
 const formatDate = (iso: string) =>
@@ -45,16 +68,28 @@ interface ApplicationCardProps {
   onWithdrawSuccess: () => void;
 }
 
-export function ApplicationCard({ application, onWithdrawSuccess }: ApplicationCardProps) {
+export function ApplicationCard({
+  application,
+  onWithdrawSuccess,
+}: ApplicationCardProps) {
   const status = statusConfig[application.status];
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [withdrawalReason, setWithdrawalReason] = useState("");
+  const [reasonError, setReasonError] = useState<string | null>(null);
 
   const handleConfirmWithdraw = async () => {
+    if (!withdrawalReason.trim()) {
+      setReasonError("Please provide a reason for withdrawing.");
+      return;
+    }
     setIsWithdrawing(true);
     setServerError(null);
-    const result = await withdrawApplicationAction(application.id);
+    const result = await withdrawApplicationAction(
+      application.id,
+      withdrawalReason.trim(),
+    );
     setIsWithdrawing(false);
 
     if (!result.success) {
@@ -140,7 +175,11 @@ export function ApplicationCard({ application, onWithdrawSuccess }: ApplicationC
         onOpenChange={(open) => {
           if (!isWithdrawing) {
             setConfirmOpen(open);
-            if (!open) setServerError(null);
+            if (!open) {
+              setServerError(null);
+              setWithdrawalReason("");
+              setReasonError(null);
+            }
           }
         }}
       >
@@ -153,13 +192,33 @@ export function ApplicationCard({ application, onWithdrawSuccess }: ApplicationC
               <DialogTitle>Withdraw Application</DialogTitle>
             </div>
             <DialogDescription>
-              Are you sure you want to withdraw your application for{" "}
-              <span className="font-medium text-slate-700">
-                &ldquo;{application.task.title}&rdquo;
-              </span>
-              ? This action cannot be undone.
+              Are you sure you ? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
+
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="withdrawalReason"
+              className="text-sm font-medium text-slate-700"
+            >
+              Reason for withdrawal <span className="text-red-500">*</span>
+            </Label>
+            <Textarea
+              id="withdrawalReason"
+              placeholder="Please explain why you are withdrawing this application…"
+              value={withdrawalReason}
+              onChange={(e) => {
+                setWithdrawalReason(e.target.value);
+                if (reasonError) setReasonError(null);
+              }}
+              disabled={isWithdrawing}
+              rows={4}
+              className="resize-none"
+            />
+            {reasonError && (
+              <p className="text-xs text-red-600">{reasonError}</p>
+            )}
+          </div>
 
           {serverError && (
             <ServerErrorDisplay
