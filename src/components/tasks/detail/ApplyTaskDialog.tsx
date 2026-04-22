@@ -1,7 +1,7 @@
 "use client";
-
 import { applyTaskAction } from "@/actions/task/applyTaskAction";
 import { useAppForm } from "@/components/form/hooks";
+import ServerErrorDisplay from "@/components/form/ServerErrorDisplay";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { BackendError } from "@/lib/api/types";
 import ApplyTaskSchema, {
   ApplyTaskFormData,
 } from "@/schema/applyTaskValidation";
@@ -20,11 +21,16 @@ import { toast } from "sonner";
 
 interface ApplyTaskDialogProps {
   taskId: string;
+  baseCompensation: string;
 }
 
-export function ApplyTaskDialog({ taskId }: ApplyTaskDialogProps) {
+export function ApplyTaskDialog({
+  taskId,
+  baseCompensation,
+}: ApplyTaskDialogProps) {
   const [open, setOpen] = useState(false);
-
+  const [serverError, setServerError] = useState<string | null>(null);
+  console.log("Base compensation for task:", baseCompensation);
   const form = useAppForm({
     defaultValues: {
       message: "",
@@ -36,12 +42,25 @@ export function ApplyTaskDialog({ taskId }: ApplyTaskDialogProps) {
     onSubmit: async ({ value }) => {
       const result = await applyTaskAction(taskId, value);
       if (!result.success) {
-        toast.error("message" in result ? result.message : "Failed to apply");
+        const error = result as BackendError;
+        console.log("Application submission error:", error);
+        if (error.errorSources && error?.errorSources?.length > 0) {
+          setServerError(error.errorSources[0].message);
+        } else {
+          setServerError(
+            error.message || "An error occurred. Please try again.",
+          );
+        }
         return;
       }
       toast.success("Application submitted successfully!");
       setOpen(false);
       form.reset();
+    },
+    listeners: {
+      onChange: () => {
+        if (serverError) setServerError(null);
+      },
     },
   });
 
@@ -94,13 +113,18 @@ export function ApplyTaskDialog({ taskId }: ApplyTaskDialogProps) {
               {(field) => (
                 <field.NumberInputField
                   label="Proposed Compensation"
-                  placeholder="80"
+                  placeholder={baseCompensation}
                   prefix="$"
                   min={1}
                 />
               )}
             </form.AppField>
-
+            {serverError && (
+              <ServerErrorDisplay
+                serverError={serverError}
+                setServerError={setServerError}
+              />
+            )}
             <DialogFooter className="gap-2 pt-2">
               <Button
                 type="button"

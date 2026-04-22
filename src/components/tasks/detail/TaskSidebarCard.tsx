@@ -1,7 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { TaskPoster } from "@/lib/types";
+import Link from "next/link";
 import { ApplyTaskDialog } from "./ApplyTaskDialog";
 
 interface TaskSidebarCardProps {
@@ -36,12 +38,24 @@ export function TaskSidebarCard({
         {/* Price Highlight */}
         <div className="text-center py-4 bg-linear-to-br from-green-50 to-emerald-50 rounded-xl">
           <p className="text-sm text-green-600 mb-1">Earn up to</p>
-          <p className="text-4xl font-bold text-green-700">${baseCompensation}</p>
+          <p className="text-4xl font-bold text-green-700">
+            ${baseCompensation}
+          </p>
         </div>
 
         {/* Apply Button */}
+        {!currentUserId && (
+          <Button className="w-full h-12 text-base font-semibold" asChild>
+            <Link href={`/login?callbackUrl=/tasks/${taskId}`}>
+              Login to Apply
+            </Link>
+          </Button>
+        )}
         {currentUserId && currentUserId !== postedBy.id && (
-          <ApplyTaskDialog taskId={taskId} />
+          <ApplyTaskDialog
+            taskId={taskId}
+            baseCompensation={baseCompensation}
+          />
         )}
 
         <Separator />
