@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FileText, Search, X } from "lucide-react";
-import { toast } from "sonner";
-import { useState } from "react";
 
 import { TaskPagination } from "@/components/tasks/TaskPagination";
 import { Badge } from "@/components/ui/badge";
@@ -55,8 +53,6 @@ export function ApplicationsClient({
 }: ApplicationsClientProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [withdrawingId, setWithdrawingId] = useState<string | null>(null);
-
   function updateURL(updates: Partial<CurrentFilters>) {
     const merged = { ...currentFilters, ...updates };
     const params = new URLSearchParams();
@@ -84,10 +80,8 @@ export function ApplicationsClient({
 
   const handleClearFilters = () => updateURL({ status: undefined, page: 1 });
 
-  const handleWithdraw = async (id: string) => {
-    setWithdrawingId(id);
-    toast.info("Withdraw functionality coming soon.");
-    setWithdrawingId(null);
+  const handleWithdrawSuccess = () => {
+    router.replace(pathname);
   };
 
   const hasActiveFilters = !!currentFilters.status;
@@ -207,8 +201,7 @@ export function ApplicationsClient({
             <ApplicationCard
               key={application.id}
               application={application}
-              onWithdraw={handleWithdraw}
-              isWithdrawing={withdrawingId === application.id}
+              onWithdrawSuccess={handleWithdrawSuccess}
             />
           ))}
         </div>

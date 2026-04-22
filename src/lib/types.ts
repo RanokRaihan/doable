@@ -175,6 +175,29 @@ export interface MyApplication {
   task: ApplicationTask;
 }
 
+// Full application detail returned by GET /application/:applicationId
+export interface ApplicationDetails {
+  id: string;
+  message: string;
+  proposedCompensation: string;
+  applicantId: string;
+  taskId: string;
+  status: ApplicationStatusType;
+  rejectionReason: string | null;
+  withdrawalReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  task: {
+    id: string;
+    title: string;
+    description: string;
+    status: TaskStatusType;
+    postedById: string;
+    postedBy: { id: string; name: string; image: string | null };
+  };
+  applicant: { id: string; name: string; image: string | null };
+}
+
 // Paginated response from GET /application/my-applications
 export interface ApplicationsResponse {
   success: boolean;
