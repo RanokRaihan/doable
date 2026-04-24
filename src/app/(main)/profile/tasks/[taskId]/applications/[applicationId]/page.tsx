@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";
+import { ApplicationOwnerActions } from "@/components/profile/tasks/ApplicationOwnerActions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -103,12 +104,20 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
             <h1 className="text-2xl font-bold text-slate-900">Application Detail</h1>
             <p className="text-xs text-slate-400 mt-1 font-mono">ID: {app.id}</p>
           </div>
-          <Badge
-            variant="outline"
-            className={cn("text-sm font-medium px-3 py-1", appStatus.className)}
-          >
-            {appStatus.label}
-          </Badge>
+          <div className="flex items-center gap-3 flex-wrap">
+            <Badge
+              variant="outline"
+              className={cn("text-sm font-medium px-3 py-1", appStatus.className)}
+            >
+              {appStatus.label}
+            </Badge>
+            {app.status === "PENDING" && (
+              <ApplicationOwnerActions
+                applicationId={app.id}
+                applicantName={app.applicant.name}
+              />
+            )}
+          </div>
         </div>
       </div>
 

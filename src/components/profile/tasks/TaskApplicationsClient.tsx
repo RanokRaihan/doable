@@ -2,8 +2,6 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { Users, Search, X } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 import { TaskSearch } from "@/components/tasks/TaskSearch";
 import { TaskPagination } from "@/components/tasks/TaskPagination";
@@ -60,7 +58,6 @@ export function TaskApplicationsClient({
 }: TaskApplicationsClientProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [actingId, setActingId] = useState<string | null>(null);
 
   function updateURL(updates: Partial<CurrentFilters>) {
     const merged = { ...currentFilters, ...updates };
@@ -94,17 +91,7 @@ export function TaskApplicationsClient({
   const handleClearFilters = () =>
     updateURL({ status: undefined, searchTerm: undefined, page: 1 });
 
-  const handleApprove = async (id: string) => {
-    setActingId(id);
-    toast.info("Approve functionality coming soon.");
-    setActingId(null);
-  };
-
-  const handleReject = async (id: string) => {
-    setActingId(id);
-    toast.info("Reject functionality coming soon.");
-    setActingId(null);
-  };
+  const handleActionSuccess = () => router.replace(pathname);
 
   const hasActiveFilters = !!(currentFilters.status || currentFilters.searchTerm);
 
@@ -224,9 +211,8 @@ export function TaskApplicationsClient({
             <TaskApplicationCard
               key={application.id}
               application={application}
-              onApprove={handleApprove}
-              onReject={handleReject}
-              isActing={actingId === application.id}
+              taskId={taskId}
+              onActionSuccess={handleActionSuccess}
             />
           ))}
         </div>
