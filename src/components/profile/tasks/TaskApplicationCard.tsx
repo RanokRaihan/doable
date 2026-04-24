@@ -19,11 +19,26 @@ import {
 import { ApplicationStatusType, TaskApplicationDetail } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const statusConfig: Record<ApplicationStatusType, { label: string; className: string }> = {
-  PENDING:   { label: "Pending",   className: "bg-amber-100 text-amber-700 border-amber-200" },
-  APPROVED:  { label: "Approved",  className: "bg-green-100 text-green-700 border-green-200" },
-  REJECTED:  { label: "Rejected",  className: "bg-red-100   text-red-700   border-red-200"   },
-  WITHDRAWN: { label: "Withdrawn", className: "bg-gray-100  text-gray-600  border-gray-200"  },
+const statusConfig: Record<
+  ApplicationStatusType,
+  { label: string; className: string }
+> = {
+  PENDING: {
+    label: "Pending",
+    className: "bg-amber-100 text-amber-700 border-amber-200",
+  },
+  APPROVED: {
+    label: "Approved",
+    className: "bg-green-100 text-green-700 border-green-200",
+  },
+  REJECTED: {
+    label: "Rejected",
+    className: "bg-red-100   text-red-700   border-red-200",
+  },
+  WITHDRAWN: {
+    label: "Withdrawn",
+    className: "bg-gray-100  text-gray-600  border-gray-200",
+  },
 };
 
 const formatDate = (iso: string) =>
@@ -69,9 +84,12 @@ export function TaskApplicationCard({
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0">
-              <p className="font-semibold text-sm text-slate-900 truncate">
+              <Link
+                href={`/users/${application.applicant.id}`}
+                className="font-semibold text-sm text-slate-900 truncate"
+              >
                 {application.applicant.name}
-              </p>
+              </Link>
               <div className="flex items-center gap-1 mt-0.5 text-xs text-slate-400">
                 <Calendar className="h-3 w-3 shrink-0" />
                 Applied {formatDate(application.createdAt)}
@@ -85,7 +103,10 @@ export function TaskApplicationCard({
             </span>
             <Badge
               variant="outline"
-              className={cn("text-xs font-medium hidden sm:inline-flex", status.className)}
+              className={cn(
+                "text-xs font-medium hidden sm:inline-flex",
+                status.className,
+              )}
             >
               {status.label}
             </Badge>
@@ -103,7 +124,9 @@ export function TaskApplicationCard({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/profile/tasks/${taskId}/applications/${application.id}`}>
+                  <Link
+                    href={`/profile/tasks/${taskId}/applications/${application.id}`}
+                  >
                     View
                   </Link>
                 </DropdownMenuItem>
@@ -138,7 +161,9 @@ export function TaskApplicationCard({
         {(application.rejectionReason || application.withdrawalReason) && (
           <div className="mt-3 px-3 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-500">
             <span className="font-medium text-slate-700">
-              {application.rejectionReason ? "Rejection reason: " : "Withdrawal reason: "}
+              {application.rejectionReason
+                ? "Rejection reason: "
+                : "Withdrawal reason: "}
             </span>
             {application.rejectionReason ?? application.withdrawalReason}
           </div>

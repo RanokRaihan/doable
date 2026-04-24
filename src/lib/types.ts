@@ -25,11 +25,18 @@ export type TaskCategoryType = (typeof TaskCategory)[keyof typeof TaskCategory];
 
 // Task Status
 export const TaskStatus = {
+  DRAFT: "DRAFT",
   OPEN: "OPEN",
+  ASSIGNED: "ASSIGNED",
   IN_PROGRESS: "IN_PROGRESS",
-  COMPLETED: "COMPLETED",
-  CANCELLED: "CANCELLED",
+  PENDING_REVIEW: "PENDING_REVIEW",
   PAYMENT_PROCESSING: "PAYMENT_PROCESSING",
+  COMPLETED: "COMPLETED",
+  PAYMENT_FAILED: "PAYMENT_FAILED",
+  DISPUTED: "DISPUTED",
+  CANCELLED: "CANCELLED",
+  EXPIRED: "EXPIRED",
+  REFUNDED: "REFUNDED",
 } as const;
 
 export type TaskStatusType = (typeof TaskStatus)[keyof typeof TaskStatus];

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   ArrowLeft,
   Calendar,
@@ -8,6 +7,7 @@ import {
   ShieldOff,
   User,
 } from "lucide-react";
+import Link from "next/link";
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,19 +18,49 @@ import { Separator } from "@/components/ui/separator";
 import { ApplicationStatusType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const statusConfig: Record<ApplicationStatusType, { label: string; className: string }> = {
-  PENDING:   { label: "Pending",   className: "bg-amber-100 text-amber-700 border-amber-200" },
-  APPROVED:  { label: "Approved",  className: "bg-green-100 text-green-700 border-green-200" },
-  REJECTED:  { label: "Rejected",  className: "bg-red-100   text-red-700   border-red-200"   },
-  WITHDRAWN: { label: "Withdrawn", className: "bg-gray-100  text-gray-600  border-gray-200"  },
+const statusConfig: Record<
+  ApplicationStatusType,
+  { label: string; className: string }
+> = {
+  PENDING: {
+    label: "Pending",
+    className: "bg-amber-100 text-amber-700 border-amber-200",
+  },
+  APPROVED: {
+    label: "Approved",
+    className: "bg-green-100 text-green-700 border-green-200",
+  },
+  REJECTED: {
+    label: "Rejected",
+    className: "bg-red-100   text-red-700   border-red-200",
+  },
+  WITHDRAWN: {
+    label: "Withdrawn",
+    className: "bg-gray-100  text-gray-600  border-gray-200",
+  },
 };
 
 const taskStatusConfig: Record<string, { label: string; className: string }> = {
-  OPEN:               { label: "Open",               className: "bg-blue-100 text-blue-700 border-blue-200" },
-  IN_PROGRESS:        { label: "In Progress",        className: "bg-purple-100 text-purple-700 border-purple-200" },
-  COMPLETED:          { label: "Completed",          className: "bg-green-100 text-green-700 border-green-200" },
-  CANCELLED:          { label: "Cancelled",          className: "bg-red-100 text-red-700 border-red-200" },
-  PAYMENT_PROCESSING: { label: "Payment Processing", className: "bg-orange-100 text-orange-700 border-orange-200" },
+  OPEN: {
+    label: "Open",
+    className: "bg-blue-100 text-blue-700 border-blue-200",
+  },
+  IN_PROGRESS: {
+    label: "In Progress",
+    className: "bg-purple-100 text-purple-700 border-purple-200",
+  },
+  COMPLETED: {
+    label: "Completed",
+    className: "bg-green-100 text-green-700 border-green-200",
+  },
+  CANCELLED: {
+    label: "Cancelled",
+    className: "bg-red-100 text-red-700 border-red-200",
+  },
+  PAYMENT_PROCESSING: {
+    label: "Payment Processing",
+    className: "bg-orange-100 text-orange-700 border-orange-200",
+  },
 };
 
 const formatDate = (iso: string) =>
@@ -58,7 +88,8 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
 
   if (!result.success) {
     const statusCode = "statusCode" in result ? result.statusCode : 500;
-    const message = "message" in result ? result.message : "Something went wrong";
+    const message =
+      "message" in result ? result.message : "Something went wrong";
 
     if (statusCode === 400 || statusCode === 403) {
       return (
@@ -66,7 +97,9 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
           <div className="h-16 w-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
             <ShieldOff className="h-8 w-8 text-red-500" />
           </div>
-          <h1 className="text-xl font-bold text-slate-900 mb-2">Access Denied</h1>
+          <h1 className="text-xl font-bold text-slate-900 mb-2">
+            Access Denied
+          </h1>
           <p className="text-sm text-slate-500 max-w-sm mb-6">{message}</p>
           <Link href="/profile/applications">
             <Button variant="outline">
@@ -80,7 +113,9 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
 
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-        <h1 className="text-xl font-bold text-slate-900 mb-2">Something went wrong</h1>
+        <h1 className="text-xl font-bold text-slate-900 mb-2">
+          Something went wrong
+        </h1>
         <p className="text-sm text-slate-500 max-w-sm mb-6">{message}</p>
         <Link href="/profile/applications">
           <Button variant="outline">
@@ -110,8 +145,12 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
 
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">{app.task.title}</h1>
-            <p className="text-xs text-slate-400 mt-1 font-mono">ID: {app.id}</p>
+            <h1 className="text-2xl font-bold text-slate-900">
+              {app.task.title}
+            </h1>
+            <p className="text-xs text-slate-400 mt-1 font-mono">
+              ID: {app.id}
+            </p>
           </div>
           <Badge
             variant="outline"
@@ -197,12 +236,16 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
             <CardContent className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Applied on</span>
-                <span className="font-medium text-slate-800">{formatDate(app.createdAt)}</span>
+                <span className="font-medium text-slate-800">
+                  {formatDate(app.createdAt)}
+                </span>
               </div>
               <Separator />
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Last updated</span>
-                <span className="font-medium text-slate-800">{formatDate(app.updatedAt)}</span>
+                <span className="font-medium text-slate-800">
+                  {formatDate(app.updatedAt)}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -213,7 +256,9 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
           {/* Task info */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-semibold text-slate-700">Task</CardTitle>
+              <CardTitle className="text-sm font-semibold text-slate-700">
+                Task
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
@@ -232,7 +277,8 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
                 variant="outline"
                 className={cn(
                   "text-xs font-medium",
-                  taskStatus?.className ?? "bg-slate-100 text-slate-600 border-slate-200"
+                  taskStatus?.className ??
+                    "bg-slate-100 text-slate-600 border-slate-200",
                 )}
               >
                 {taskStatus?.label ?? app.task.status}
@@ -256,9 +302,12 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
                     {getInitials(app.task.postedBy.name)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium text-slate-800">
+                <Link
+                  href={`/users/${app.task.postedBy.id}`}
+                  className="text-sm font-medium text-slate-800"
+                >
                   {app.task.postedBy.name}
-                </span>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -279,9 +328,12 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
                     {getInitials(app.applicant.name)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium text-slate-800">
+                <Link
+                  href={`/users/${app.applicant.id}`}
+                  className="text-sm font-medium text-slate-800"
+                >
                   {app.applicant.name}
-                </span>
+                </Link>
               </div>
             </CardContent>
           </Card>
