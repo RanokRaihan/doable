@@ -257,3 +257,56 @@ export interface FilterState {
   page: number;
   limit: number;
 }
+
+// Payment Method
+export const PaymentMethod = {
+  ONLINE: "ONLINE",
+  CASH: "CASH",
+} as const;
+export type PaymentMethodType = (typeof PaymentMethod)[keyof typeof PaymentMethod];
+
+// Payment Status
+export const PaymentStatus = {
+  PENDING: "PENDING",
+  COMPLETED: "COMPLETED",
+  FAILED: "FAILED",
+  CANCELLED: "CANCELLED",
+  REFUNDED: "REFUNDED",
+} as const;
+export type PaymentStatusType = (typeof PaymentStatus)[keyof typeof PaymentStatus];
+
+// Cash Payment Status
+export const CashStatus = {
+  PAYER_CLAIMED: "PAYER_CLAIMED",
+  PAYEE_CONFIRMED: "PAYEE_CONFIRMED",
+  PAYEE_DISPUTED: "PAYEE_DISPUTED",
+  ADMIN_VERIFIED: "ADMIN_VERIFIED",
+} as const;
+export type CashStatusType = (typeof CashStatus)[keyof typeof CashStatus];
+
+// Response shape for POST /payment/cash/init/:taskId
+export interface CashPaymentInitData {
+  id: string;
+  transactionId: string;
+  amount: string;
+  method: "CASH";
+  status: PaymentStatusType;
+  cashStatus: CashStatusType;
+}
+
+// Response shape for POST /payment/online/init/:taskId
+export interface OnlinePaymentInitData {
+  payment: {
+    id: string;
+    transactionId: string;
+    sessionToken: string;
+    amount: string;
+    method: PaymentMethodType;
+    status: PaymentStatusType;
+    sessionExpiresAt: string;
+    gatewayResponse: unknown;
+  };
+  gatewayUrl: string;
+  message: string;
+  isExisting: boolean;
+}
