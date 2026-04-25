@@ -1,31 +1,24 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 import {
+  AlertCircle,
   ClipboardList,
+  Loader2,
   Plus,
   Search,
   X,
-  AlertCircle,
-  Loader2,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { MyTaskCard } from "@/components/profile/tasks/MyTaskCard";
+import { TaskPagination } from "@/components/tasks/TaskPagination";
 import { TaskSearch } from "@/components/tasks/TaskSearch";
 import { TaskSort } from "@/components/tasks/TaskSort";
-import { TaskPagination } from "@/components/tasks/TaskPagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -35,14 +28,22 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { taskStatusConfig } from "@/lib/taskStatusConfig";
+import {
+  PaginationMeta,
+  SortField,
+  SortOrder,
   Task,
   TaskCategory,
   TaskCategoryType,
   TaskStatus,
   TaskStatusType,
-  PaginationMeta,
-  SortField,
-  SortOrder,
 } from "@/lib/types";
 
 interface CurrentFilters {
@@ -61,13 +62,13 @@ interface MyTasksClientProps {
   currentFilters: CurrentFilters;
 }
 
-const statusLabels: Record<TaskStatusType, string> = {
-  OPEN: "Open",
-  IN_PROGRESS: "In Progress",
-  COMPLETED: "Completed",
-  CANCELLED: "Cancelled",
-  PAYMENT_PROCESSING: "Payment Processing",
-};
+// const statusLabels: Record<TaskStatusType, string> = {
+//   OPEN: "Open",
+//   IN_PROGRESS: "In Progress",
+//   COMPLETED: "Completed",
+//   CANCELLED: "Cancelled",
+//   PAYMENT_PROCESSING: "Payment Processing",
+// };
 
 const categoryLabels: Record<TaskCategoryType, string> = {
   DELIVERY: "Delivery",
@@ -81,7 +82,11 @@ const categoryLabels: Record<TaskCategoryType, string> = {
   OTHER: "Other",
 };
 
-export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProps) {
+export function MyTasksClient({
+  tasks,
+  meta,
+  currentFilters,
+}: MyTasksClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
@@ -107,10 +112,16 @@ export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProp
     updateURL({ searchTerm: value || undefined, page: 1 });
 
   const handleStatusChange = (value: string) =>
-    updateURL({ status: value === "ALL" ? undefined : (value as TaskStatusType), page: 1 });
+    updateURL({
+      status: value === "ALL" ? undefined : (value as TaskStatusType),
+      page: 1,
+    });
 
   const handleCategoryChange = (value: string) =>
-    updateURL({ category: value === "ALL" ? undefined : (value as TaskCategoryType), page: 1 });
+    updateURL({
+      category: value === "ALL" ? undefined : (value as TaskCategoryType),
+      page: 1,
+    });
 
   const handleSortChange = (sortBy: SortField, sortOrder: SortOrder) =>
     updateURL({ sortBy, sortOrder, page: 1 });
@@ -121,7 +132,12 @@ export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProp
   };
 
   const handleClearFilters = () =>
-    updateURL({ status: undefined, category: undefined, searchTerm: undefined, page: 1 });
+    updateURL({
+      status: undefined,
+      category: undefined,
+      searchTerm: undefined,
+      page: 1,
+    });
 
   const handleEdit = (taskId: string) => {
     router.push(`/profile/tasks/edit/${taskId}`);
@@ -155,7 +171,9 @@ export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProp
         {/* Page header */}
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold text-slate-900">My Posted Tasks</h1>
+            <h1 className="text-xl font-bold text-slate-900">
+              My Posted Tasks
+            </h1>
             <p className="text-sm text-slate-500 mt-0.5">
               {meta.total} task{meta.total !== 1 ? "s" : ""} total
             </p>
@@ -190,7 +208,7 @@ export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProp
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.values(TaskStatus).map((s) => (
                   <SelectItem key={s} value={s}>
-                    {statusLabels[s]}
+                    {taskStatusConfig[s].label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -241,7 +259,7 @@ export function MyTasksClient({ tasks, meta, currentFilters }: MyTasksClientProp
           <div className="flex flex-wrap gap-2">
             {currentFilters.status && (
               <Badge variant="secondary" className="gap-1.5 pr-1.5">
-                {statusLabels[currentFilters.status]}
+                {taskStatusConfig[currentFilters.status].label}
                 <button
                   onClick={() => updateURL({ status: undefined, page: 1 })}
                   className="rounded-full hover:bg-slate-300 transition-colors p-0.5"

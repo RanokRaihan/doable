@@ -4,13 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Calendar,
+  CheckCircle2,
   ClipboardList,
   Eye,
   MapPin,
   MoreHorizontal,
   Pencil,
+  RotateCcw,
   Trash2,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,6 +27,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Task, TaskStatusType } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ApproveCompletionDialog } from "./ApproveCompletionDialog";
+import { RequestRevisionDialog } from "./RequestRevisionDialog";
 
 const statusConfig: Record<
   TaskStatusType,
@@ -67,6 +73,10 @@ interface MyTaskCardProps {
 }
 
 export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
+  const router = useRouter();
+  const [approveOpen, setApproveOpen] = useState(false);
+  const [revisionOpen, setRevisionOpen] = useState(false);
+
   const imageUrl =
     task.images && task.images.length > 0
       ? task.images[0].url
@@ -75,6 +85,7 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
   const status = statusConfig[task.status];
 
   return (
+    <>
     <div className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-200">
       {/* Thumbnail */}
       <div className="relative h-16 w-16 rounded-lg overflow-hidden shrink-0 bg-slate-100">
@@ -146,6 +157,25 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
                 Applications
               </Link>
             </DropdownMenuItem>
+            {task.status === "PENDING_REVIEW" && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setApproveOpen(true)}
+                  className="flex items-center gap-2 cursor-pointer text-green-600 focus:text-green-600 focus:bg-green-50"
+                >
+                  <CheckCircle2 className="h-4 w-4" />
+                  Approve Completion
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setRevisionOpen(true)}
+                  className="flex items-center gap-2 cursor-pointer text-amber-600 focus:text-amber-600 focus:bg-amber-50"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Request Revision
+                </DropdownMenuItem>
+              </>
+            )}
             <DropdownMenuItem
               onClick={() => onEdit(task.id)}
               className="flex items-center gap-2 cursor-pointer"
@@ -165,5 +195,25 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
         </DropdownMenu>
       </div>
     </div>
+
+    {task.status === "PENDING_REVIEW" && (
+      <>
+        <ApproveCompletionDialog
+          taskId={task.id}
+          taskTitle={task.title}
+          open={approveOpen}
+          onOpenChange={setApproveOpen}
+          onSuccess={() => router.refresh()}
+        />
+        <RequestRevisionDialog
+          taskId={task.id}
+          taskTitle={task.title}
+          open={revisionOpen}
+          onOpenChange={setRevisionOpen}
+          onSuccess={() => router.refresh()}
+        />
+      </>
+    )}
+    </>
   );
 }

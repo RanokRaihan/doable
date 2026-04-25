@@ -1,15 +1,17 @@
-import Link from "next/link";
 import {
   ArrowLeft,
   Calendar,
+  Cog,
   DollarSign,
   MessageSquare,
   ShieldOff,
   User,
 } from "lucide-react";
+import Link from "next/link";
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";
 import { ApplicationOwnerActions } from "@/components/profile/tasks/ApplicationOwnerActions";
+import { OwnerPendingReviewActions } from "@/components/profile/tasks/OwnerPendingReviewActions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,11 +20,26 @@ import { Separator } from "@/components/ui/separator";
 import { ApplicationStatusType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const statusConfig: Record<ApplicationStatusType, { label: string; className: string }> = {
-  PENDING:   { label: "Pending",   className: "bg-amber-100 text-amber-700 border-amber-200" },
-  APPROVED:  { label: "Approved",  className: "bg-green-100 text-green-700 border-green-200" },
-  REJECTED:  { label: "Rejected",  className: "bg-red-100   text-red-700   border-red-200"   },
-  WITHDRAWN: { label: "Withdrawn", className: "bg-gray-100  text-gray-600  border-gray-200"  },
+const statusConfig: Record<
+  ApplicationStatusType,
+  { label: string; className: string }
+> = {
+  PENDING: {
+    label: "Pending",
+    className: "bg-amber-100 text-amber-700 border-amber-200",
+  },
+  APPROVED: {
+    label: "Approved",
+    className: "bg-green-100 text-green-700 border-green-200",
+  },
+  REJECTED: {
+    label: "Rejected",
+    className: "bg-red-100   text-red-700   border-red-200",
+  },
+  WITHDRAWN: {
+    label: "Withdrawn",
+    className: "bg-gray-100  text-gray-600  border-gray-200",
+  },
 };
 
 const formatDate = (iso: string) =>
@@ -50,7 +67,8 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
 
   if (!result.success) {
     const statusCode = "statusCode" in result ? result.statusCode : 500;
-    const message = "message" in result ? result.message : "Something went wrong";
+    const message =
+      "message" in result ? result.message : "Something went wrong";
 
     if (statusCode === 400 || statusCode === 403) {
       return (
@@ -58,7 +76,9 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
           <div className="h-16 w-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
             <ShieldOff className="h-8 w-8 text-red-500" />
           </div>
-          <h1 className="text-xl font-bold text-slate-900 mb-2">Access Denied</h1>
+          <h1 className="text-xl font-bold text-slate-900 mb-2">
+            Access Denied
+          </h1>
           <p className="text-sm text-slate-500 max-w-sm mb-6">{message}</p>
           <Link href={`/profile/tasks/${taskId}/applications`}>
             <Button variant="outline">
@@ -72,7 +92,9 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
 
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-        <h1 className="text-xl font-bold text-slate-900 mb-2">Something went wrong</h1>
+        <h1 className="text-xl font-bold text-slate-900 mb-2">
+          Something went wrong
+        </h1>
         <p className="text-sm text-slate-500 max-w-sm mb-6">{message}</p>
         <Link href={`/profile/tasks/${taskId}/applications`}>
           <Button variant="outline">
@@ -101,22 +123,23 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
 
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Application Detail</h1>
-            <p className="text-xs text-slate-400 mt-1 font-mono">ID: {app.id}</p>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Application Detail
+            </h1>
+            <p className="text-xs text-slate-400 mt-1 font-mono">
+              ID: {app.id}
+            </p>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
             <Badge
               variant="outline"
-              className={cn("text-sm font-medium px-3 py-1", appStatus.className)}
+              className={cn(
+                "text-sm font-medium px-3 py-1",
+                appStatus.className,
+              )}
             >
               {appStatus.label}
             </Badge>
-            {app.status === "PENDING" && (
-              <ApplicationOwnerActions
-                applicationId={app.id}
-                applicantName={app.applicant.name}
-              />
-            )}
           </div>
         </div>
       </div>
@@ -196,12 +219,16 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
             <CardContent className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Applied on</span>
-                <span className="font-medium text-slate-800">{formatDate(app.createdAt)}</span>
+                <span className="font-medium text-slate-800">
+                  {formatDate(app.createdAt)}
+                </span>
               </div>
               <Separator />
               <div className="flex justify-between text-sm">
                 <span className="text-slate-500">Last updated</span>
-                <span className="font-medium text-slate-800">{formatDate(app.updatedAt)}</span>
+                <span className="font-medium text-slate-800">
+                  {formatDate(app.updatedAt)}
+                </span>
               </div>
             </CardContent>
           </Card>
@@ -209,6 +236,34 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
 
         {/* Right column — applicant + task poster */}
         <div className="space-y-4">
+          {/* actions */}
+          {(app.status === "PENDING" ||
+            app.task.status === "PENDING_REVIEW") && (
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                  <Cog className="h-4 w-4 text-slate-500" />
+                  Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {app.status === "PENDING" && (
+                  <ApplicationOwnerActions
+                    applicationId={app.id}
+                    applicantName={app.applicant.name}
+                  />
+                )}
+                {app.task.status === "PENDING_REVIEW" && (
+                  <OwnerPendingReviewActions
+                    stacked={true}
+                    taskId={app.task.id}
+                    taskTitle={app.task.title}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Applicant */}
           <Card>
             <CardHeader className="pb-3">
@@ -240,7 +295,9 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <p className="font-semibold text-sm text-slate-900">{app.task.title}</p>
+              <p className="font-semibold text-sm text-slate-900">
+                {app.task.title}
+              </p>
               <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
                 {app.task.description}
               </p>

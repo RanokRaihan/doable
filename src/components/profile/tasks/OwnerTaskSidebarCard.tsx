@@ -3,15 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { MyPostedTask } from "@/lib/types";
-import {
-  Calendar,
-  ClipboardList,
-  DollarSign,
-  Edit,
-  Hash,
-  Users,
-} from "lucide-react";
+import { Calendar, ClipboardList, DollarSign, Edit, Hash } from "lucide-react";
 import Link from "next/link";
+import { OwnerPendingReviewActions } from "./OwnerPendingReviewActions";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   OPEN: {
@@ -34,6 +28,10 @@ const statusConfig: Record<string, { label: string; className: string }> = {
     label: "Payment Processing",
     className: "bg-purple-100 text-purple-700 border-purple-200",
   },
+  PENDING_REVIEW: {
+    label: "Pending Review",
+    className: "bg-yellow-100 text-yellow-700 border-yellow-200",
+  },
 };
 
 interface OwnerTaskSidebarCardProps {
@@ -45,7 +43,7 @@ export function OwnerTaskSidebarCard({ task }: OwnerTaskSidebarCardProps) {
     label: task.status,
     className: "bg-gray-100 text-gray-700 border-gray-200",
   };
-  const applicationCount = task.applications.length;
+  // const applicationCount = task.applications.length;
   const isEditable = task.status === "OPEN";
 
   return (
@@ -78,8 +76,20 @@ export function OwnerTaskSidebarCard({ task }: OwnerTaskSidebarCardProps) {
           </Badge>
         </div>
 
+        {/* Pending review actions */}
+        {task.status === "PENDING_REVIEW" && (
+          <>
+            <Separator />
+            <OwnerPendingReviewActions
+              taskId={task.id}
+              taskTitle={task.title}
+              stacked
+            />
+          </>
+        )}
+
         {/* Applications */}
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
             <Users className="w-4 h-4" />
             Applications
@@ -92,7 +102,7 @@ export function OwnerTaskSidebarCard({ task }: OwnerTaskSidebarCardProps) {
               ? "No applications"
               : `${applicationCount} applicant${applicationCount !== 1 ? "s" : ""}`}
           </Badge>
-        </div>
+        </div> */}
 
         <Separator />
 
