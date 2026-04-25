@@ -10,11 +10,13 @@ import {
 import Link from "next/link";
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";
+import { ApplicationDetailActions } from "@/components/profile/applications/ApplicationDetailActions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { taskStatusConfig } from "@/lib/taskStatusConfig";
 import { ApplicationStatusType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -37,29 +39,6 @@ const statusConfig: Record<
   WITHDRAWN: {
     label: "Withdrawn",
     className: "bg-gray-100  text-gray-600  border-gray-200",
-  },
-};
-
-const taskStatusConfig: Record<string, { label: string; className: string }> = {
-  OPEN: {
-    label: "Open",
-    className: "bg-blue-100 text-blue-700 border-blue-200",
-  },
-  IN_PROGRESS: {
-    label: "In Progress",
-    className: "bg-purple-100 text-purple-700 border-purple-200",
-  },
-  COMPLETED: {
-    label: "Completed",
-    className: "bg-green-100 text-green-700 border-green-200",
-  },
-  CANCELLED: {
-    label: "Cancelled",
-    className: "bg-red-100 text-red-700 border-red-200",
-  },
-  PAYMENT_PROCESSING: {
-    label: "Payment Processing",
-    className: "bg-orange-100 text-orange-700 border-orange-200",
   },
 };
 
@@ -152,12 +131,20 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
               ID: {app.id}
             </p>
           </div>
-          <Badge
-            variant="outline"
-            className={cn("text-sm font-medium px-3 py-1", appStatus.className)}
-          >
-            {appStatus.label}
-          </Badge>
+          <div className="flex items-center gap-3 flex-wrap">
+            <Badge
+              variant="outline"
+              className={cn("text-sm font-medium px-3 py-1", appStatus.className)}
+            >
+              {appStatus.label}
+            </Badge>
+            <ApplicationDetailActions
+              taskId={app.task.id}
+              taskTitle={app.task.title}
+              applicationStatus={app.status}
+              taskStatus={app.task.status}
+            />
+          </div>
         </div>
       </div>
 

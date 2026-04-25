@@ -25,8 +25,13 @@ export default async function ApplicationsPage({ searchParams }: PageProps) {
       ? (params.status as ApplicationStatusType)
       : undefined;
 
-  const result = await getMyApplicationsAction({ page, limit, sortBy, sortOrder, status });
-
+  const result = await getMyApplicationsAction({
+    page,
+    limit,
+    sortBy,
+    sortOrder,
+    status,
+  });
   if (!result.success) {
     return (
       <div className="flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 text-red-700">
@@ -34,7 +39,9 @@ export default async function ApplicationsPage({ searchParams }: PageProps) {
         <div>
           <p className="font-semibold text-sm">Failed to load applications</p>
           <p className="text-sm mt-0.5 text-red-600">
-            {"message" in result ? result.message : "An unexpected error occurred."}
+            {"message" in result
+              ? result.message
+              : "An unexpected error occurred."}
           </p>
         </div>
       </div>

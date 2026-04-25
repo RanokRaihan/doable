@@ -31,11 +31,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BackendError } from "@/lib/api/types";
+import { taskStatusConfig } from "@/lib/taskStatusConfig";
 import { ApplicationStatusType, MyApplication } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import WithdrawApplicationSchema, {
   WithdrawApplicationFormData,
 } from "@/schema/withdrawApplicationValidation";
+import { MarkCompletedDialog } from "./MarkCompletedDialog";
+import { StartWorkingDialog } from "./StartWorkingDialog";
 
 const statusConfig: Record<
   ApplicationStatusType,
@@ -68,16 +71,27 @@ const formatDate = (iso: string) =>
 
 interface ApplicationCardProps {
   application: MyApplication;
-  onWithdrawSuccess: () => void;
+  onActionSuccess: () => void;
 }
 
 export function ApplicationCard({
   application,
-  onWithdrawSuccess,
+  onActionSuccess,
 }: ApplicationCardProps) {
   const status = statusConfig[application.status];
+  const taskStatus = taskStatusConfig[application.task.status];
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [startOpen, setStartOpen] = useState(false);
+  const [completeOpen, setCompleteOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const showStartWorking =
+    application.status === "APPROVED" && application.task.status === "ASSIGNED";
+  const showMarkCompleted =
+    application.status === "APPROVED" &&
+    application.task.status === "IN_PROGRESS";
+  const showDropdown =
+    application.status === "PENDING" || showStartWorking || showMarkCompleted;
 
   const form = useAppForm({
     defaultValues: { withdrawalReason: "" } as WithdrawApplicationFormData,
@@ -99,7 +113,7 @@ export function ApplicationCard({
       setConfirmOpen(false);
       form.reset();
       toast.success("Application withdrawn successfully.");
-      onWithdrawSuccess();
+      onActionSuccess();
     },
     listeners: {
       onChange: () => {
@@ -140,10 +154,19 @@ export function ApplicationCard({
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-3 shrink-0 flex-wrap justify-end">
           <span className="text-sm font-bold text-slate-800">
             ${application.proposedCompensation}
           </span>
+
+          {taskStatus && (
+            <Badge
+              variant="outline"
+              className={cn("text-xs font-medium", taskStatus.className)}
+            >
+              {taskStatus.label}
+            </Badge>
+          )}
 
           <Badge
             variant="outline"
@@ -152,7 +175,7 @@ export function ApplicationCard({
             {status.label}
           </Badge>
 
-          {application.status === "PENDING" && (
+          {showDropdown && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -165,12 +188,24 @@ export function ApplicationCard({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  variant="destructive"
-                  onSelect={() => setConfirmOpen(true)}
-                >
-                  Withdraw Application
-                </DropdownMenuItem>
+                {application.status === "PENDING" && (
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onSelect={() => setConfirmOpen(true)}
+                  >
+                    Withdraw Application
+                  </DropdownMenuItem>
+                )}
+                {showStartWorking && (
+                  <DropdownMenuItem onSelect={() => setStartOpen(true)}>
+                    Start Working
+                  </DropdownMenuItem>
+                )}
+                {showMarkCompleted && (
+                  <DropdownMenuItem onSelect={() => setCompleteOpen(true)}>
+                    Mark Completed
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -255,6 +290,21 @@ export function ApplicationCard({
           </form>
         </DialogContent>
       </Dialog>
+
+      <StartWorkingDialog
+        taskId={application.task.id}
+        taskTitle={application.task.title}
+        open={startOpen}
+        onOpenChange={setStartOpen}
+        onSuccess={onActionSuccess}
+      />
+      <MarkCompletedDialog
+        taskId={application.task.id}
+        taskTitle={application.task.title}
+        open={completeOpen}
+        onOpenChange={setCompleteOpen}
+        onSuccess={onActionSuccess}
+      />
     </>
   );
 }

@@ -1,5 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { TaskCategoryType, TaskPriorityType, TaskStatusType } from "@/lib/types";
+import { taskStatusConfig } from "@/lib/taskStatusConfig";
+import {
+  TaskCategoryType,
+  TaskPriorityType,
+  TaskStatusType,
+} from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, ArrowUp } from "lucide-react";
 
@@ -29,17 +34,6 @@ const priorityConfig: Record<
   },
 };
 
-const statusConfig: Record<TaskStatusType, { label: string; className: string }> = {
-  OPEN: { label: "Open", className: "bg-blue-100 text-blue-700" },
-  IN_PROGRESS: { label: "In Progress", className: "bg-amber-100 text-amber-700" },
-  COMPLETED: { label: "Completed", className: "bg-green-100 text-green-700" },
-  CANCELLED: { label: "Cancelled", className: "bg-gray-100 text-gray-700" },
-  PAYMENT_PROCESSING: {
-    label: "Payment Processing",
-    className: "bg-purple-100 text-purple-700",
-  },
-};
-
 interface TaskBadgesProps {
   status: TaskStatusType;
   priority: TaskPriorityType;
@@ -48,7 +42,7 @@ interface TaskBadgesProps {
 
 export function TaskBadges({ status, priority, category }: TaskBadgesProps) {
   const priorityCfg = priorityConfig[priority];
-  const statusCfg = statusConfig[status];
+  const statusCfg = taskStatusConfig[status];
   const PriorityIcon = priorityCfg.icon;
 
   return (

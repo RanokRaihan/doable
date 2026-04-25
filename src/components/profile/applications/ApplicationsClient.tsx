@@ -201,7 +201,7 @@ export function ApplicationsClient({
             <ApplicationCard
               key={application.id}
               application={application}
-              onWithdrawSuccess={handleWithdrawSuccess}
+              onActionSuccess={handleWithdrawSuccess}
             />
           ))}
         </div>
