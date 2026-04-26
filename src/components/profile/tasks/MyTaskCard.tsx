@@ -4,6 +4,7 @@ import {
   Calendar,
   CheckCircle2,
   ClipboardList,
+  CreditCard,
   Eye,
   MapPin,
   MoreHorizontal,
@@ -204,6 +205,20 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
                   Applications
                 </Link>
               </DropdownMenuItem>
+              {task.status === "PAYMENT_PROCESSING" && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href={`/profile/tasks/${task.id}/payment`}
+                      className="flex items-center gap-2 cursor-pointer text-purple-600 focus:text-purple-600 focus:bg-purple-50"
+                    >
+                      <CreditCard className="h-4 w-4" />
+                      Pay Now
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
               {task.status === "PENDING_REVIEW" && (
                 <>
                   <DropdownMenuSeparator />

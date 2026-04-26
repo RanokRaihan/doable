@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { MyPostedTask } from "@/lib/types";
-import { Calendar, ClipboardList, DollarSign, Edit, Hash } from "lucide-react";
+import { Calendar, ClipboardList, CreditCard, DollarSign, Edit, Hash } from "lucide-react";
 import Link from "next/link";
 import { OwnerPendingReviewActions } from "./OwnerPendingReviewActions";
 
@@ -108,6 +108,14 @@ export function OwnerTaskSidebarCard({ task }: OwnerTaskSidebarCardProps) {
 
         {/* Actions */}
         <div className="space-y-2.5">
+          {task.status === "PAYMENT_PROCESSING" && (
+            <Button asChild className="w-full bg-purple-600 hover:bg-purple-700">
+              <Link href={`/profile/tasks/${task.id}/payment`}>
+                <CreditCard className="w-4 h-4 mr-2" />
+                Pay Now
+              </Link>
+            </Button>
+          )}
           {isEditable && (
             <Button asChild className="w-full" variant="default">
               <Link href={`/profile/tasks/edit/${task.id}`}>

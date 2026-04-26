@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   Calendar,
   Cog,
+  CreditCard,
   DollarSign,
   MessageSquare,
   ShieldOff,
@@ -238,7 +239,8 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
         <div className="space-y-4">
           {/* actions */}
           {(app.status === "PENDING" ||
-            app.task.status === "PENDING_REVIEW") && (
+            app.task.status === "PENDING_REVIEW" ||
+            app.task.status === "PAYMENT_PROCESSING") && (
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
@@ -246,7 +248,7 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
                   Actions
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-3">
                 {app.status === "PENDING" && (
                   <ApplicationOwnerActions
                     applicationId={app.id}
@@ -259,6 +261,14 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
                     taskId={app.task.id}
                     taskTitle={app.task.title}
                   />
+                )}
+                {app.task.status === "PAYMENT_PROCESSING" && (
+                  <Button asChild className="w-full bg-purple-600 hover:bg-purple-700">
+                    <Link href={`/profile/tasks/${app.task.id}/payment`}>
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Pay Now
+                    </Link>
+                  </Button>
                 )}
               </CardContent>
             </Card>
