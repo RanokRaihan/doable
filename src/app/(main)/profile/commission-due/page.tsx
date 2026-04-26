@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
 
 import getCommissionsDueAction from "@/actions/wallet/getCommissionsDueAction";
-import { CommissionsDueClient } from "./CommissionsDueClient";
+import { CommissionsDueClient } from "@/components/profile/commission-due/CommissionsDueClient";
 import {
   CommissionDueSortField,
   CommissionsDueListResponse,

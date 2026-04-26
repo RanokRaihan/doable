@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CommissionDueStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { CommissionDueDetailActions } from "./CommissionDueDetailActions";
+import { CommissionDueDetailActions } from "@/components/profile/commission-due/CommissionDueDetailActions";
 
 interface PageProps {
   params: Promise<{ dueId: string }>;

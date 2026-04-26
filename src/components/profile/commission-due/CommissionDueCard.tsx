@@ -1,11 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { ExternalLink, Receipt } from "lucide-react";
+import { ExternalLink, MoreVertical, Receipt } from "lucide-react";
 import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { CommissionDue, CommissionDueStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { PayCommissionDueDialog } from "./PayCommissionDueDialog";
@@ -52,26 +58,27 @@ export function CommissionDueCard({ due }: CommissionDueCardProps) {
             {isDue ? "Due" : "Paid"}
           </Badge>
 
-          {isDue && (
-            <Button
-              size="sm"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white"
-              onClick={(e) => {
-                e.preventDefault();
-                setPayOpen(true);
-              }}
-            >
-              Pay Now
-            </Button>
-          )}
-
-          <Link
-            href={`/profile/commission-due/${due.id}`}
-            className="text-slate-400 hover:text-slate-700 transition-colors"
-            title="View details"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {isDue && (
+                <DropdownMenuItem onSelect={() => setPayOpen(true)}>
+                  <Receipt className="h-4 w-4 mr-2" />
+                  Pay Now
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem asChild>
+                <Link href={`/profile/commission-due/${due.id}`}>
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  View Details
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
