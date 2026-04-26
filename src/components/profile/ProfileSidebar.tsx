@@ -17,6 +17,7 @@ import {
   KeyRound,
   LogOut,
   Pencil,
+  Receipt,
   Star,
   User,
   Wallet,
@@ -31,6 +32,7 @@ const navItems = [
   { label: "Applications", href: "/profile/applications", icon: FileText },
   { label: "Reviews", href: "/profile/reviews", icon: Star },
   { label: "Wallet", href: "/profile/wallet", icon: Wallet },
+  { label: "Commission Due", href: "/profile/commission-due", icon: Receipt },
   {
     label: "Change Password",
     href: "/profile/change-password",

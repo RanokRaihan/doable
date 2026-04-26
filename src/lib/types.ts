@@ -201,6 +201,7 @@ export interface ApplicationDetails {
     status: TaskStatusType;
     postedById: string;
     postedBy: { id: string; name: string; image: string | null };
+    payments?: TaskPaymentRecord[];
   };
   applicant: { id: string; name: string; image: string | null };
 }
@@ -215,12 +216,30 @@ export interface ApplicationsResponse {
   meta: PaginationMeta;
 }
 
+// Payment record embedded in task responses
+export interface TaskPaymentRecord {
+  id: string;
+  transactionId: string;
+  taskId?: string;
+  amount: string;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  cashStatus: CashStatusType | null;
+  paidAt: string | null;
+  failedAt: string | null;
+  refundedAt: string | null;
+  posterConfirmedAt?: string | null;
+  payeeConfirmedAt?: string | null;
+  createdAt: string;
+}
+
 // Task as returned by GET /task/my-posted-task/:id (owner view)
 export interface MyPostedTask extends Task {
   postedById: string;
   agreedCompensation: string | null;
   approvedApplicationId: string | null;
   applications: TaskApplication[];
+  payments: TaskPaymentRecord[];
 }
 
 // Task returned by POST /task/post-task
@@ -292,6 +311,66 @@ export interface CashPaymentInitData {
   method: "CASH";
   status: PaymentStatusType;
   cashStatus: CashStatusType;
+}
+
+// Commission Due Status
+export const CommissionDueStatus = {
+  DUE: "DUE",
+  PAID: "PAID",
+} as const;
+export type CommissionDueStatusType =
+  (typeof CommissionDueStatus)[keyof typeof CommissionDueStatus];
+
+export type CommissionDueSortField = "amount" | "createdAt" | "updatedAt";
+
+export interface CommissionDue {
+  id: string;
+  walletId: string;
+  taskId: string;
+  amount: string;
+  status: CommissionDueStatusType;
+  paidAt: string | null;
+  paidViaPayment: string | null;
+  paidViaTxn: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CommissionDueDetail extends CommissionDue {
+  wallet: {
+    id: string;
+    userId: string;
+    balance: string;
+    updatedAt: string;
+    createdAt: string;
+  };
+  task: {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    baseCompensation: string;
+    agreedCompensation: string;
+    postedBy: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
+}
+
+export interface CommissionsDueListResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: {
+    data: CommissionDue[];
+    meta: PaginationMeta;
+  };
+  timestamp: string;
 }
 
 // Response shape for POST /payment/online/init/:taskId

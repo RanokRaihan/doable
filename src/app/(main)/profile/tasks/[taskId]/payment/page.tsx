@@ -186,6 +186,7 @@ export default async function PaymentPage({ params }: Props) {
               <PaymentMethodSelector
                 taskId={taskId}
                 agreedCompensation={compensation}
+                existingPayments={task.payments}
               />
             </CardContent>
           </Card>
