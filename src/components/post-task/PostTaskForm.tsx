@@ -26,7 +26,7 @@ import {
   Tag,
   X,
 } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import ImageUploader from "./ImageUploader";
@@ -54,6 +54,7 @@ const SECTION_CLASSES = "rounded-xl border bg-card p-5 space-y-5 shadow-xs";
 const SECTION_TITLE_CLASSES = "flex items-center gap-2 text-base font-semibold";
 
 const PostTaskForm = () => {
+  const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [coords, setCoords] = useState<{
@@ -133,7 +134,7 @@ const PostTaskForm = () => {
       }
 
       toast.success("Task posted successfully!");
-      redirect(`/tasks/${taskId}`);
+      router.push(`/tasks/${taskId}`);
     },
   });
 

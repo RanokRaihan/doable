@@ -3,7 +3,7 @@ import { LoginAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import LoginSchema from "@/schema/loginValidation";
 import { Loader2, Mail, X } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
@@ -14,6 +14,7 @@ type FormData = z.infer<typeof LoginSchema>;
 const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const { setUser } = useAuth();
+  const router = useRouter();
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -38,11 +39,7 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
       if (res?.success) {
         setUser(res.data.user);
         toast.success(res.message || "Logged in successfully!");
-        if (callbackUrl) {
-          redirect(callbackUrl);
-        } else {
-          redirect("/profile");
-        }
+        router.push(callbackUrl || "/profile");
       } else {
         setServerError(res?.message || "Login failed. Please try again.");
       }

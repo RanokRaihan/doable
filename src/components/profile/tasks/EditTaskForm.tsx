@@ -13,7 +13,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { MyPostedTask, TaskCategory, TaskPriority } from "@/lib/types";
 import PostTaskSchema, { PostTaskFormData } from "@/schema/postTaskValidation";
 import { AlertCircle, Briefcase, Loader2, MapPin, X } from "lucide-react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { EditImageManager, PendingFile } from "./EditImageManager";
@@ -76,6 +76,7 @@ interface EditTaskFormProps {
 }
 
 export function EditTaskForm({ task }: EditTaskFormProps) {
+  const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loadingState, setLoadingState] = useState<LoadingState>("idle");
   const [coords, setCoords] = useState<{
@@ -215,7 +216,7 @@ export function EditTaskForm({ task }: EditTaskFormProps) {
       }
 
       toast.success("Task updated successfully!");
-      redirect("/profile/tasks");
+      router.push("/profile/tasks");
     },
   });
 
