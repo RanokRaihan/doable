@@ -490,6 +490,71 @@ export interface WalletTransactionDetailResponse {
   timestamp: string;
 }
 
+// Payment list & detail types
+export type PaymentSortField = "amount" | "createdAt" | "updatedAt";
+
+export interface PaymentMadeItem {
+  id: string;
+  transactionId: string;
+  amount: string;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  cashStatus: CashStatusType | null;
+  paidAt: string | null;
+  createdAt: string;
+  payee: { id: string; name: string; email: string };
+  taskId: string;
+}
+
+export interface PaymentReceivedItem {
+  id: string;
+  transactionId: string;
+  amount: string;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  cashStatus: CashStatusType | null;
+  paidAt: string | null;
+  createdAt: string;
+  payer: { id: string; name: string; email: string };
+  commissionAmount: string;
+  commissionDeducted: boolean;
+  taskId: string;
+}
+
+export interface PaymentDetail {
+  id: string;
+  transactionId: string;
+  amount: string;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  cashStatus: CashStatusType | null;
+  paidAt: string | null;
+  createdAt: string;
+  failedAt: string | null;
+  failureReason: string | null;
+  commissionAmount: string;
+  commissionDeducted: boolean;
+  task: { title: string; category: string; location: string; status: string };
+  payer: { id: string; name: string; email: string };
+  payee: { id: string; name: string; email: string };
+}
+
+export interface PaymentsMadeListResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  timestamp: string;
+  data: { data: PaymentMadeItem[]; meta: PaginationMeta };
+}
+
+export interface PaymentsReceivedListResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  timestamp: string;
+  data: { data: PaymentReceivedItem[]; meta: PaginationMeta };
+}
+
 // Response shape for GET /payment/session/:sessionToken
 export interface PaymentSessionDetail {
   id: string;
