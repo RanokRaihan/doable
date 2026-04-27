@@ -389,3 +389,136 @@ export interface OnlinePaymentInitData {
   message: string;
   isExisting: boolean;
 }
+
+// Wallet Transaction Type
+export const WalletTransactionType = {
+  CREDIT: "CREDIT",
+  DEBIT:  "DEBIT",
+} as const;
+export type WalletTransactionTypeType =
+  (typeof WalletTransactionType)[keyof typeof WalletTransactionType];
+
+// Wallet Transaction Category
+export const WalletTransactionCategory = {
+  TASK_PAYMENT:                "TASK_PAYMENT",
+  DIRECT_COMMISSION_DEDUCTION: "DIRECT_COMMISSION_DEDUCTION",
+  COMMISSION_PAYMENT:          "COMMISSION_PAYMENT",
+  WITHDRAWAL:                  "WITHDRAWAL",
+  REFUND:                      "REFUND",
+  ADJUSTMENT:                  "ADJUSTMENT",
+} as const;
+export type WalletTransactionCategoryType =
+  (typeof WalletTransactionCategory)[keyof typeof WalletTransactionCategory];
+
+// Wallet Transaction Status
+export const WalletTransactionStatus = {
+  PENDING:   "PENDING",
+  COMPLETED: "COMPLETED",
+  FAILED:    "FAILED",
+  REVERSED:  "REVERSED",
+} as const;
+export type WalletTransactionStatusType =
+  (typeof WalletTransactionStatus)[keyof typeof WalletTransactionStatus];
+
+export type WalletTransactionSortField = "createdAt" | "amount";
+
+export interface Wallet {
+  id: string;
+  userId: string;
+  balance: string;
+  updatedAt: string;
+  createdAt: string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    image: string | null;
+  };
+}
+
+export interface MyWalletResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: Wallet;
+  timestamp: string;
+}
+
+export interface WalletTransaction {
+  id: string;
+  transactionId: string;
+  walletId: string;
+  amount: string;
+  type: WalletTransactionTypeType;
+  category: WalletTransactionCategoryType;
+  status: WalletTransactionStatusType;
+  refPaymentId: string | null;
+  refCommissionDueId: string | null;
+  description: string;
+  metadata: unknown;
+  balanceBefore: string;
+  balanceAfter: string;
+  createdAt: string;
+}
+
+export interface WalletTransactionDetail extends WalletTransaction {
+  wallet: {
+    id: string;
+    userId: string;
+    balance: string;
+    updatedAt: string;
+    createdAt: string;
+  };
+}
+
+export interface WalletTransactionsListResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: {
+    data: WalletTransaction[];
+    meta: PaginationMeta;
+  };
+  timestamp: string;
+}
+
+export interface WalletTransactionDetailResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: WalletTransactionDetail;
+  timestamp: string;
+}
+
+// Response shape for GET /payment/session/:sessionToken
+export interface PaymentSessionDetail {
+  id: string;
+  transactionId: string;
+  sessionToken: string;
+  amount: string;
+  method: PaymentMethodType;
+  status: PaymentStatusType;
+  cashStatus: CashStatusType | null;
+  paidAt: string | null;
+  failedAt: string | null;
+  refundedAt: string | null;
+  sessionExpiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  task: {
+    id: string;
+    title: string;
+    category: string;
+    status: string;
+  } | null;
+  payer: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
+  payee: {
+    id: string;
+    name: string;
+    email: string;
+  } | null;
+}
