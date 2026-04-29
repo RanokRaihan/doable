@@ -3,16 +3,26 @@ import { LoginAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import LoginSchema from "@/schema/loginValidation";
 import { Loader2, Mail, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { useAppForm } from "../form/hooks";
 import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { FieldGroup } from "../ui/field";
 type FormData = z.infer<typeof LoginSchema>;
 const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
+  const [lockedDialogOpen, setLockedDialogOpen] = useState(false);
   const { setUser } = useAuth();
   const router = useRouter();
   const form = useAppForm({
@@ -40,12 +50,34 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         setUser(res.data.user);
         toast.success(res.message || "Logged in successfully!");
         router.push(callbackUrl || "/profile");
+      } else if (res?.statusCode === 423) {
+        setLockedDialogOpen(true);
       } else {
         setServerError(res?.message || "Login failed. Please try again.");
       }
     },
   });
   return (
+    <>
+      <Dialog open={lockedDialogOpen} onOpenChange={setLockedDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Account Temporarily Locked</DialogTitle>
+            <DialogDescription>
+              Too many failed login attempts. Please try again later or reset
+              your password to regain access.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setLockedDialogOpen(false)}>
+              Close
+            </Button>
+            <Button asChild>
+              <Link href="/forgot-password">Reset Password</Link>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     <form
       onSubmit={(e) => {
         e.preventDefault();
@@ -94,6 +126,7 @@ const LoginForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         </form.Subscribe>
       </FieldGroup>
     </form>
+    </>
   );
 };
 
