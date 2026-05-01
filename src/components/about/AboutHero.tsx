@@ -21,7 +21,7 @@ export const AboutHero = () => {
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-blue-600">
             <Sparkles size={13} />
-            About GetItDone
+            About Doable
           </span>
         </motion.div>
 
@@ -49,10 +49,9 @@ export const AboutHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.2 }}
         >
-          GetItDone is a community-powered marketplace that blurs the line
-          between hiring and working. Today you post a job; tomorrow you pick
-          one up. No corporate gatekeeping — just real people, real tasks, real
-          earnings.
+          Doable is a community-powered marketplace that blurs the line between
+          hiring and working. Today you post a job; tomorrow you pick one up. No
+          corporate gatekeeping — just real people, real tasks, real earnings.
         </motion.p>
       </div>
     </section>

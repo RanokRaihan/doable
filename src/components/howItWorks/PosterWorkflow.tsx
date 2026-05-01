@@ -67,12 +67,12 @@ export const PosterWorkflow = () => {
           <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Post a task in minutes,{" "}
             <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              get it done today
+              Doable today
             </span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-gray-600">
             You can be a poster at 9 AM and a worker by noon. That&apos;s the
-            GetItDone way — a community where helping and hiring flow both ways.
+            Doable way — a community where helping and hiring flow both ways.
           </p>
         </AnimatedSection>
 

@@ -1,4 +1,4 @@
-# API Contract — Get It Done Backend
+# API Contract — Doable Backend
 
 Single source of truth for the frontend ↔ backend boundary.
 Generated from source: `src/`, `prisma/schema.prisma`. Verified against actual code.

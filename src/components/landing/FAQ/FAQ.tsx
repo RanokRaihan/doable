@@ -11,7 +11,7 @@ const posterFaqs = [
   {
     question: "Is my payment secure?",
     answer:
-      "Yes. We use a secure Escrow system. Your money is held safely by GetItDone and is only released to the helper once you confirm the task is completed to your satisfaction.",
+      "Yes. We use a secure Escrow system. Your money is held safely by Doable and is only released to the helper once you confirm the task is completed to your satisfaction.",
   },
   {
     question: "What if I'm not happy with the work?",

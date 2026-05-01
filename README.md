@@ -1,4 +1,4 @@
-# Get It Done
+# Doable
 
 A full-featured task marketplace where people post tasks they need done and workers apply to complete them. The platform handles the full lifecycle — task posting, applications, worker assignment, completion, and payment (cash or online gateway).
 
@@ -41,7 +41,7 @@ A full-featured task marketplace where people post tasks they need done and work
 ## Project Structure
 
 ```
-get-it-done/
+doable/
 ├── public/                         # Static assets
 ├── src/
 │   ├── app/                        # Next.js App Router pages
@@ -105,13 +105,13 @@ get-it-done/
 ### Prerequisites
 
 - Node.js 18+
-- A running instance of the [Get It Done backend API](https://github.com/)
+- A running instance of the [Doable backend API](https://github.com/)
 
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/get-it-done.git
-cd get-it-done
+git clone https://github.com/your-username/doable.git
+cd doable
 npm install
 ```
 

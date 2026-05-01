@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Get It Done - Helper Marketplace",
+  title: "Doable - Helper Marketplace",
   description: "A marketplace to find helpers for your tasks.",
 };
 

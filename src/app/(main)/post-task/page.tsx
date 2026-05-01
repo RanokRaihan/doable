@@ -2,7 +2,7 @@ import PostTaskForm from "@/components/post-task/PostTaskForm";
 import { ClipboardList } from "lucide-react";
 
 export const metadata = {
-  title: "Post a Task — Get It Done",
+  title: "Post a Task — Doable",
   description: "Describe your task and connect with skilled helpers nearby.",
 };
 

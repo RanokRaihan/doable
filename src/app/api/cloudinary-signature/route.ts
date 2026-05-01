@@ -16,7 +16,7 @@ export async function GET() {
   }
 
   const timestamp = Math.round(Date.now() / 1000);
-  const folder = "get-it-done/tasks";
+  const folder = "doable/tasks";
 
   // Signature string: all parameters sorted alphabetically + API secret
   const paramsToSign = `folder=${folder}&timestamp=${timestamp}`;

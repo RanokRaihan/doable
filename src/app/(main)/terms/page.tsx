@@ -6,9 +6,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | GetItDone",
+  title: "Terms of Service | Doable",
   description:
-    "Read GetItDone's Terms of Service to understand your rights and responsibilities when using our task marketplace platform.",
+    "Read Doable's Terms of Service to understand your rights and responsibilities when using our task marketplace platform.",
 };
 
 export default function TermsOfServicePage() {
@@ -28,7 +28,7 @@ export default function TermsOfServicePage() {
               Terms of Service
             </h1>
             <p className="text-gray-600 text-lg leading-relaxed">
-              Please read these terms carefully before using the GetItDone
+              Please read these terms carefully before using the Doable
               platform. They set out the rules for our community.
             </p>
           </div>
