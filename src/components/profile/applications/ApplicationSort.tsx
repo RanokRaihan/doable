@@ -4,6 +4,7 @@ import {
   Calendar,
   CalendarClock,
   Check,
+  ChevronDown,
   CircleDot,
   DollarSign,
   SortAsc,
@@ -51,6 +52,7 @@ export function ApplicationSort({ sortField, sortOrder, onSortChange }: Applicat
               {currentOption?.icon}
               {currentOption?.label}
             </span>
+            <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-45">

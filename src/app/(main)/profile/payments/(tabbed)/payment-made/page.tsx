@@ -6,6 +6,7 @@ import type {
   PaymentMethodType,
   PaymentSortField,
   PaymentsMadeListResponse,
+  PaymentStatusType,
   SortOrder,
 } from "@/lib/types";
 
@@ -24,7 +25,13 @@ export default async function PaymentsMadePage({ searchParams }: PageProps) {
   const method: PaymentMethodType | undefined =
     rawMethod === "CASH" || rawMethod === "ONLINE" ? rawMethod : undefined;
 
-  const result = await getPaymentsMadeAction({ page, limit, sortBy, sortOrder, method });
+  const rawStatus = typeof params.status === "string" ? params.status : undefined;
+  const validStatuses = ["PENDING", "COMPLETED", "FAILED", "CANCELLED", "REFUNDED"] as const;
+  const status: PaymentStatusType | undefined = validStatuses.includes(rawStatus as PaymentStatusType)
+    ? (rawStatus as PaymentStatusType)
+    : undefined;
+
+  const result = await getPaymentsMadeAction({ page, limit, sortBy, sortOrder, method, status });
 
   if (!result.success) {
     return (
@@ -46,7 +53,7 @@ export default async function PaymentsMadePage({ searchParams }: PageProps) {
     <PaymentsMadeClient
       payments={payments}
       meta={meta}
-      currentFilters={{ page, limit, sortBy, sortOrder, method }}
+      currentFilters={{ page, limit, sortBy, sortOrder, method, status }}
     />
   );
 }

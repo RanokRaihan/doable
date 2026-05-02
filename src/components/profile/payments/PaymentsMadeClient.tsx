@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, CreditCard, Search, SortAsc, SortDesc } from "lucide-react";
+import { Check, ChevronDown, CreditCard, Search, SortAsc, SortDesc } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { PaymentCard } from "@/components/profile/payments/PaymentCard";
@@ -20,6 +20,7 @@ import type {
   PaymentMadeItem,
   PaymentMethodType,
   PaymentSortField,
+  PaymentStatusType,
   SortOrder,
 } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ interface CurrentFilters {
   sortBy: PaymentSortField;
   sortOrder: SortOrder;
   method?: PaymentMethodType;
+  status?: PaymentStatusType;
 }
 
 interface PaymentsMadeClientProps {
@@ -38,16 +40,25 @@ interface PaymentsMadeClientProps {
   currentFilters: CurrentFilters;
 }
 
-const sortFieldOptions: { value: PaymentSortField; label: string }[] = [
-  { value: "createdAt", label: "Date Created" },
-  { value: "updatedAt", label: "Last Updated" },
-  { value: "amount",    label: "Amount" },
-];
-
 const methodOptions: { value: PaymentMethodType | undefined; label: string }[] = [
   { value: undefined,  label: "All Methods" },
   { value: "ONLINE",   label: "Online" },
   { value: "CASH",     label: "Cash" },
+];
+
+const statusOptions: { value: PaymentStatusType | undefined; label: string }[] = [
+  { value: undefined,     label: "All Statuses" },
+  { value: "PENDING",     label: "Pending" },
+  { value: "COMPLETED",   label: "Completed" },
+  { value: "FAILED",      label: "Failed" },
+  { value: "CANCELLED",   label: "Cancelled" },
+  { value: "REFUNDED",    label: "Refunded" },
+];
+
+const sortFieldOptions: { value: PaymentSortField; label: string }[] = [
+  { value: "createdAt", label: "Date Created" },
+  { value: "updatedAt", label: "Last Updated" },
+  { value: "amount",    label: "Amount" },
 ];
 
 export function PaymentsMadeClient({
@@ -67,10 +78,17 @@ export function PaymentsMadeClient({
     if (merged.sortBy !== "createdAt") params.set("sortBy", merged.sortBy);
     if (merged.sortOrder !== "desc") params.set("sortOrder", merged.sortOrder);
     if (merged.method) params.set("method", merged.method);
+    if (merged.status) params.set("status", merged.status);
 
     const query = params.toString();
     router.replace(`${pathname}${query ? `?${query}` : ""}`);
   }
+
+  const handleMethodChange = (method: PaymentMethodType | undefined) =>
+    updateURL({ method, page: 1 });
+
+  const handleStatusChange = (status: PaymentStatusType | undefined) =>
+    updateURL({ status, page: 1 });
 
   const handleSortFieldChange = (field: PaymentSortField) =>
     updateURL({ sortBy: field, page: 1 });
@@ -80,9 +98,6 @@ export function PaymentsMadeClient({
       sortOrder: currentFilters.sortOrder === "asc" ? "desc" : "asc",
       page: 1,
     });
-
-  const handleMethodChange = (method: PaymentMethodType | undefined) =>
-    updateURL({ method, page: 1 });
 
   const handlePageChange = (page: number) => {
     updateURL({ page });
@@ -97,7 +112,13 @@ export function PaymentsMadeClient({
     (m) => m.value === currentFilters.method,
   );
 
-  const hasFilter = !!currentFilters.method;
+  const currentStatusOption = statusOptions.find(
+    (s) => s.value === currentFilters.status,
+  );
+
+  const hasMethodFilter = !!currentFilters.method;
+  const hasStatusFilter = !!currentFilters.status;
+  const hasFilter = hasMethodFilter || hasStatusFilter;
 
   return (
     <div className="space-y-5">
@@ -106,21 +127,100 @@ export function PaymentsMadeClient({
           {meta.total} payment{meta.total !== 1 ? "s" : ""} total
         </p>
         {hasFilter && (
-          <Badge
-            variant="outline"
-            className="border-blue-200 bg-blue-50 text-blue-700 cursor-pointer hover:bg-blue-100 transition-colors"
-            onClick={() => handleMethodChange(undefined)}
-          >
-            {currentFilters.method} ✕
-          </Badge>
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            {hasMethodFilter && (
+              <Badge
+                variant="outline"
+                className="border-blue-200 bg-blue-50 text-blue-700 cursor-pointer hover:bg-blue-100 transition-colors"
+                onClick={() => handleMethodChange(undefined)}
+              >
+                {currentFilters.method} ✕
+              </Badge>
+            )}
+            {hasStatusFilter && (
+              <Badge
+                variant="outline"
+                className="border-violet-200 bg-violet-50 text-violet-700 cursor-pointer hover:bg-violet-100 transition-colors"
+                onClick={() => handleStatusChange(undefined)}
+              >
+                {currentFilters.status} ✕
+              </Badge>
+            )}
+          </div>
         )}
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
+        {/* Method filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "min-w-36 justify-between",
+                hasMethodFilter && "border-blue-300 bg-blue-50/50 text-blue-700",
+              )}
+            >
+              {currentMethodOption?.label ?? "All Methods"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-40">
+            <DropdownMenuLabel>Payment Method</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {methodOptions.map((option) => (
+              <DropdownMenuItem
+                key={option.value ?? "all"}
+                onClick={() => handleMethodChange(option.value)}
+                className="cursor-pointer"
+              >
+                <span className="flex-1">{option.label}</span>
+                {currentFilters.method === option.value && (
+                  <Check className="h-4 w-4 text-primary" />
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Status filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "min-w-40 justify-between",
+                hasStatusFilter && "border-violet-300 bg-violet-50/50 text-violet-700",
+              )}
+            >
+              {currentStatusOption?.label ?? "All Statuses"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-44">
+            <DropdownMenuLabel>Payment Status</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {statusOptions.map((option) => (
+              <DropdownMenuItem
+                key={option.value ?? "all"}
+                onClick={() => handleStatusChange(option.value)}
+                className="cursor-pointer"
+              >
+                <span className="flex-1">{option.label}</span>
+                {currentFilters.status === option.value && (
+                  <Check className="h-4 w-4 text-primary" />
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Sort by */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="min-w-40 justify-between">
               {currentSortOption?.label ?? "Sort by"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">
@@ -141,6 +241,7 @@ export function PaymentsMadeClient({
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* Sort order toggle */}
         <Button
           variant="outline"
           size="icon"
@@ -157,36 +258,6 @@ export function PaymentsMadeClient({
             <SortDesc className="h-4 w-4" />
           )}
         </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "min-w-36 justify-between",
-                hasFilter && "border-blue-300 bg-blue-50/50 text-blue-700",
-              )}
-            >
-              {currentMethodOption?.label ?? "All Methods"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-40">
-            <DropdownMenuLabel>Payment Method</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {methodOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value ?? "all"}
-                onClick={() => handleMethodChange(option.value)}
-                className="cursor-pointer"
-              >
-                <span className="flex-1">{option.label}</span>
-                {currentFilters.method === option.value && (
-                  <Check className="h-4 w-4 text-primary" />
-                )}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       {payments.length === 0 ? (
@@ -195,10 +266,10 @@ export function PaymentsMadeClient({
             <>
               <Search className="h-10 w-10 text-slate-300 mb-3" />
               <h3 className="text-base font-semibold text-slate-700">
-                No payments match your filter
+                No payments match your filters
               </h3>
               <p className="text-sm text-slate-500 mt-1 max-w-xs">
-                Try removing the method filter to see all payments.
+                Try adjusting or removing the active filters.
               </p>
             </>
           ) : (

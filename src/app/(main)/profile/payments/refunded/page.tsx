@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ApiResponse } from "@/lib/api/types";
 import { PaymentSessionDetail, PaymentStatus } from "@/lib/types";
-import { ArrowLeft, CreditCard, XCircle } from "lucide-react";
+import { ArrowLeft, ExternalLink, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -17,7 +17,7 @@ interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function PaymentFailPage({ searchParams }: PageProps) {
+export default async function PaymentRefundedPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const sessionToken =
     typeof params.sessionToken === "string" ? params.sessionToken : null;
@@ -40,7 +40,7 @@ export default async function PaymentFailPage({ searchParams }: PageProps) {
 
   const session = (result as ApiResponse<PaymentSessionDetail>).data;
 
-  if (session.status !== PaymentStatus.FAILED) {
+  if (session.status !== PaymentStatus.REFUNDED) {
     redirect(
       resolveStatusRedirectUrl(
         session.status,
@@ -54,18 +54,21 @@ export default async function PaymentFailPage({ searchParams }: PageProps) {
     <div className="space-y-6 max-w-2xl">
       {/* Hero */}
       <div className="text-center space-y-3 py-2">
-        <XCircle className="size-16 text-red-500 mx-auto" />
+        <RotateCcw className="size-16 text-blue-500 mx-auto" />
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Payment Failed</h1>
+          <h1 className="text-2xl font-bold text-slate-900">
+            Payment Refunded
+          </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Your payment could not be processed. Please try again.
+            Your payment has been refunded. It may take a few days to reflect in
+            your account.
           </p>
         </div>
       </div>
 
       <TransactionSummaryCard
         session={session}
-        amountClassName="text-red-600"
+        amountClassName="text-blue-600"
       />
 
       {session.task && <TaskCard task={session.task} />}
@@ -80,13 +83,10 @@ export default async function PaymentFailPage({ searchParams }: PageProps) {
           </Link>
         </Button>
         {session.task && (
-          <Button
-            asChild
-            className="bg-red-600 hover:bg-red-700 text-white"
-          >
-            <Link href={`/profile/tasks/${session.task.id}/payment`}>
-              <CreditCard className="size-4" />
-              Retry Payment
+          <Button asChild variant="secondary">
+            <Link href={`/profile/tasks/${session.task.id}`}>
+              View Task
+              <ExternalLink className="size-4" />
             </Link>
           </Button>
         )}

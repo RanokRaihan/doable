@@ -2,6 +2,8 @@
 
 ## Recent Changes
 
+- 2026-05-02 — Added payment result pages (fail, cancel, refunded) and shared _components/paymentPageHelpers.tsx; all payment result pages now redirect based on session status
+- 2026-05-02 — Updated TaskStatus enum (PAYMENT_PROCESSING → PAYMENT_PENDING + PAYMENT_INITIATED); added CLOSED to ApplicationStatus
 - 2026-04-27 — Restructured context files; full directory map updated to reflect payments, wallet, commission-due, application, and profile areas; tasks page confirmed on real API data; mock tasks removed
 
 ---
@@ -116,12 +118,15 @@ src/
 │           │   └── [applicationId]/page.tsx  # Application detail + withdraw / actions
 │           ├── payments/
 │           │   ├── page.tsx            # Redirects to payment-made tab
+│           │   ├── _components/
+│           │   │   └── paymentPageHelpers.tsx  # Shared components + utilities for all payment result pages
 │           │   ├── [paymentId]/
 │           │   │   ├── page.tsx        # Payment detail
 │           │   │   └── loading.tsx
-│           │   ├── success/page.tsx    # Payment gateway success callback
-│           │   ├── cancel/page.tsx     # Payment gateway cancel callback
-│           │   ├── fail/page.tsx       # Payment gateway failure callback
+│           │   ├── success/page.tsx    # Gateway success callback — validates COMPLETED status, redirects others
+│           │   ├── cancel/page.tsx     # Gateway cancel callback — validates CANCELLED status, redirects others
+│           │   ├── fail/page.tsx       # Gateway failure callback — validates FAILED status, redirects others
+│           │   ├── refunded/page.tsx   # Refund confirmation — validates REFUNDED status, redirects others
 │           │   └── (tabbed)/           # Route group for tabbed payments layout
 │           │       ├── layout.tsx      # Mounts <PaymentsTabNav>
 │           │       ├── payment-made/

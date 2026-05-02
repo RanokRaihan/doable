@@ -4,6 +4,7 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Check,
+  ChevronDown,
   Search,
   SortAsc,
   SortDesc,
@@ -125,6 +126,7 @@ export function WalletTransactionsClient({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="min-w-36 justify-between">
               {currentTypeOption?.label ?? "All Types"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">
@@ -150,6 +152,7 @@ export function WalletTransactionsClient({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="min-w-36 justify-between">
               {currentSortOption?.label ?? "Sort by"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-36">

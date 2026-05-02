@@ -42,6 +42,7 @@ interface ApplicationsClientProps {
 const statusLabels: Record<ApplicationStatusType, string> = {
   PENDING:   "Pending",
   APPROVED:  "Approved",
+  CLOSED:    "Closed",
   REJECTED:  "Rejected",
   WITHDRAWN: "Withdrawn",
 };

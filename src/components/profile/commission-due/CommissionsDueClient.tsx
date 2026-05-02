@@ -1,6 +1,6 @@
 "use client";
 
-import { Receipt, SortAsc, SortDesc, Check } from "lucide-react";
+import { ChevronDown, Receipt, SortAsc, SortDesc, Check } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { CommissionDueCard } from "@/components/profile/commission-due/CommissionDueCard";
@@ -99,6 +99,7 @@ export function CommissionsDueClient({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="min-w-40 justify-between">
               {currentOption?.label ?? "Sort by"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">

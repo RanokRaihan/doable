@@ -6,6 +6,7 @@ import type {
   PaymentMethodType,
   PaymentSortField,
   PaymentsMadeListResponse,
+  PaymentStatusType,
   SortOrder,
 } from "@/lib/types";
 
@@ -15,6 +16,7 @@ export type PaymentsMadeParams = {
   sortBy?: PaymentSortField;
   sortOrder?: SortOrder;
   method?: PaymentMethodType;
+  status?: PaymentStatusType;
 };
 
 const getPaymentsMadeAction = async (params: PaymentsMadeParams = {}) =>

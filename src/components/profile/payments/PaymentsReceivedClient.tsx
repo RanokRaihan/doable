@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, CreditCard, Search, SortAsc, SortDesc } from "lucide-react";
+import { Check, ChevronDown, CreditCard, Search, SortAsc, SortDesc } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { PaymentCard } from "@/components/profile/payments/PaymentCard";
@@ -117,10 +117,44 @@ export function PaymentsReceivedClient({
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
+        {/* Method filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "min-w-36 justify-between",
+                hasFilter && "border-blue-300 bg-blue-50/50 text-blue-700",
+              )}
+            >
+              {currentMethodOption?.label ?? "All Methods"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-40">
+            <DropdownMenuLabel>Payment Method</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {methodOptions.map((option) => (
+              <DropdownMenuItem
+                key={option.value ?? "all"}
+                onClick={() => handleMethodChange(option.value)}
+                className="cursor-pointer"
+              >
+                <span className="flex-1">{option.label}</span>
+                {currentFilters.method === option.value && (
+                  <Check className="h-4 w-4 text-primary" />
+                )}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Sort by */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="min-w-40 justify-between">
               {currentSortOption?.label ?? "Sort by"}
+              <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-44">
@@ -141,6 +175,7 @@ export function PaymentsReceivedClient({
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* Sort order toggle */}
         <Button
           variant="outline"
           size="icon"
@@ -157,36 +192,6 @@ export function PaymentsReceivedClient({
             <SortDesc className="h-4 w-4" />
           )}
         </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "min-w-36 justify-between",
-                hasFilter && "border-blue-300 bg-blue-50/50 text-blue-700",
-              )}
-            >
-              {currentMethodOption?.label ?? "All Methods"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-40">
-            <DropdownMenuLabel>Payment Method</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {methodOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value ?? "all"}
-                onClick={() => handleMethodChange(option.value)}
-                className="cursor-pointer"
-              >
-                <span className="flex-1">{option.label}</span>
-                {currentFilters.method === option.value && (
-                  <Check className="h-4 w-4 text-primary" />
-                )}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       {payments.length === 0 ? (
