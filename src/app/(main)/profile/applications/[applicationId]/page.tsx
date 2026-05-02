@@ -141,7 +141,10 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
           <div className="flex items-center gap-3 flex-wrap">
             <Badge
               variant="outline"
-              className={cn("text-sm font-medium px-3 py-1", appStatus.className)}
+              className={cn(
+                "text-sm font-medium px-3 py-1",
+                appStatus.className,
+              )}
             >
               {appStatus.label}
             </Badge>
@@ -248,64 +251,71 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
         {/* Right column — payment + task + people */}
         <div className="space-y-4">
           {/* Payment card — only when payments are present */}
-          {app.task.payments && app.task.payments.length > 0 && (() => {
-            const payment = app.task.payments![0];
-            const isCash = payment.method === "CASH";
-            return (
-              <Card className={isCash ? "border-amber-200" : "border-blue-200"}>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+          {app.task.payments &&
+            app.task.payments.length > 0 &&
+            (() => {
+              const payment = app.task.payments![0];
+              const isCash = payment.method === "CASH";
+              return (
+                <Card
+                  className={isCash ? "border-amber-200" : "border-blue-200"}
+                >
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                      {isCash ? (
+                        <Banknote className="h-4 w-4 text-amber-500" />
+                      ) : (
+                        <CreditCard className="h-4 w-4 text-blue-500" />
+                      )}
+                      {isCash ? "Cash Payment" : "Online Payment"}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     {isCash ? (
-                      <Banknote className="h-4 w-4 text-amber-500" />
+                      <CashPaymentActions payment={payment} />
                     ) : (
-                      <CreditCard className="h-4 w-4 text-blue-500" />
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500">Amount</span>
+                          <span className="font-bold text-slate-900">
+                            ৳{" "}
+                            {parseFloat(payment.amount).toLocaleString(
+                              "en-BD",
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              },
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500">Status</span>
+                          <Badge
+                            variant="outline"
+                            className={
+                              payment.status === "COMPLETED"
+                                ? "bg-green-50 text-green-700 border-green-200"
+                                : payment.status === "FAILED"
+                                  ? "bg-red-50 text-red-700 border-red-200"
+                                  : "bg-blue-50 text-blue-700 border-blue-200"
+                            }
+                          >
+                            {payment.status.charAt(0) +
+                              payment.status.slice(1).toLowerCase()}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500">Transaction</span>
+                          <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                            {payment.transactionId.slice(0, 16)}…
+                          </span>
+                        </div>
+                      </div>
                     )}
-                    {isCash ? "Cash Payment" : "Online Payment"}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {isCash ? (
-                    <CashPaymentActions payment={payment} />
-                  ) : (
-                    <div className="space-y-3 text-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Amount</span>
-                        <span className="font-bold text-slate-900">
-                          ৳{" "}
-                          {parseFloat(payment.amount).toLocaleString("en-BD", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Status</span>
-                        <Badge
-                          variant="outline"
-                          className={
-                            payment.status === "COMPLETED"
-                              ? "bg-green-50 text-green-700 border-green-200"
-                              : payment.status === "FAILED"
-                                ? "bg-red-50 text-red-700 border-red-200"
-                                : "bg-blue-50 text-blue-700 border-blue-200"
-                          }
-                        >
-                          {payment.status.charAt(0) +
-                            payment.status.slice(1).toLowerCase()}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-500">Transaction</span>
-                        <span className="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
-                          {payment.transactionId.slice(0, 16)}…
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })()}
+                  </CardContent>
+                </Card>
+              );
+            })()}
 
           {/* Task info */}
           <Card>
@@ -327,16 +337,18 @@ export default async function ApplicationDetailPage({ params }: PageProps) {
                   {app.task.description}
                 </p>
               </div>
-              <Badge
-                variant="outline"
-                className={cn(
-                  "text-xs font-medium",
-                  taskStatus?.className ??
-                    "bg-slate-100 text-slate-600 border-slate-200",
-                )}
-              >
-                {taskStatus?.label ?? app.task.status}
-              </Badge>
+              {app.task.status && (
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "text-xs font-medium",
+                    taskStatus?.className ??
+                      "bg-slate-100 text-slate-600 border-slate-200",
+                  )}
+                >
+                  {taskStatus?.label ?? app.task.status}
+                </Badge>
+              )}
             </CardContent>
           </Card>
 

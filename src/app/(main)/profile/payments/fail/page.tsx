@@ -5,7 +5,7 @@ import {
   TaskCard,
   TransactionSummaryCard,
   resolveStatusRedirectUrl,
-} from "@/app/(main)/profile/payments/_components/paymentPageHelpers";
+} from "@/components/profile/payments/paymentPageHelpers";
 import { Button } from "@/components/ui/button";
 import { ApiResponse } from "@/lib/api/types";
 import { PaymentSessionDetail, PaymentStatus } from "@/lib/types";
@@ -80,10 +80,7 @@ export default async function PaymentFailPage({ searchParams }: PageProps) {
           </Link>
         </Button>
         {session.task && (
-          <Button
-            asChild
-            className="bg-red-600 hover:bg-red-700 text-white"
-          >
+          <Button asChild className="bg-red-600 hover:bg-red-700 text-white">
             <Link href={`/profile/tasks/${session.task.id}/payment`}>
               <CreditCard className="size-4" />
               Retry Payment
