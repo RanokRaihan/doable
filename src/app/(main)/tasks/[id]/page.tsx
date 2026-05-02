@@ -69,6 +69,7 @@ export default async function TaskDetailsPage({ params }: PageProps) {
               expiresAt={task.expiresAt}
               taskId={task.id}
               currentUserId={user?.id}
+              hasApplied={task.hasApplied}
             />
             <SafetyCard />
           </div>

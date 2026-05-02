@@ -62,13 +62,6 @@ interface MyTasksClientProps {
   currentFilters: CurrentFilters;
 }
 
-// const statusLabels: Record<TaskStatusType, string> = {
-//   OPEN: "Open",
-//   IN_PROGRESS: "In Progress",
-//   COMPLETED: "Completed",
-//   CANCELLED: "Cancelled",
-//   PAYMENT_PROCESSING: "Payment Processing",
-// };
 
 const categoryLabels: Record<TaskCategoryType, string> = {
   DELIVERY: "Delivery",

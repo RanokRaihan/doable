@@ -12,6 +12,8 @@ interface TaskSidebarCardProps {
   createdAt: string;
   expiresAt?: string | null;
   taskId: string;
+  hasApplied: boolean;
+
   currentUserId?: string;
 }
 
@@ -31,6 +33,7 @@ export function TaskSidebarCard({
   expiresAt,
   taskId,
   currentUserId,
+  hasApplied,
 }: TaskSidebarCardProps) {
   return (
     <Card>
@@ -44,14 +47,29 @@ export function TaskSidebarCard({
         </div>
 
         {/* Apply Button */}
-        {!currentUserId && (
+        {!currentUserId ? (
           <Button className="w-full h-12 text-base font-semibold" asChild>
             <Link href={`/login?callbackUrl=/tasks/${taskId}`}>
               Login to Apply
             </Link>
           </Button>
-        )}
-        {currentUserId && currentUserId !== postedBy.id && (
+        ) : currentUserId === postedBy.id ? (
+          <Button
+            variant="outline"
+            className="w-full h-12 text-base font-semibold"
+            disabled
+          >
+            Your Task
+          </Button>
+        ) : hasApplied ? (
+          <Button
+            variant="outline"
+            className="w-full h-12 text-base font-semibold"
+            disabled
+          >
+            Application Submitted
+          </Button>
+        ) : (
           <ApplyTaskDialog
             taskId={taskId}
             baseCompensation={baseCompensation}

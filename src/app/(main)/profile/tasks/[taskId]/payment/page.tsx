@@ -41,7 +41,7 @@ export default async function PaymentPage({ params }: Props) {
 
   const task = taskResult.data;
 
-  if (task.status !== "PAYMENT_PROCESSING") {
+  if (task.status !== "PAYMENT_PENDING") {
     redirect(`/profile/tasks/${taskId}`);
   }
 

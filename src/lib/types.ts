@@ -30,7 +30,8 @@ export const TaskStatus = {
   ASSIGNED: "ASSIGNED",
   IN_PROGRESS: "IN_PROGRESS",
   PENDING_REVIEW: "PENDING_REVIEW",
-  PAYMENT_PROCESSING: "PAYMENT_PROCESSING",
+  PAYMENT_PENDING: "PAYMENT_PENDING",
+  PAYMENT_INITIATED: "PAYMENT_INITIATED",
   COMPLETED: "COMPLETED",
   PAYMENT_FAILED: "PAYMENT_FAILED",
   DISPUTED: "DISPUTED",
@@ -82,6 +83,7 @@ export interface TaskPoster {
 export interface TaskDetails extends Task {
   postedById: string;
   postedBy: TaskPoster;
+  hasApplied: boolean; // Whether current user has applied
 }
 
 // Single Task API Response
@@ -152,15 +154,21 @@ export interface TaskApplication {
 
 // Application status
 export const ApplicationStatus = {
-  PENDING:   "PENDING",
-  APPROVED:  "APPROVED",
-  REJECTED:  "REJECTED",
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  CLOSED: "CLOSED",
+  REJECTED: "REJECTED",
   WITHDRAWN: "WITHDRAWN",
 } as const;
-export type ApplicationStatusType = (typeof ApplicationStatus)[keyof typeof ApplicationStatus];
+export type ApplicationStatusType =
+  (typeof ApplicationStatus)[keyof typeof ApplicationStatus];
 
 // Sort fields supported by GET /application/my-applications
-export type ApplicationSortField = "createdAt" | "updatedAt" | "proposedCompensation" | "status";
+export type ApplicationSortField =
+  | "createdAt"
+  | "updatedAt"
+  | "proposedCompensation"
+  | "status";
 
 // Embedded task shape returned in /application/my-applications
 export interface ApplicationTask {
@@ -282,7 +290,8 @@ export const PaymentMethod = {
   ONLINE: "ONLINE",
   CASH: "CASH",
 } as const;
-export type PaymentMethodType = (typeof PaymentMethod)[keyof typeof PaymentMethod];
+export type PaymentMethodType =
+  (typeof PaymentMethod)[keyof typeof PaymentMethod];
 
 // Payment Status
 export const PaymentStatus = {
@@ -292,7 +301,8 @@ export const PaymentStatus = {
   CANCELLED: "CANCELLED",
   REFUNDED: "REFUNDED",
 } as const;
-export type PaymentStatusType = (typeof PaymentStatus)[keyof typeof PaymentStatus];
+export type PaymentStatusType =
+  (typeof PaymentStatus)[keyof typeof PaymentStatus];
 
 // Cash Payment Status
 export const CashStatus = {
@@ -393,29 +403,29 @@ export interface OnlinePaymentInitData {
 // Wallet Transaction Type
 export const WalletTransactionType = {
   CREDIT: "CREDIT",
-  DEBIT:  "DEBIT",
+  DEBIT: "DEBIT",
 } as const;
 export type WalletTransactionTypeType =
   (typeof WalletTransactionType)[keyof typeof WalletTransactionType];
 
 // Wallet Transaction Category
 export const WalletTransactionCategory = {
-  TASK_PAYMENT:                "TASK_PAYMENT",
+  TASK_PAYMENT: "TASK_PAYMENT",
   DIRECT_COMMISSION_DEDUCTION: "DIRECT_COMMISSION_DEDUCTION",
-  COMMISSION_PAYMENT:          "COMMISSION_PAYMENT",
-  WITHDRAWAL:                  "WITHDRAWAL",
-  REFUND:                      "REFUND",
-  ADJUSTMENT:                  "ADJUSTMENT",
+  COMMISSION_PAYMENT: "COMMISSION_PAYMENT",
+  WITHDRAWAL: "WITHDRAWAL",
+  REFUND: "REFUND",
+  ADJUSTMENT: "ADJUSTMENT",
 } as const;
 export type WalletTransactionCategoryType =
   (typeof WalletTransactionCategory)[keyof typeof WalletTransactionCategory];
 
 // Wallet Transaction Status
 export const WalletTransactionStatus = {
-  PENDING:   "PENDING",
+  PENDING: "PENDING",
   COMPLETED: "COMPLETED",
-  FAILED:    "FAILED",
-  REVERSED:  "REVERSED",
+  FAILED: "FAILED",
+  REVERSED: "REVERSED",
 } as const;
 export type WalletTransactionStatusType =
   (typeof WalletTransactionStatus)[keyof typeof WalletTransactionStatus];

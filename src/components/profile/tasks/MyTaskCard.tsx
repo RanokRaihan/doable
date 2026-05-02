@@ -55,8 +55,12 @@ const statusConfig: Record<
     label: "Pending Review",
     className: "bg-yellow-100 text-yellow-700 border-yellow-200",
   },
-  PAYMENT_PROCESSING: {
-    label: "Payment Processing",
+  PAYMENT_PENDING: {
+    label: "Payment Pending",
+    className: "bg-orange-100 text-orange-700 border-orange-200",
+  },
+  PAYMENT_INITIATED: {
+    label: "Payment Initiated",
     className: "bg-purple-100 text-purple-700 border-purple-200",
   },
   COMPLETED: {
@@ -205,7 +209,7 @@ export function MyTaskCard({ task, onEdit, onDelete }: MyTaskCardProps) {
                   Applications
                 </Link>
               </DropdownMenuItem>
-              {task.status === "PAYMENT_PROCESSING" && (
+              {task.status === "PAYMENT_PENDING" && (
                 <>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>

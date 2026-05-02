@@ -24,9 +24,13 @@ export const taskStatusConfig: Record<
     label: "Pending Review",
     className: "bg-amber-100 text-amber-700 border-amber-200",
   },
-  PAYMENT_PROCESSING: {
-    label: "Payment Processing",
+  PAYMENT_PENDING: {
+    label: "Payment Pending",
     className: "bg-orange-100 text-orange-700 border-orange-200",
+  },
+  PAYMENT_INITIATED: {
+    label: "Payment Initiated",
+    className: "bg-violet-100 text-violet-700 border-violet-200",
   },
   COMPLETED: {
     label: "Completed",

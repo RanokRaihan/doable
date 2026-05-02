@@ -16,6 +16,7 @@ import ApplyTaskSchema, {
   ApplyTaskFormData,
 } from "@/schema/applyTaskValidation";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -28,6 +29,7 @@ export function ApplyTaskDialog({
   taskId,
   baseCompensation,
 }: ApplyTaskDialogProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   console.log("Base compensation for task:", baseCompensation);
@@ -56,6 +58,7 @@ export function ApplyTaskDialog({
       toast.success("Application submitted successfully!");
       setOpen(false);
       form.reset();
+      router.refresh(); // Refresh to update the UI with the new application status
     },
     listeners: {
       onChange: () => {

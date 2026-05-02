@@ -24,8 +24,12 @@ const statusConfig: Record<string, { label: string; className: string }> = {
     label: "Cancelled",
     className: "bg-gray-100 text-gray-600 border-gray-200",
   },
-  PAYMENT_PROCESSING: {
-    label: "Payment Processing",
+  PAYMENT_PENDING: {
+    label: "Payment Pending",
+    className: "bg-orange-100 text-orange-700 border-orange-200",
+  },
+  PAYMENT_INITIATED: {
+    label: "Payment Initiated",
     className: "bg-purple-100 text-purple-700 border-purple-200",
   },
   PENDING_REVIEW: {
@@ -108,7 +112,7 @@ export function OwnerTaskSidebarCard({ task }: OwnerTaskSidebarCardProps) {
 
         {/* Actions */}
         <div className="space-y-2.5">
-          {task.status === "PAYMENT_PROCESSING" && (
+          {task.status === "PAYMENT_PENDING" && (
             <Button asChild className="w-full bg-purple-600 hover:bg-purple-700">
               <Link href={`/profile/tasks/${task.id}/payment`}>
                 <CreditCard className="w-4 h-4 mr-2" />

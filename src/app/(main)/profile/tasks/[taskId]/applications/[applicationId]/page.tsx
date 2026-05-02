@@ -33,6 +33,10 @@ const statusConfig: Record<
     label: "Approved",
     className: "bg-green-100 text-green-700 border-green-200",
   },
+  CLOSED: {
+    label: "Closed",
+    className: "bg-slate-100 text-slate-600 border-slate-200",
+  },
   REJECTED: {
     label: "Rejected",
     className: "bg-red-100   text-red-700   border-red-200",
@@ -240,7 +244,7 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
           {/* actions */}
           {(app.status === "PENDING" ||
             app.task.status === "PENDING_REVIEW" ||
-            app.task.status === "PAYMENT_PROCESSING") && (
+            app.task.status === "PAYMENT_PENDING") && (
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-semibold text-slate-700 flex items-center gap-2">
@@ -262,7 +266,7 @@ export default async function TaskApplicationDetailPage({ params }: PageProps) {
                     taskTitle={app.task.title}
                   />
                 )}
-                {app.task.status === "PAYMENT_PROCESSING" && (
+                {app.task.status === "PAYMENT_PENDING" && (
                   <Button asChild className="w-full bg-purple-600 hover:bg-purple-700">
                     <Link href={`/profile/tasks/${app.task.id}/payment`}>
                       <CreditCard className="h-4 w-4 mr-2" />
