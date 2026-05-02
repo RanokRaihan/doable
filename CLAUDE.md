@@ -1,36 +1,52 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Frontend-only Next.js 16 canary (App Router) task-marketplace. React 19, TypeScript strict, Tailwind v4. No database — all persistence lives in a separate backend API (`BACKEND_URL`). JWT access + refresh tokens in HTTP-only cookies, refreshed transparently by middleware in `src/proxy.ts`. shadcn/ui is the mandatory first choice for all UI components.
 
 ## Commands
 
 ```bash
-npm run dev      # Start development server (Next.js)
+npm run dev      # Start development server
 npm run build    # Production build
 npm run lint     # Run ESLint
 ```
 
 **No test framework is installed.** Do not attempt to run or generate tests.
 
-## Full Architecture Reference
+## Coding Conventions
 
-`AGENTS.md` is the authoritative codebase reference. Read it before making changes. It covers: tech stack versions, environment variables, project structure, authentication architecture, API client usage, form system, domain types, UI conventions, and key constraints.
+- **Naming:** `PascalCase` for components and types; `camelCase` for functions/variables/non-component files; `SCREAMING_SNAKE_CASE` for enum values (via `const` objects `as const`).
+- **File names:** Match the exported component exactly (`LoginForm.tsx` exports `LoginForm`). Non-component files are `camelCase`.
+- **Imports:** Use `@/` alias for all `src/` imports. No relative `../../` imports.
+- **`cn()` utility:** Always use `cn()` from `src/lib/utils.ts` for all conditional Tailwind class composition.
+- **Server vs. client:** Server Components by default. Add `"use client"` only for event handlers, hooks, or browser APIs.
+- **Server Actions:** One file per action in `src/actions/{domain}/`. Every file must be marked `"use server"` at the top. Wrap all API calls in `actionHandler()`.
+- **Forms:** Always use `useAppForm()` from `src/components/form/hooks.tsx`. Validate with Zod schemas from `src/schema/`.
+- **Zod schemas:** One file per form in `src/schema/{feature}Validation.ts`.
+- **UI components:** Use shadcn/ui first. Only use custom design if a shadcn component does not exist.
+- **Icons:** Lucide React only.
+- **Toasts:** Sonner — `<Toaster>` is already in root layout.
 
-## Architecture at a Glance
+## Do NOT
 
-- **Frontend-only Next.js app** (App Router, React 19, TypeScript strict mode) — no database or ORM; all persistence is in a separate backend API at `BACKEND_URL`.
-- **Server Components by default.** Add `"use client"` only when necessary (event handlers, hooks, browser APIs).
-- **Auth:** JWT access + refresh tokens in HTTP-only cookies. The middleware (`src/proxy.ts`) handles token refresh transparently before every request. A 401 from the backend means the session is truly expired — never retry on 401.
-- **Server Actions** live in `src/actions/` and must be marked `"use server"`. Wrap API calls in `actionHandler()` from `src/lib/api/actionHandler.ts`.
-- **Route protection:** Add entries to `protectedRoutes` in `src/lib/auth/routes-utils.ts` — no other files need changing.
-- **Forms:** TanStack React Form v1 via `useAppForm()` from `src/components/form/hooks.tsx`, validated with Zod schemas in `src/schema/`.
-- **`/tasks` page uses mock data** (`MOCK_TASKS`) — replace with `apiClient` calls when implementing real data fetching.
+- Do not traverse the full `src/` tree to find files — check the directory map in AGENTS.md first.
+- Do not re-read files whose purpose is already described in AGENTS.md unless you need their exact content.
+- Do not assume file locations — verify against AGENTS.md before reading.
+- Do not import `src/lib/config.ts` or `src/lib/api/tokens.ts` from `"use client"` files — they are server-only.
+- Do not use `const enum` — `isolatedModules: true` is set. Use `const` objects with `as const`.
+- Do not retry on 401 — middleware already attempted refresh; a 401 from the backend means the session is expired.
+- Do not read `node_modules/` or `.next/` unless explicitly asked.
+- Do not read `process.env` directly on the server — use `env.*` and `cookieConfig.*` from `src/lib/config.ts`; use `process.env.NEXT_PUBLIC_*` in client components only.
+- Do not use raw `searchParams` or `params` in page components — they must be awaited (Next.js 15+ requirement).
 
-## Critical Constraints
+## API / Type Questions
 
-- **`const enum` is forbidden** (`isolatedModules: true`). Use `const` objects with `as const`.
-- **`src/lib/config.ts` and `src/lib/api/tokens.ts` are server-only** — never import them from `"use client"` files.
-- **`searchParams` and `params` in page components must be awaited** (Next.js 15+ requirement).
-- **`Task.baseCompensation` is typed as `string`** — parse before arithmetic.
-- **Images:** Only `images.unsplash.com` is whitelisted in `next.config.ts`.
-- **Before any Next.js work,** read the relevant docs in `node_modules/next/dist/docs/` — training data is outdated.
+Before touching anything that calls the backend, read `api-contract.md` in the repo root. It is the source of truth for endpoint paths, request/response shapes, shared enums, and cookie behavior.
+
+For all domain types, see `src/lib/types.ts`. For auth types, see `src/lib/types/auth/index.ts`.
+
+## Mandatory Post-Task Protocol
+
+After any task that creates or deletes a file, renames something, or makes an architectural decision, you MUST update AGENTS.md before the task is considered done:
+1. Add or remove the file from the directory map with a one-line purpose description
+2. Append any architectural decision to ## Architectural Decisions
+3. Add a one-line entry to ## Recent Changes at the top of AGENTS.md (format: YYYY-MM-DD — what changed)

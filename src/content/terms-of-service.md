@@ -3,13 +3,13 @@
 **Effective Date:** March 23, 2026
 **Last Updated:** March 23, 2026
 
-Welcome to **GetItDone**. These Terms of Service ("Terms") govern your access to and use of the GetItDone platform, including our website, mobile applications, and all related services (collectively, the "Platform"). By creating an account or using the Platform in any way, you agree to be bound by these Terms. If you do not agree, please do not use the Platform.
+Welcome to **Doable**. These Terms of Service ("Terms") govern your access to and use of the Doable platform, including our website, mobile applications, and all related services (collectively, the "Platform"). By creating an account or using the Platform in any way, you agree to be bound by these Terms. If you do not agree, please do not use the Platform.
 
 ---
 
 ## 1. Acceptance of Terms
 
-By accessing or using the GetItDone Platform, you confirm that:
+By accessing or using the Doable Platform, you confirm that:
 
 - You are at least **18 years of age** or the legal age of majority in your jurisdiction.
 - You have read, understood, and agree to be bound by these Terms and our [Privacy Policy](/privacy).
@@ -19,9 +19,9 @@ We reserve the right to update these Terms at any time. Continued use of the Pla
 
 ---
 
-## 2. The GetItDone Platform
+## 2. The Doable Platform
 
-GetItDone is a **two-sided marketplace** that connects individuals and businesses who need tasks completed ("Clients") with skilled independent contractors who perform those tasks ("Helpers"). GetItDone is not a party to any agreement between Clients and Helpers and does not employ Helpers.
+Doable is a **two-sided marketplace** that connects individuals and businesses who need tasks completed ("Clients") with skilled independent contractors who perform those tasks ("Helpers"). Doable is not a party to any agreement between Clients and Helpers and does not employ Helpers.
 
 ### 2.1 Platform Roles
 
@@ -31,7 +31,7 @@ GetItDone is a **two-sided marketplace** that connects individuals and businesse
 
 ### 2.2 No Employment Relationship
 
-Helpers are **independent contractors**, not employees, agents, or partners of GetItDone. GetItDone has no control over, and is not responsible for, the work performed by Helpers or the conduct of Clients.
+Helpers are **independent contractors**, not employees, agents, or partners of Doable. Doable has no control over, and is not responsible for, the work performed by Helpers or the conduct of Clients.
 
 ---
 
@@ -48,11 +48,11 @@ To use core features of the Platform, you must register for an account. You agre
 
 ### 3.2 Account Security
 
-You must notify us immediately at **support@getitdone.com** if you suspect any unauthorized access to your account. GetItDone is not liable for any loss or damage arising from your failure to maintain account security.
+You must notify us immediately at **support@Doable.com** if you suspect any unauthorized access to your account. Doable is not liable for any loss or damage arising from your failure to maintain account security.
 
 ### 3.3 One Account Per User
 
-You may only create one account per person unless explicitly authorized by GetItDone. Creating multiple accounts to circumvent suspensions or restrictions is strictly prohibited.
+You may only create one account per person unless explicitly authorized by Doable. Creating multiple accounts to circumvent suspensions or restrictions is strictly prohibited.
 
 ---
 
@@ -89,7 +89,7 @@ Users may not post or accept tasks involving:
 - Harassment, stalking, or targeted abuse of individuals
 - Any activity that violates local, state, or federal law
 
-GetItDone reserves the right to remove any task that violates these Terms without prior notice.
+Doable reserves the right to remove any task that violates these Terms without prior notice.
 
 ---
 
@@ -97,11 +97,11 @@ GetItDone reserves the right to remove any task that violates these Terms withou
 
 ### 5.1 How Payments Work
 
-GetItDone provides a secure payments system to facilitate transactions between Clients and Helpers. All payments must be made through the Platform. Off-platform payments are prohibited and may result in account suspension.
+Doable provides a secure payments system to facilitate transactions between Clients and Helpers. All payments must be made through the Platform. Off-platform payments are prohibited and may result in account suspension.
 
 ### 5.2 Service Fees
 
-GetItDone charges a **service fee** on each completed transaction to support platform operations, payment processing, and customer support. The current fee schedule is displayed on the [Pricing](/pricing) page and is subject to change with notice.
+Doable charges a **service fee** on each completed transaction to support platform operations, payment processing, and customer support. The current fee schedule is displayed on the [Pricing](/pricing) page and is subject to change with notice.
 
 ### 5.3 Payment Release
 
@@ -121,7 +121,7 @@ Refund eligibility depends on the stage of the task:
 
 ### 5.5 Taxes
 
-You are solely responsible for determining and fulfilling any tax obligations arising from transactions on the Platform. GetItDone may issue tax forms (e.g., 1099-K) to Helpers where legally required.
+You are solely responsible for determining and fulfilling any tax obligations arising from transactions on the Platform. Doable may issue tax forms (e.g., 1099-K) to Helpers where legally required.
 
 ---
 
@@ -148,7 +148,7 @@ Any content you post on the Platform — including task descriptions, profiles, 
 - Not infringe any third-party **intellectual property rights**.
 - Not include **personally identifiable information** of third parties without their consent.
 
-GetItDone reserves the right to remove any content that violates these standards.
+Doable reserves the right to remove any content that violates these standards.
 
 ---
 
@@ -160,7 +160,7 @@ Both Clients and Helpers may leave reviews and ratings after a completed task. R
 - **Free from personal attacks**, defamatory statements, or harassing language.
 - **Not manipulated** through fake accounts, incentivized reviews, or coordinated campaigns.
 
-GetItDone reserves the right to moderate, remove, or not display reviews that violate these standards. Reviews cannot be removed simply because they are negative.
+Doable reserves the right to moderate, remove, or not display reviews that violate these standards. Reviews cannot be removed simply because they are negative.
 
 ---
 
@@ -168,37 +168,37 @@ GetItDone reserves the right to moderate, remove, or not display reviews that vi
 
 ### 8.1 Between Users
 
-GetItDone encourages Clients and Helpers to resolve disputes directly through the in-platform messaging system. If direct resolution is not possible, either party may initiate a **formal dispute** through the Platform within **7 days** of task completion.
+Doable encourages Clients and Helpers to resolve disputes directly through the in-platform messaging system. If direct resolution is not possible, either party may initiate a **formal dispute** through the Platform within **7 days** of task completion.
 
-### 8.2 GetItDone Mediation
+### 8.2 Doable Mediation
 
-GetItDone's Trust & Safety team may review submitted disputes and make a determination based on:
+Doable's Trust & Safety team may review submitted disputes and make a determination based on:
 
 - Evidence provided by both parties (messages, photos, receipts, etc.)
 - Task description and agreed terms
 - Platform policies and precedent
 
-GetItDone's decision is final within the bounds of the dispute process. We do not guarantee a specific outcome.
+Doable's decision is final within the bounds of the dispute process. We do not guarantee a specific outcome.
 
 ### 8.3 Legal Disputes
 
-For disputes not resolved through the Platform process, you agree to resolve them through **binding arbitration** in accordance with the American Arbitration Association's rules, with proceedings conducted in **[Your Jurisdiction]**. **You waive any right to participate in class-action lawsuits** against GetItDone to the maximum extent permitted by law.
+For disputes not resolved through the Platform process, you agree to resolve them through **binding arbitration** in accordance with the American Arbitration Association's rules, with proceedings conducted in **[Your Jurisdiction]**. **You waive any right to participate in class-action lawsuits** against Doable to the maximum extent permitted by law.
 
 ---
 
 ## 9. Intellectual Property
 
-### 9.1 GetItDone's Intellectual Property
+### 9.1 Doable's Intellectual Property
 
-All content, features, and functionality of the Platform — including but not limited to text, graphics, logos, icons, software, and code — are the exclusive property of **GetItDone Inc.** or its licensors and are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without express written permission.
+All content, features, and functionality of the Platform — including but not limited to text, graphics, logos, icons, software, and code — are the exclusive property of **Doable Inc.** or its licensors and are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without express written permission.
 
 ### 9.2 User Content License
 
-By posting content on the Platform, you grant GetItDone a **non-exclusive, royalty-free, worldwide, sublicensable license** to use, display, reproduce, and distribute that content in connection with operating and promoting the Platform. You retain ownership of your content.
+By posting content on the Platform, you grant Doable a **non-exclusive, royalty-free, worldwide, sublicensable license** to use, display, reproduce, and distribute that content in connection with operating and promoting the Platform. You retain ownership of your content.
 
 ### 9.3 Feedback
 
-Any feedback, suggestions, or ideas you provide to GetItDone may be used by us without compensation or attribution to you.
+Any feedback, suggestions, or ideas you provide to Doable may be used by us without compensation or attribution to you.
 
 ---
 
@@ -210,14 +210,14 @@ Your use of the Platform is also governed by our [Privacy Policy](/privacy), whi
 
 ## 11. Trust & Safety
 
-GetItDone takes the safety of its community seriously. We maintain a [Trust & Safety](/safety) program that includes:
+Doable takes the safety of its community seriously. We maintain a [Trust & Safety](/safety) program that includes:
 
 - **Identity verification** options for Helpers.
 - **Background check** integrations for high-trust task categories.
 - A **reporting system** for unsafe or inappropriate behavior.
 - A **zero-tolerance policy** for violence, harassment, or illegal activity on the Platform.
 
-You agree to cooperate with GetItDone's safety investigations and to not take any action that compromises the safety of other users.
+You agree to cooperate with Doable's safety investigations and to not take any action that compromises the safety of other users.
 
 ---
 
@@ -225,11 +225,11 @@ You agree to cooperate with GetItDone's safety investigations and to not take an
 
 ### 12.1 Platform Provided "As Is"
 
-The Platform is provided **"as is" and "as available"** without warranties of any kind, either express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. GetItDone does not warrant that the Platform will be uninterrupted, error-free, or secure.
+The Platform is provided **"as is" and "as available"** without warranties of any kind, either express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. Doable does not warrant that the Platform will be uninterrupted, error-free, or secure.
 
 ### 12.2 No Liability for User Actions
 
-GetItDone is not responsible for:
+Doable is not responsible for:
 
 - The **quality, safety, or legality** of tasks posted.
 - The **qualifications or conduct** of Helpers.
@@ -238,15 +238,15 @@ GetItDone is not responsible for:
 
 ### 12.3 Limitation of Liability
 
-To the fullest extent permitted by applicable law, GetItDone's total liability to you for any claims arising out of or related to these Terms or the Platform shall not exceed the **greater of $100 USD or the total fees paid by you to GetItDone in the 3 months preceding the claim**.
+To the fullest extent permitted by applicable law, Doable's total liability to you for any claims arising out of or related to these Terms or the Platform shall not exceed the **greater of $100 USD or the total fees paid by you to Doable in the 3 months preceding the claim**.
 
-In no event will GetItDone be liable for any **indirect, incidental, special, exemplary, punitive, or consequential damages**, even if advised of the possibility of such damages.
+In no event will Doable be liable for any **indirect, incidental, special, exemplary, punitive, or consequential damages**, even if advised of the possibility of such damages.
 
 ---
 
 ## 13. Indemnification
 
-You agree to **indemnify, defend, and hold harmless** GetItDone Inc., its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or related to:
+You agree to **indemnify, defend, and hold harmless** Doable Inc., its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or related to:
 
 - Your use of or access to the Platform.
 - Your violation of these Terms.
@@ -259,16 +259,16 @@ You agree to **indemnify, defend, and hold harmless** GetItDone Inc., its affili
 
 ### 14.1 Termination by You
 
-You may close your account at any time by contacting support at **support@getitdone.com**. Closing your account does not automatically cancel any active tasks or payment obligations.
+You may close your account at any time by contacting support at **support@Doable.com**. Closing your account does not automatically cancel any active tasks or payment obligations.
 
-### 14.2 Termination by GetItDone
+### 14.2 Termination by Doable
 
-GetItDone reserves the right to **suspend or permanently terminate** your account at any time, with or without notice, for:
+Doable reserves the right to **suspend or permanently terminate** your account at any time, with or without notice, for:
 
 - Violation of these Terms or any Platform policy.
 - Fraudulent, abusive, or illegal activity.
 - Behavior that harms the Platform community or operations.
-- Any other reason at GetItDone's sole discretion.
+- Any other reason at Doable's sole discretion.
 
 ### 14.3 Effect of Termination
 
@@ -284,7 +284,7 @@ These Terms are governed by and construed in accordance with the laws of the **S
 
 ## 16. Changes to These Terms
 
-GetItDone may update these Terms from time to time. We will notify you of material changes by:
+Doable may update these Terms from time to time. We will notify you of material changes by:
 
 - Posting a notice on the Platform, or
 - Sending an email to the address associated with your account.
@@ -295,10 +295,10 @@ Your continued use of the Platform after such notice constitutes your acceptance
 
 ## 17. Miscellaneous
 
-- **Entire Agreement:** These Terms, together with our Privacy Policy and any other policies referenced herein, constitute the entire agreement between you and GetItDone regarding your use of the Platform.
+- **Entire Agreement:** These Terms, together with our Privacy Policy and any other policies referenced herein, constitute the entire agreement between you and Doable regarding your use of the Platform.
 - **Severability:** If any provision of these Terms is found to be unenforceable, the remaining provisions will continue in full force and effect.
-- **Waiver:** Failure by GetItDone to enforce any right or provision of these Terms does not constitute a waiver of that right or provision.
-- **Assignment:** You may not assign or transfer your rights under these Terms without GetItDone's prior written consent. GetItDone may freely assign its rights and obligations.
+- **Waiver:** Failure by Doable to enforce any right or provision of these Terms does not constitute a waiver of that right or provision.
+- **Assignment:** You may not assign or transfer your rights under these Terms without Doable's prior written consent. Doable may freely assign its rights and obligations.
 - **No Third-Party Beneficiaries:** These Terms do not create any third-party beneficiary rights.
 
 ---
@@ -307,14 +307,14 @@ Your continued use of the Platform after such notice constitutes your acceptance
 
 If you have questions, concerns, or feedback about these Terms, please reach out:
 
-- **Email:** legal@getitdone.com
+- **Email:** legal@Doable.com
 - **Support:** [Contact Support](/contact)
 - **Mailing Address:**
-  GetItDone Inc.
+  Doable Inc.
   123 Task Lane, Suite 400
   Wilmington, DE 19801
   United States
 
 ---
 
-_Thank you for being part of the GetItDone community. We're committed to building a safe, fair, and efficient marketplace for everyone._
+_Thank you for being part of the Doable community. We're committed to building a safe, fair, and efficient marketplace for everyone._

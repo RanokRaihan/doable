@@ -15,6 +15,7 @@ import {
   Calendar,
   CalendarClock,
   Check,
+  ChevronDown,
   SortAsc,
   SortDesc,
   Type,
@@ -63,6 +64,7 @@ export function TaskSort({
               {currentFieldOption?.icon}
               {currentFieldOption?.label}
             </span>
+            <ChevronDown className="h-4 w-4 shrink-0 opacity-60" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-45">

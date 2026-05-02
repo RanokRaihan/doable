@@ -33,7 +33,7 @@ export default function VerifyEmailCheck({
         refreshUser();
         // Give user a moment to see the success state, then redirect
         setTimeout(() => {
-          router.push(callbackUrl || "/profile");
+          router.push(callbackUrl || "/complete-profile");
         }, 2000);
       } else {
         setStatus("error");

@@ -67,4 +67,11 @@ const updateProfileAction = async (payload: UpdateProfilePayload) => {
   );
 };
 
-export { getMyProfileAction, updateProfileAction };
+const updateAvatarAction = async (imageUrl: string) =>
+  actionHandler(() =>
+    apiClient.patch<ApiResponse<MyProfile>>("/user/update-avatar", {
+      image: imageUrl,
+    }),
+  );
+
+export { getMyProfileAction, updateProfileAction, updateAvatarAction };

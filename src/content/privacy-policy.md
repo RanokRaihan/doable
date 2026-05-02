@@ -3,7 +3,7 @@
 **Effective Date:** March 24, 2026
 **Last Updated:** March 24, 2026
 
-At **GetItDone**, we take your privacy seriously. This Privacy Policy explains how GetItDone Inc. ("GetItDone", "we", "us", or "our") collects, uses, discloses, and protects your personal information when you use our website, mobile applications, and related services (collectively, the "Platform").
+At **Doable**, we take your privacy seriously. This Privacy Policy explains how Doable Inc. ("Doable", "we", "us", or "our") collects, uses, discloses, and protects your personal information when you use our website, mobile applications, and related services (collectively, the "Platform").
 
 By using the Platform, you agree to the collection and use of information in accordance with this policy. If you do not agree, please do not use the Platform.
 
@@ -57,7 +57,7 @@ We use the information we collect for the following purposes:
 - Verifying user identities and screening for fraud.
 - Investigating reports of policy violations, disputes, or suspicious activity.
 - Enforcing our [Terms of Service](/terms) and other platform policies.
-- Protecting the rights, property, and safety of GetItDone, our users, and the public.
+- Protecting the rights, property, and safety of Doable, our users, and the public.
 
 ### 2.3 Improving the Platform
 
@@ -110,11 +110,11 @@ We may disclose your information if we believe disclosure is necessary to:
 - Comply with a legal obligation or valid legal process (subpoenas, court orders).
 - Protect the safety of any person.
 - Prevent fraud, abuse, or illegal activity.
-- Protect the rights and property of GetItDone.
+- Protect the rights and property of Doable.
 
 ### 3.4 Business Transfers
 
-If GetItDone is involved in a merger, acquisition, bankruptcy, or sale of assets, your information may be transferred as part of that transaction. We will notify you via email or a prominent notice on the Platform before your information is transferred and becomes subject to a different privacy policy.
+If Doable is involved in a merger, acquisition, bankruptcy, or sale of assets, your information may be transferred as part of that transaction. We will notify you via email or a prominent notice on the Platform before your information is transferred and becomes subject to a different privacy policy.
 
 ### 3.5 With Your Consent
 
@@ -204,13 +204,13 @@ California residents have the right to opt out of the sale or sharing of their p
 
 ### 7.7 How to Exercise Your Rights
 
-To exercise any of these rights, contact us at **privacy@getitdone.com** or through our [Contact Support](/contact) page. We will respond within **30 days**. We may need to verify your identity before processing your request.
+To exercise any of these rights, contact us at **privacy@Doable.com** or through our [Contact Support](/contact) page. We will respond within **30 days**. We may need to verify your identity before processing your request.
 
 ---
 
 ## 8. Children's Privacy
 
-The Platform is not intended for children under the age of **18**. We do not knowingly collect personal information from anyone under 18. If we learn that we have collected information from a child under 18, we will delete it promptly. If you believe a child has provided us with personal information, please contact us at **privacy@getitdone.com**.
+The Platform is not intended for children under the age of **18**. We do not knowingly collect personal information from anyone under 18. If we learn that we have collected information from a child under 18, we will delete it promptly. If you believe a child has provided us with personal information, please contact us at **privacy@Doable.com**.
 
 ---
 
@@ -229,7 +229,7 @@ Despite these measures, no system is completely secure. We cannot guarantee the 
 
 ## 10. International Data Transfers
 
-GetItDone is based in the United States. If you access the Platform from outside the United States, your information will be transferred to and processed in the United States, where data protection laws may differ from those in your country.
+Doable is based in the United States. If you access the Platform from outside the United States, your information will be transferred to and processed in the United States, where data protection laws may differ from those in your country.
 
 If you are located in the European Economic Area (EEA), United Kingdom, or Switzerland, we rely on the following legal bases for transfers:
 
@@ -240,7 +240,7 @@ If you are located in the European Economic Area (EEA), United Kingdom, or Switz
 
 ## 11. Third-Party Links
 
-The Platform may contain links to third-party websites or services. This Privacy Policy applies only to the GetItDone Platform. We are not responsible for the privacy practices of third-party sites and encourage you to review their privacy policies.
+The Platform may contain links to third-party websites or services. This Privacy Policy applies only to the Doable Platform. We are not responsible for the privacy practices of third-party sites and encourage you to review their privacy policies.
 
 ---
 
@@ -260,10 +260,10 @@ Your continued use of the Platform after such notice constitutes your acceptance
 
 If you have any questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact our Privacy Team:
 
-- **Email:** privacy@getitdone.com
+- **Email:** privacy@Doable.com
 - **Support:** [Contact Support](/contact)
 - **Mailing Address:**
-  GetItDone Inc. — Privacy Team
+  Doable Inc. — Privacy Team
   123 Task Lane, Suite 400
   Wilmington, DE 19801
   United States
@@ -272,4 +272,4 @@ For users in the EEA or UK, you also have the right to lodge a complaint with yo
 
 ---
 
-_Your trust is important to us. GetItDone is committed to handling your data responsibly and transparently._
+_Your trust is important to us. Doable is committed to handling your data responsibly and transparently._

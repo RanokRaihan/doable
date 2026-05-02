@@ -1,60 +1,44 @@
-# Next.js: ALWAYS read docs before coding
+# Doable — Agent Codebase Reference
 
-Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
+## Recent Changes
 
-# for desiging component, it's mandatory use shadcnUI, if not possible then can move to custom design
-
-# Get It Done — Agent Codebase Reference
-
-A Next.js task-marketplace where users post tasks and workers accept them. This file is the authoritative guide for AI agents working in this repo.
+- 2026-05-02 — Added payment result pages (fail, cancel, refunded) and shared _components/paymentPageHelpers.tsx; all payment result pages now redirect based on session status
+- 2026-05-02 — Updated TaskStatus enum (PAYMENT_PROCESSING → PAYMENT_PENDING + PAYMENT_INITIATED); added CLOSED to ApplicationStatus
+- 2026-04-27 — Restructured context files; full directory map updated to reflect payments, wallet, commission-due, application, and profile areas; tasks page confirmed on real API data; mock tasks removed
 
 ---
 
-## Cross-Codebase Contract
+A Next.js task-marketplace where users post tasks and workers accept them. This file is the authoritative directory map, tech stack reference, and architectural decision log for AI agents working in this repo.
 
-Before working on anything that touches the backend (API calls, auth flow,
-types, response shapes), mandatory read `api-contract.md` in the root of this repo.
-
-It is the source of truth for:
-
-- All endpoint paths and HTTP methods
-- Request and response shapes
-- Shared enums (TaskStatus, TaskCategory, etc.)
-- Auth token delivery and cookie behavior
-- Known mismatches between frontend and backend types
-
-## 1. Tech Stack (exact versions)
-
-| Package              | Version                          |
-| -------------------- | -------------------------------- |
-| Next.js              | `^16.2.0-canary.37` (App Router) |
-| React / React DOM    | `19.2.3`                         |
-| TypeScript           | `^5` (strict mode)               |
-| Tailwind CSS         | `^4` via `@tailwindcss/postcss`  |
-| TanStack React Form  | `^1.28.2`                        |
-| Zod                  | `^4.3.6`                         |
-| Framer Motion        | `^12.31.0`                       |
-| Sonner (toasts)      | `^2.0.7`                         |
-| shadcn/ui (Radix UI) | via `radix-ui ^1.4.3`            |
-| Lucide React         | `^0.563.0`                       |
-| `server-only`        | `^0.0.1`                         |
+Before working on anything that touches the backend (API calls, auth flow, types, response shapes), read `api-contract.md` in the repo root.
 
 ---
 
-## 2. npm Scripts
+## Tech Stack
 
-```bash
-npm run dev      # next dev
-npm run build    # next build
-npm run start    # next start
-npm run lint     # eslint
-```
-
-> **No test framework** — there are no test scripts or testing dependencies. Do not attempt to run or generate tests.
+| Tool                        | Version                          | Purpose                                |
+| --------------------------- | -------------------------------- | -------------------------------------- |
+| Next.js                     | `^16.2.0-canary.37` (App Router) | Framework                              |
+| React / React DOM           | `19.2.3`                         | UI rendering                           |
+| TypeScript                  | `^5` (strict mode)               | Type safety                            |
+| Tailwind CSS                | `^4` via `@tailwindcss/postcss`  | Styling — no tailwind.config.js        |
+| TanStack React Form         | `^1.28.2`                        | Form state management                  |
+| Zod                         | `^4.3.6`                         | Schema validation                      |
+| Framer Motion               | `^12.31.0`                       | Complex animations                     |
+| Sonner                      | `^2.0.7`                         | Toast notifications                    |
+| shadcn/ui (Radix UI)        | via `radix-ui ^1.4.3`            | UI component library                   |
+| Lucide React                | `^0.563.0`                       | Icons                                  |
+| `server-only`               | `^0.0.1`                         | Enforces server-side module boundaries |
+| lodash                      | `^4.18.1`                        | Utility functions                      |
+| react-datepicker            | `^9.1.0`                         | Date/time picker                       |
+| react-easy-crop             | `^5.5.7`                         | Image cropping for avatar upload       |
+| react-markdown + remark-gfm | `^10.1.0` / `^4.0.1`             | Renders .md content pages              |
+| next-themes                 | `^0.4.6`                         | Theme management                       |
+| tw-animate-css              | `^1.4.0`                         | CSS-only transition utilities          |
 
 ---
 
-## 3. Environment Variables
+## Environment Variables
 
 Defined and enforced in `src/lib/config.ts`. Missing required vars throw at startup.
 
@@ -66,91 +50,241 @@ Defined and enforced in `src/lib/config.ts`. Missing required vars throw at star
 | `ACCESS_TOKEN_MAX_AGE`    | Server | No       | `900` (15 min)    | Access token cookie max-age in seconds          |
 | `REFRESH_TOKEN_MAX_AGE`   | Server | No       | `604800` (7 days) | Refresh token cookie max-age in seconds         |
 
-Use `env.backendUrl`, `env.isProduction`, `cookieConfig.*` from `src/lib/config.ts` — never read `process.env` directly. `NEXT_PUBLIC_BACKEND_URL` is not enforced by `config.ts` and must be accessed via `process.env.NEXT_PUBLIC_BACKEND_URL` in client components only.
+Use `env.*` / `cookieConfig.*` from `src/lib/config.ts` — never read `process.env` directly on the server.
 
 ---
 
-## 4. Project Structure
+## Directory Map
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx                  # Root layout — wraps with <AuthProvider>
-│   ├── globals.css                 # Tailwind v4 + global styles
-│   ├── not-found.tsx
-│   ├── (auth)/                     # No shared layout — inherits root
+│   ├── layout.tsx                  # Root layout — wraps with <AuthProvider>, mounts <Toaster>
+│   ├── globals.css                 # Tailwind v4 base + global styles
+│   ├── not-found.tsx               # 404 page
+│   ├── api/
+│   │   └── cloudinary-signature/
+│   │       └── route.ts            # API route: generates signed Cloudinary upload params
+│   ├── (auth)/                     # Auth pages — no shared layout beyond root
 │   │   ├── login/page.tsx
 │   │   ├── register/page.tsx
+│   │   ├── forgot-password/page.tsx
+│   │   ├── reset-password/page.tsx
 │   │   └── unauthorized/page.tsx
-│   └── (main)/                     # Has shared layout with Navbar + Footer
-│       ├── layout.tsx
+│   └── (main)/                     # All non-auth pages — shared Navbar + Footer layout
+│       ├── layout.tsx              # Mounts Navbar, Footer, NavigationProgress
 │       ├── page.tsx                # Landing page
-│       ├── tasks/                  # Task browser
-│       ├── about/
-│       ├── how-it-works/
-│       ├── privacy/
-│       └── terms/
+│       ├── about/page.tsx
+│       ├── how-it-works/page.tsx
+│       ├── privacy/page.tsx
+│       ├── terms/page.tsx
+│       ├── complete-profile/page.tsx   # Onboarding: complete profile form
+│       ├── verify-email/page.tsx       # Email verification flow
+│       ├── post-task/page.tsx          # Post a new task (onboarding-gated)
+│       ├── tasks/
+│       │   ├── page.tsx            # Task browser — real API data, URL-based filters
+│       │   └── [id]/
+│       │       ├── page.tsx        # Task detail
+│       │       └── loading.tsx
+│       ├── users/
+│       │   └── [id]/
+│       │       ├── page.tsx        # Public user profile
+│       │       └── loading.tsx
+│       └── profile/                # Authenticated area — protected (USER | ADMIN)
+│           ├── layout.tsx          # Profile layout with <ProfileSidebar>
+│           ├── page.tsx            # Profile overview
+│           ├── change-password/page.tsx
+│           ├── update-information/page.tsx
+│           ├── reviews/page.tsx
+│           ├── tasks/
+│           │   ├── page.tsx        # My posted tasks list
+│           │   ├── loading.tsx
+│           │   ├── edit/[id]/
+│           │   │   ├── page.tsx    # Edit task form
+│           │   │   └── loading.tsx
+│           │   └── [taskId]/
+│           │       ├── page.tsx    # Task detail (owner view)
+│           │       ├── loading.tsx
+│           │       ├── payment/
+│           │       │   ├── page.tsx    # Initiate payment (cash or online)
+│           │       │   └── loading.tsx
+│           │       └── applications/
+│           │           ├── page.tsx        # Applicants list for a task (owner view)
+│           │           ├── loading.tsx
+│           │           └── [applicationId]/page.tsx  # Approve / reject specific application
+│           ├── applications/
+│           │   ├── page.tsx            # My applications as a worker
+│           │   ├── loading.tsx
+│           │   └── [applicationId]/page.tsx  # Application detail + withdraw / actions
+│           ├── payments/
+│           │   ├── page.tsx            # Redirects to payment-made tab
+│           │   ├── _components/
+│           │   │   └── paymentPageHelpers.tsx  # Shared components + utilities for all payment result pages
+│           │   ├── [paymentId]/
+│           │   │   ├── page.tsx        # Payment detail
+│           │   │   └── loading.tsx
+│           │   ├── success/page.tsx    # Gateway success callback — validates COMPLETED status, redirects others
+│           │   ├── cancel/page.tsx     # Gateway cancel callback — validates CANCELLED status, redirects others
+│           │   ├── fail/page.tsx       # Gateway failure callback — validates FAILED status, redirects others
+│           │   ├── refunded/page.tsx   # Refund confirmation — validates REFUNDED status, redirects others
+│           │   └── (tabbed)/           # Route group for tabbed payments layout
+│           │       ├── layout.tsx      # Mounts <PaymentsTabNav>
+│           │       ├── payment-made/
+│           │       │   ├── page.tsx    # Payments made by user
+│           │       │   └── loading.tsx
+│           │       └── payment-received/
+│           │           ├── page.tsx    # Payments received by user
+│           │           └── loading.tsx
+│           ├── wallet/
+│           │   ├── page.tsx            # Wallet balance + transaction list
+│           │   ├── loading.tsx
+│           │   └── [id]/
+│           │       ├── page.tsx        # Wallet transaction detail
+│           │       └── loading.tsx
+│           └── commission-due/
+│               ├── page.tsx            # Commissions owed to platform
+│               ├── loading.tsx
+│               └── [dueId]/
+│                   ├── page.tsx        # Commission due detail + pay action
+│                   └── loading.tsx
 │
-├── actions/                        # Server Actions ("use server")
-│   ├── auth/authAction.ts          # LoginAction, RegisterAction, logoutAction
-│   └── common/cookie.ts            # setCookie / clearCookie helpers
+├── actions/                        # Server Actions — "use server", one action per file
+│   ├── auth/
+│   │   └── authAction.ts           # LoginAction, RegisterAction, logoutAction
+│   ├── common/
+│   │   └── cookie.ts               # setCookie / clearCookie helpers
+│   ├── application/
+│   │   ├── approveApplicationAction.ts
+│   │   ├── getApplicationDetailsAction.ts
+│   │   ├── rejectApplicationAction.ts
+│   │   └── withdrawApplicationAction.ts
+│   ├── payment/
+│   │   ├── confirmCashPaymentAction.ts
+│   │   ├── declineCashPaymentAction.ts
+│   │   ├── getPaymentDetailAction.ts
+│   │   ├── getPaymentSessionAction.ts
+│   │   ├── getPaymentsMadeAction.ts
+│   │   ├── getPaymentsReceivedAction.ts
+│   │   ├── initCashPaymentAction.ts
+│   │   └── initOnlinePaymentAction.ts
+│   ├── task/
+│   │   ├── applyTaskAction.ts
+│   │   ├── approveCompletionAction.ts
+│   │   ├── markTaskCompletedAction.ts
+│   │   ├── markTaskInProgressAction.ts
+│   │   ├── requestRevisionAction.ts
+│   │   └── taskAction.ts           # Post task, edit task, delete task, get tasks
+│   ├── user/
+│   │   ├── getPublicProfileAction.ts
+│   │   └── userAction.ts           # Update profile, complete profile, change password, avatar
+│   └── wallet/
+│       ├── getCommissionDueAction.ts
+│       ├── getCommissionsDueAction.ts
+│       ├── getMyWalletAction.ts
+│       ├── getWalletTransactionAction.ts
+│       ├── getWalletTransactionsAction.ts
+│       └── payCommissionDueAction.ts
 │
 ├── lib/
-│   ├── config.ts                   # env + cookieConfig (server-only)
-│   ├── types.ts                    # Task domain types
-│   ├── utils.ts                    # cn() utility
+│   ├── config.ts                   # env + cookieConfig — SERVER-ONLY (imports server-only)
+│   ├── types.ts                    # All domain types and enums (Task, Payment, Wallet, Commission…)
+│   ├── taskStatusConfig.ts         # Badge label + Tailwind className map for every TaskStatusType
+│   ├── utils.ts                    # cn() utility (clsx + tailwind-merge)
 │   ├── api/
-│   │   ├── client.ts               # Core fetch wrapper (retries, auth, timeout)
-│   │   ├── errors.ts               # ApiError class
+│   │   ├── client.ts               # Core fetch wrapper: retries, auth header, timeout
+│   │   ├── errors.ts               # ApiError class — use .isApiError() / .isUnauthorized()
 │   │   ├── actionHandler.ts        # Try/catch wrapper for Server Actions
-│   │   ├── tokens.ts               # setTokens / clearTokens (cookie access)
-│   │   ├── types.ts                # ApiResponse, BackendError, PaginatedResponse, RequestConfig
+│   │   ├── tokens.ts               # setTokens / clearTokens — SERVER-ONLY
+│   │   ├── types.ts                # ApiResponse<T>, BackendError, RequestConfig
 │   │   ├── utils.ts                # buildUrl, sleep, DEFAULT_TIMEOUT, RETRY_DELAY
 │   │   └── index.ts                # Re-exports: apiClient, ApiResponse
-│   └── auth/
-│       ├── getCurrentUser.ts       # React cache — fetches current user once per request
-│       ├── requireAuth.ts          # Server Component auth guard
-│       ├── routes-utils.ts         # isAuthRoute / isAuthenticatedRoute / getRequiredRoles
-│       └── proxy-utils.ts          # JWT decode, isTokenValid, isTokenExpiringSoon, refreshTokens
-│
-├── lib/types/
-│   └── auth/index.ts               # LoggedinUser, RegisteredUser interfaces
+│   ├── auth/
+│   │   ├── getCurrentUser.ts       # React cache — fetches current user once per request; never throws
+│   │   ├── getEmailVerificationStatus.ts  # Fetches email verification status (cache: no-store)
+│   │   ├── requireAuth.ts          # Server Component guard — redirects to /login if unauthenticated
+│   │   ├── routes-utils.ts         # isAuthRoute, isAuthenticatedRoute, getRequiredRoles, isOnboardingGatedRoute
+│   │   └── proxy-utils.ts          # JWT decode, isTokenValid, isTokenExpiringSoon, refreshTokens
+│   ├── form/
+│   │   └── form-error.ts           # Helpers to extract and format server error messages for forms
+│   └── types/
+│       └── auth/index.ts           # LoggedinUser, RegisteredUser, AuthContextType, EmailVerificationStatus
 │
 ├── components/
-│   ├── ui/                         # shadcn/ui primitives
-│   ├── form/
+│   ├── ui/                         # shadcn/ui primitives — do not edit generated files directly
+│   ├── form/                       # Shared form field components (registered in useAppForm)
 │   │   ├── hooks.tsx               # useAppForm (TanStack), useFieldContext, useFormContext
-│   │   ├── FormBase.tsx            # Label + error wrapper for form fields
-│   │   ├── FormCheckbox.tsx
+│   │   ├── FormBase.tsx            # Label + description + error wrapper for any field
+│   │   ├── FormCheckbox.tsx        # Checkbox field
 │   │   ├── InputWithIcon.tsx       # Text/email input with leading icon
-│   │   └── PasswordInput.tsx       # Password field with show/hide toggle
+│   │   ├── PasswordInput.tsx       # Password field with show/hide toggle
+│   │   ├── DateTimeField.tsx       # Date/time picker (wraps react-datepicker)
+│   │   ├── NumberInputField.tsx    # Numeric input
+│   │   ├── SelectField.tsx         # Select dropdown
+│   │   ├── TextAreaField.tsx       # Textarea
+│   │   └── ServerErrorDisplay.tsx  # Renders server-side errors inside a form
 │   ├── layout/
 │   │   ├── Navbar.tsx
-│   │   └── Footer.tsx
+│   │   ├── Footer.tsx
+│   │   └── NavigationProgress.tsx  # Top loading bar during client-side navigation
+│   ├── common/
+│   │   └── TaskCard.tsx            # Reusable task card (used in both browse and profile views)
+│   ├── landing/                    # Landing page section components
+│   ├── about/                      # About page section components
+│   ├── howItWorks/                 # How It Works page section components
 │   ├── login/                      # LoginForm, LoginFormContainer, LoginLeftSection
 │   ├── register/                   # RegisterForm, RegisterFormContainer, RegisterLeftSection
-│   ├── tasks/                      # TaskFilters, TaskSearch, TaskPagination, TaskSort, TaskSkeleton, ImageGallery
-│   └── landing/                    # hero/, liveFeed/, howItWorks/, category/, testimonial/, becomeHelper/, FAQ/
+│   ├── forgot-password/            # ForgotPasswordForm, container, left section
+│   ├── reset-password/             # ResetPasswordForm, container, left section
+│   ├── verify-email/               # VerifyEmailCheck, VerifyEmailPrompt
+│   ├── post-task/                  # PostTaskForm, ImageUploader, LocationPicker
+│   ├── tasks/
+│   │   ├── TaskFilters.tsx         # Category + priority filter panel
+│   │   ├── TaskSearch.tsx          # Search input
+│   │   ├── TaskPagination.tsx      # Pagination controls
+│   │   ├── TaskSort.tsx            # Sort field/order selector
+│   │   ├── TaskSkeleton.tsx        # Loading skeleton for task cards
+│   │   ├── ImageGallery.tsx        # Image gallery for task detail
+│   │   ├── browse/                 # URL-driven controls: TasksControlBar, TasksUrlPagination, FiltersBarSkeleton
+│   │   └── detail/                 # Task detail subcomponents: ApplyTaskDialog, TaskBadges, TaskInfoCard, etc.
+│   └── profile/
+│       ├── ProfileSidebar.tsx      # Left sidebar for profile area
+│       ├── OnboardingBanner.tsx    # Banner prompting profile completion / email verification
+│       ├── AvatarUploadDialog.tsx  # Avatar upload with crop (react-easy-crop + Cloudinary)
+│       ├── ChangePasswordForm.tsx
+│       ├── CompleteProfileForm.tsx
+│       ├── UpdateInformationForm.tsx
+│       ├── applications/           # Application management components (worker view)
+│       ├── tasks/                  # My tasks management components (owner view)
+│       ├── payments/               # Payment history components
+│       ├── wallet/                 # Wallet + transaction components
+│       └── commission-due/         # Commission due management components
 │
 ├── providers/
-│   └── AuthProvider.tsx            # Client context — holds current user state
+│   └── AuthProvider.tsx            # Client context — holds LoggedinUser | null state
 │
-├── schema/
-│   ├── loginValidation.ts          # Zod: email + password (6+ chars)
-│   └── registerValidation.ts       # Zod: name (2+) + email + password (8+) + confirmPassword
+├── schema/                         # Zod validation schemas — one file per form
+│   ├── loginValidation.ts
+│   ├── registerValidation.ts
+│   ├── forgotPasswordValidation.ts
+│   ├── resetPasswordValidation.ts
+│   ├── changePasswordValidation.ts
+│   ├── completeProfileValidation.ts
+│   ├── updateProfileValidation.ts
+│   ├── postTaskValidation.ts
+│   ├── applyTaskValidation.ts
+│   ├── rejectApplicationValidation.ts
+│   └── withdrawApplicationValidation.ts
 │
 ├── content/
-│   ├── privacy-policy.md
-│   └── terms-of-service.md
+│   ├── privacy-policy.md           # Content for /privacy, rendered by <MarkdownArticle>
+│   └── terms-of-service.md        # Content for /terms, rendered by <MarkdownArticle>
 │
-└── proxy.ts                        # Next.js middleware (token refresh + route protection)
+└── proxy.ts                        # Next.js middleware: token refresh + route protection
 ```
-
-`next.config.ts` — only allows remote images from `images.unsplash.com`.
 
 ---
 
-## 5. Authentication Architecture
+## Auth Pattern
 
 ### Cookie names
 
@@ -159,44 +293,63 @@ src/
 
 ### Middleware (`src/proxy.ts`)
 
-Runs on every request. Logic:
+Runs on every request:
 
 1. Reads `accessToken` / `refreshToken` from cookies.
-2. Decodes + validates the access token.
-3. If access token is missing, expired, or expiring soon **and** a refresh token exists → calls `refreshTokens()` from `proxy-utils.ts`.
+2. Decodes + validates the access token via `proxy-utils.ts`.
+3. If access token is missing, expired, or expiring soon **and** a refresh token exists → calls `refreshTokens()`.
 4. On successful refresh, attaches new cookies to the response **and** forwards `x-refreshed-access-token` header so Server Components can read the new token before the cookie is visible.
-5. **Auth routes** (`/login`, `/register`): redirect authenticated users to `/profile`.
-6. **Authenticated-only routes** (`/change-password`): redirect unauthenticated users to `/login?callbackUrl=<path>`.
-7. **Protected routes** (role-based, see below): check role; redirect to `/unauthorized` on failure.
+5. **Auth routes** (`/login`, `/register`): redirects authenticated users to `/profile`.
+6. **Authenticated-only routes** (`/change-password`, `/verify-email`, `/complete-profile`): redirects unauthenticated users to `/login?callbackUrl=<path>`.
+7. **Protected routes** (role-based): checks role; redirects to `/unauthorized` on failure.
+8. **Onboarding-gated routes** (`/post-task`, `/my-tasks`): additionally requires verified email + complete profile.
 
 ### Route protection map (`src/lib/auth/routes-utils.ts`)
 
 ```ts
+// Role-protected
 const protectedRoutes = {
-  "/profile": ["USER", "ADMIN"],
+  "/profile/*": ["USER", "ADMIN"],
   "/post-task": ["USER", "ADMIN"],
   "/my-tasks": ["USER", "ADMIN"],
-  "/admin/*": ["ADMIN"], // wildcard prefix match
+  "/admin/*": ["ADMIN"],
 };
+
+// Login required, no role check
+const authenticatedRoutes = [
+  "/change-password",
+  "/verify-email",
+  "/complete-profile",
+];
+
+// Also require verified email + complete profile
+const onboardingGatedRoutes = ["/post-task", "/my-tasks"];
 ```
 
-Use `"/*"` suffix for prefix-matching. Everything else is exact-match only.
-
-To add a new protected route, edit only `routes-utils.ts`.
+Use `"/*"` suffix for prefix-matching; everything else is exact-match. To add a new protected route: edit only `routes-utils.ts`.
 
 ### Server Component auth guard
 
-Use `requireAuth()` from `src/lib/auth/requireAuth.ts` in Server Components that need a user. It calls `getCurrentUser()` (React-cached) and redirects if unauthenticated.
+Use `requireAuth()` from `src/lib/auth/requireAuth.ts` in Server Components that need a user. Calls `getCurrentUser()` (React-cached) and redirects to `/login` if unauthenticated.
 
 ### Client-side auth state
 
-`AuthProvider` (`src/providers/AuthProvider.tsx`) provides `user` via React context. Updated after login/logout via `router.refresh()`.
+`AuthProvider` (`src/providers/AuthProvider.tsx`) provides `user: LoggedinUser | null` via React context. Call `refreshUser()` after login/profile changes; `clearUser()` after logout; both trigger `router.refresh()`.
 
 ---
 
-## 6. API Client
+## State Management Pattern
 
-Import via `src/lib/api/index.ts`:
+No global client state manager (no Redux, Zustand, etc.).
+
+- **Server state:** fetched in Server Components via `apiClient` or Server Actions; passed as props to client components.
+- **Auth state:** `AuthProvider` context — updated by `refreshUser()` / `clearUser()`.
+- **Form state:** TanStack React Form `useAppForm()` — local to each form component. Server errors surfaced via `ServerErrorDisplay`.
+- **URL state:** filter, sort, and pagination for `/tasks` browser live in URL search params; read in Server Components and passed down.
+
+---
+
+## API Client
 
 ```ts
 import { apiClient, ApiResponse } from "@/lib/api";
@@ -212,24 +365,20 @@ apiClient.patch<T>(endpoint, body?, config?)
 apiClient.delete<T>(endpoint, config?)
 ```
 
-### `RequestConfig` options
+### Key `RequestConfig` options
 
 ```ts
 {
   params?:     Record<string, string | number | boolean | undefined | null>;
-  headers?:    HeadersInit;
-  timeout?:    number;          // default: DEFAULT_TIMEOUT
   tags?:       string[];        // Next.js cache tags
-  revalidate?: number | false;  // Next.js revalidate
-  retries?:    number;          // default: 0 — retries on 5xx/429/network errors
-  skipAuth?:   boolean;         // skip Authorization header (e.g. login/register)
+  revalidate?: number | false;
+  retries?:    number;          // 0 by default — retries on 5xx/429/network errors only
+  skipAuth?:   boolean;         // omit Authorization header (login/register)
   cache?:      RequestCache;
 }
 ```
 
 ### Response shapes
-
-**Success:**
 
 ```ts
 interface ApiResponse<T> {
@@ -239,11 +388,7 @@ interface ApiResponse<T> {
   data: T;
   timestamp?: string;
 }
-```
 
-**Error (backend):**
-
-```ts
 type BackendError = {
   success: false;
   message: string;
@@ -253,104 +398,91 @@ type BackendError = {
 };
 ```
 
-Thrown errors are wrapped in `ApiError` (from `src/lib/api/errors.ts`). Use `ApiError.isApiError(e)` and `ApiError.isUnauthorized(e)` for type-safe checks.
-
-> **401 is terminal.** The middleware already attempted refresh before the request reached the Server Component. A 401 from the backend means the session is truly expired — never retry on 401. `getCurrentUser()` always returns `null` on any error (including 401) and never throws.
+Use `ApiError.isApiError(e)` / `ApiError.isUnauthorized(e)` for type-safe checks. **401 is terminal — never retry.**
 
 ### Server Actions
-
-Always wrap callees in `actionHandler()`:
 
 ```ts
 import { actionHandler } from "@/lib/api/actionHandler";
 
 const result = await actionHandler(() =>
-  apiClient.post<ApiResponse<SomeType>>("/some/endpoint", payload),
+  apiClient.post<ApiResponse<SomeType>>("/endpoint", payload),
 );
-// result is T | BackendError — check result.success
+// result.success → check before using result.data
 ```
 
 ---
 
-## 7. Form System
-
-**Framework:** TanStack React Form v1 with custom field components.
-
-Always import the form hook from `src/components/form/hooks.tsx`:
+## Form System
 
 ```ts
 import { useAppForm } from "@/components/form/hooks";
 ```
 
-### Available field components (registered in `useAppForm`)
+### Registered field components
 
-| Component       | Usage                                   |
-| --------------- | --------------------------------------- |
-| `InputWithIcon` | Text / email inputs with a leading icon |
-| `PasswordInput` | Password field with show/hide toggle    |
-| `Checkbox`      | Checkbox (aliased from `FormCheckbox`)  |
+| Component          | Description                          |
+| ------------------ | ------------------------------------ |
+| `InputWithIcon`    | Text/email input with leading icon   |
+| `PasswordInput`    | Password field with show/hide toggle |
+| `Checkbox`         | Checkbox (alias of `FormCheckbox`)   |
+| `DateTimeField`    | Date/time picker                     |
+| `NumberInputField` | Numeric input                        |
+| `SelectField`      | Select dropdown                      |
+| `TextAreaField`    | Textarea                             |
 
-Wrap fields with `FormBase` from `src/components/form/FormBase.tsx` to get automatic label, description, and validation error display.
-
-### Validation schemas in `src/schema/`
-
-- `LoginSchema` — email + password (min 6 chars)
-- `RegisterSchema` — name (min 2) + email + password (min 8) + confirmPassword (must match)
-
----
-
-## 8. Domain Types (`src/lib/types.ts`)
-
-```ts
-TaskPriority: LOW | MEDIUM | HIGH | URGENT;
-TaskCategory: DELIVERY |
-  CLEANING |
-  REPAIR |
-  TUTORING |
-  GARDENING |
-  MOVING |
-  PET_CARE |
-  TECH_SUPPORT |
-  OTHER;
-TaskStatus: OPEN | IN_PROGRESS | COMPLETED | CANCELLED | PAYMENT_PROCESSING;
-```
-
-Key interfaces: `Task`, `TaskDetails` (extends Task with `postedBy`), `TaskPoster`, `TaskDetailsResponse`, `PaginationMeta`.
-
-Additional types used by the tasks browser:
-
-- `FilterState` — `{ categories, priorities, search, sortField, sortOrder, page, limit }`
-- `SortField` — `"createdAt" | "updatedAt" | "title"`
-- `SortOrder` — `"asc" | "desc"`
-- `TasksResponse` — paginated tasks API response
-
-> **`Task.baseCompensation` is typed as `string`**, not `number`. Do not do arithmetic on it without parsing.
-
-> **`/tasks` page is WIP** — `src/app/(main)/tasks/page.tsx` uses hardcoded `MOCK_TASKS` with a simulated 500 ms delay. When implementing real data fetching, replace the mock with `apiClient` calls.
+Wrap fields with `FormBase` for automatic label, description, and error display. Display server errors with `ServerErrorDisplay`.
 
 ---
 
-## 9. UI & Styling Conventions
+## Domain Types (`src/lib/types.ts`)
 
-- **Tailwind CSS v4** — no `tailwind.config.js`; configured entirely via PostCSS (`postcss.config.mjs`).
-- **shadcn/ui** components live in `src/components/ui/`. Config in `components.json`.
+Key enums (all `const` objects `as const`):
+
+- `TaskPriority`: `LOW | MEDIUM | HIGH | URGENT`
+- `TaskCategory`: `DELIVERY | CLEANING | REPAIR | TUTORING | GARDENING | MOVING | PET_CARE | TECH_SUPPORT | OTHER`
+- `TaskStatus`: `DRAFT | OPEN | ASSIGNED | IN_PROGRESS | PENDING_REVIEW | PAYMENT_PROCESSING | COMPLETED | PAYMENT_FAILED | DISPUTED | CANCELLED | EXPIRED | REFUNDED`
+- `ApplicationStatus`: `PENDING | APPROVED | REJECTED | WITHDRAWN`
+- `PaymentMethod`: `ONLINE | CASH`
+- `PaymentStatus`: `PENDING | COMPLETED | FAILED | CANCELLED | REFUNDED`
+- `CashStatus`: `PAYER_CLAIMED | PAYEE_CONFIRMED | PAYEE_DISPUTED | ADMIN_VERIFIED`
+- `CommissionDueStatus`: `DUE | PAID`
+- `WalletTransactionType`: `CREDIT | DEBIT`
+- `WalletTransactionCategory`: `TASK_PAYMENT | DIRECT_COMMISSION_DEDUCTION | COMMISSION_PAYMENT | WITHDRAWAL | REFUND | ADJUSTMENT`
+- `WalletTransactionStatus`: `PENDING | COMPLETED | FAILED | REVERSED`
+
+Key type notes:
+
+- **`Task.baseCompensation` is typed as `string`** — parse before arithmetic.
+- **`taskStatusConfig`** in `src/lib/taskStatusConfig.ts` maps every `TaskStatusType` to `{ label, className }` — use it instead of switch statements for status badges.
+
+Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`, `emailVerified`, `provider`), `RegisteredUser`, `AuthContextType`, `EmailVerificationStatus`.
+
+---
+
+## UI & Styling Conventions
+
+- **Tailwind v4** — no `tailwind.config.js`; configured via PostCSS (`postcss.config.mjs`).
+- **shadcn/ui** in `src/components/ui/`. Config in `components.json`. Do not edit generated files directly.
 - **Color palette:** blue/emerald accents, slate base (dark sections use `bg-slate-900`).
-- **Responsive:** mobile-first — `lg:` breakpoint separates mobile single-column from desktop two-column layouts.
-- **Auth page layout pattern** — `<main className="h-screen flex">` with the left branding section (`hidden lg:flex lg:w-1/2 …`) fixed at viewport height and the right form section (`w-full lg:w-1/2 … overflow-y-auto`) scrolling internally.
-- **Animations:** Framer Motion for complex sequences; Tailwind `tw-animate-css` for CSS-only transitions.
-- **Icons:** Lucide React only.
-- **Toasts:** Sonner — use the `<Toaster>` in root layout.
+- **Responsive:** mobile-first — `lg:` breakpoint for desktop two-column layouts.
+- **Auth page layout:** `<main className="h-screen flex">` — left branding (`hidden lg:flex lg:w-1/2`) fixed at viewport height; right form (`w-full lg:w-1/2 overflow-y-auto`) scrolls internally.
+- **Animations:** Framer Motion for complex sequences; `tw-animate-css` for CSS-only transitions.
+- **Markdown pages:** `<MarkdownArticle>` (`src/components/ui/MarkdownArticle.tsx`) renders `.md` files from `src/content/`.
+- **Images:** Only `images.unsplash.com` is whitelisted in `next.config.ts`. Add new hosts there if needed.
 
 ---
 
-## 10. Key Conventions
+## Architectural Decisions
 
-- **Server-only modules:** `src/lib/config.ts` and `src/lib/api/tokens.ts` are server-only (import `server-only`). Never import them from `"use client"` files.
-- **`"use server"` boundary:** All files in `src/actions/` are Server Actions. Always mark them `"use server"` at the top.
-- **`cn()` utility:** Use `cn()` from `src/lib/utils.ts` (combines `clsx` + `tailwind-merge`) for all conditional Tailwind class composition.
-- **Adding a new protected route:** Edit `protectedRoutes` in `src/lib/auth/routes-utils.ts` only. No middleware changes needed.
-- **Adding a new API endpoint:** Call `apiClient` directly; wrap in `actionHandler()` inside a Server Action if triggered from a form.
-- **Image domains:** Only `images.unsplash.com` is allowed in `next.config.ts`. Add new hostnames there if needed.
-- **Markdown content:** Legal/static pages are rendered from `.md` files in `src/content/` using the `MarkdownArticle` component (`src/components/ui/MarkdownArticle.tsx`).
-- **`const enum` is forbidden** — `tsconfig.json` sets `isolatedModules: true`. Use `const` objects with `as const` instead (all existing domain types follow this pattern).
-- **`await searchParams` in page components** — Next.js 15+ requires `searchParams` (and `params`) to be awaited. Both auth pages already follow this pattern: `const { callbackUrl } = await searchParams;`
+- **Frontend-only architecture:** All persistence delegated to a separate backend API at `BACKEND_URL`. This frontend never writes to a database directly.
+- **HTTP-only cookie auth:** JWT tokens stored in HTTP-only cookies (not localStorage) to prevent XSS token theft. Refresh handled in Next.js middleware before requests reach Server Components.
+- **`x-refreshed-access-token` header:** On token refresh, middleware forwards the new token as a response header so Server Components can use it within the same request cycle before the cookie propagates to the client.
+- **Server Components by default:** `"use client"` is added only where necessary to keep data-fetching on the server and minimize bundle size.
+- **`actionHandler()` wrapper:** All Server Actions wrap API calls in `actionHandler()` to normalize error handling and prevent unhandled rejections from reaching the client.
+- **React cache for `getCurrentUser()`:** Deduplicated per request — multiple Server Components on the same page call it without extra network requests.
+- **`const enum` forbidden:** `isolatedModules: true` in tsconfig. All enums are `const` objects `as const`.
+- **Onboarding gating:** `/post-task` and `/my-tasks` require verified email + complete profile (checked in middleware via `isOnboardingGatedRoute`), in addition to role protection.
+- **Cloudinary for image uploads:** Task images and avatars are uploaded directly from the client via a signed Cloudinary widget. The signature is generated server-side at `src/app/api/cloudinary-signature/route.ts`.
+- **URL-state for task browser:** Filters, sort, and pagination for `/tasks` are stored in URL search params — enables server-side rendering and shareable URLs without client state.
+- **shadcn/ui mandatory first:** Custom UI components are only created when a shadcn component does not exist for the use case.

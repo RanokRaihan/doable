@@ -3,12 +3,13 @@
 import { LoginAction, RegisterAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import RegisterSchema from "@/schema/registerValidation";
-import { Loader2, Mail, User, X } from "lucide-react";
-import { redirect } from "next/navigation";
+import { Loader2, Mail, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { useAppForm } from "../form/hooks";
+import ServerErrorDisplay from "../form/ServerErrorDisplay";
 import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
 
@@ -18,6 +19,7 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const { setUser } = useAuth();
+  const router = useRouter();
 
   const form = useAppForm({
     defaultValues: {
@@ -58,10 +60,10 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
           const verifyUrl = callbackUrl
             ? `/verify-email?callbackUrl=${encodeURIComponent(callbackUrl)}`
             : "/verify-email";
-          redirect(verifyUrl);
+          router.push(verifyUrl);
         } else {
           toast.error(loginRes?.message || "Login failed. ");
-          redirect("/login");
+          router.push("/login");
         }
       } else {
         setServerError(
@@ -116,17 +118,10 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         </form.AppField>
 
         {serverError && (
-          <div className="flex items-center justify-between gap-2 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
-            <span>{serverError}</span>
-            <button
-              type="button"
-              onClick={() => setServerError(null)}
-              className="shrink-0 rounded p-0.5 hover:bg-red-100"
-              aria-label="Dismiss error"
-            >
-              <X className="size-4" />
-            </button>
-          </div>
+          <ServerErrorDisplay
+            serverError={serverError}
+            setServerError={setServerError}
+          />
         )}
 
         <form.Subscribe selector={(state) => state.isSubmitting}>

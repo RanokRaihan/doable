@@ -1,12 +1,13 @@
 "use client";
 
+import { TaskImage } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
 interface ImageGalleryProps {
-  images: string[];
+  images: TaskImage[];
   alt?: string;
   className?: string;
 }
@@ -23,19 +24,22 @@ export function ImageGallery({
   alt = "Task image",
   className,
 }: ImageGalleryProps) {
-  // Use placeholder images if none provided
-  const galleryImages = images.length > 0 ? images : placeholderImages;
+  const hasImages = images.length > 0;
+  const displayUrls = hasImages
+    ? images.map((img) => ({ url: img.url, alt: img.altText ?? alt }))
+    : placeholderImages.map((url) => ({ url, alt }));
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = () => {
     setCurrentIndex((prev) =>
-      prev === 0 ? galleryImages.length - 1 : prev - 1,
+      prev === 0 ? displayUrls.length - 1 : prev - 1,
     );
   };
 
   const goToNext = () => {
     setCurrentIndex((prev) =>
-      prev === galleryImages.length - 1 ? 0 : prev + 1,
+      prev === displayUrls.length - 1 ? 0 : prev + 1,
     );
   };
 
@@ -43,7 +47,7 @@ export function ImageGallery({
     setCurrentIndex(index);
   };
 
-  if (galleryImages.length === 0) {
+  if (displayUrls.length === 0) {
     return (
       <div
         className={cn(
@@ -65,8 +69,8 @@ export function ImageGallery({
       <div className="relative w-full aspect-4/3 md:aspect-video bg-gray-100 rounded-2xl overflow-hidden group">
         {/* Current Image */}
         <Image
-          src={galleryImages[currentIndex]}
-          alt={`${alt} ${currentIndex + 1}`}
+          src={displayUrls[currentIndex].url}
+          alt={`${displayUrls[currentIndex].alt} ${currentIndex + 1}`}
           fill
           className="object-cover transition-opacity duration-300"
           sizes="(max-width: 768px) 100vw, 60vw"
@@ -74,7 +78,7 @@ export function ImageGallery({
         />
 
         {/* Navigation Arrows */}
-        {galleryImages.length > 1 && (
+        {displayUrls.length > 1 && (
           <>
             {/* Previous Button */}
             <button
@@ -98,14 +102,14 @@ export function ImageGallery({
 
         {/* Image Counter */}
         <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-sm px-3 py-1 rounded-full">
-          {currentIndex + 1} / {galleryImages.length}
+          {currentIndex + 1} / {displayUrls.length}
         </div>
       </div>
 
       {/* Thumbnails */}
-      {galleryImages.length > 1 && (
+      {displayUrls.length > 1 && (
         <div className="flex gap-2 overflow-x-auto py-2 px-1 scrollbar-hide">
-          {galleryImages.map((image, index) => (
+          {displayUrls.map((image, index) => (
             <button
               key={index}
               onClick={() => goToImage(index)}
@@ -117,8 +121,8 @@ export function ImageGallery({
               )}
             >
               <Image
-                src={image}
-                alt={`${alt} thumbnail ${index + 1}`}
+                src={image.url}
+                alt={`${image.alt} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
                 sizes="96px"

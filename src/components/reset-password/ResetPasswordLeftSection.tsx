@@ -28,7 +28,7 @@ const ResetPasswordLeftSection = () => {
             <Sparkles className="w-6 h-6 text-blue-400" />
           </div>
           <Link href="/" className="text-2xl font-bold text-white">
-            Get It Done
+            Doable
           </Link>
         </div>
 
@@ -74,7 +74,7 @@ const ResetPasswordLeftSection = () => {
 
         {/* Footer */}
         <div className="text-sm text-slate-500">
-          © 2026 Get It Done. All rights reserved.
+          © 2026 Doable. All rights reserved.
         </div>
       </div>
     </div>

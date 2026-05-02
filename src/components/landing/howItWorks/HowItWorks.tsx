@@ -21,7 +21,7 @@ const steps = [
   },
   {
     icon: ShieldCheck,
-    title: "3. Get it done",
+    title: "3. Doable",
     description:
       "Your payment is held securely in escrow. Only release the funds once you are 100% satisfied with the work.",
     gradient: "from-emerald-500 to-teal-500",

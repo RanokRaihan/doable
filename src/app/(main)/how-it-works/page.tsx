@@ -8,9 +8,9 @@ import { WorkerWorkflow } from "@/components/howItWorks/WorkerWorkflow";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How It Works | GetItDone",
+  title: "How It Works | Doable",
   description:
-    "Learn how GetItDone works for both job posters and workers. Post a task in minutes, receive offers, pay with cash or online — and earn money on your own schedule.",
+    "Learn how Doable works for both job posters and workers. Post a task in minutes, receive offers, pay with cash or online — and earn money on your own schedule.",
 };
 
 export default function HowItWorksPage() {

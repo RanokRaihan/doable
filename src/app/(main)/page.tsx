@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <main>
       <Hero />
-      <LiveFeed />
       <HowItWorks />
+      <LiveFeed />
       <CategoryGrid />
       <Testimonials />
       <FAQ />

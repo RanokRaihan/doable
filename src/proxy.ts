@@ -72,17 +72,17 @@ export async function proxy(request: NextRequest) {
       return response;
     }
 
-    // Redirect away from /verify-email if already verified
-    if (pathname === "/verify-email" && tokenData?.emailVerified === true) {
-      if (tokenData?.profileStatus === "INCOMPLETE") {
-        return withRefreshedCookies(
-          NextResponse.redirect(new URL("/complete-profile", request.url)),
-        );
-      }
-      return withRefreshedCookies(
-        NextResponse.redirect(new URL("/profile", request.url)),
-      );
-    }
+    // // Redirect away from /verify-email if already verified
+    // if (pathname === "/verify-email" && tokenData?.emailVerified === true) {
+    //   if (tokenData?.profileStatus === "INCOMPLETE") {
+    //     return withRefreshedCookies(
+    //       NextResponse.redirect(new URL("/complete-profile", request.url)),
+    //     );
+    //   }
+    //   return withRefreshedCookies(
+    //     NextResponse.redirect(new URL("/profile", request.url)),
+    //   );
+    // }
 
     // Redirect away from /complete-profile if profile is already complete
     if (

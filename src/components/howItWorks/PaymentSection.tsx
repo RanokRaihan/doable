@@ -92,8 +92,8 @@ export const PaymentSection = () => {
                   </div>
 
                   <p className="mb-8 text-gray-600 leading-relaxed">
-                    Your money is held safely by GetItDone and only released
-                    when you confirm satisfaction. Zero risk, full control.
+                    Your money is held safely by Doable and only released when
+                    you confirm satisfaction. Zero risk, full control.
                   </p>
 
                   {/* Escrow flow steps */}

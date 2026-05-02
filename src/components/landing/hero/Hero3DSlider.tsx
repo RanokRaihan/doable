@@ -33,7 +33,7 @@ const workflowSteps = [
     stepNumber: 2,
     title: "Post Your Task",
     subtitle: "Describe what you need done",
-    description: "John posts his task on Get It Done with details and budget.",
+    description: "John posts his task on Doable with details and budget.",
     image:
       "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop",
     icon: Send,

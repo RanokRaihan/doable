@@ -59,7 +59,7 @@ export const HowItWorksHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.2 }}
         >
-          GetItDone blurs the line between posting and working. Today you hire
+          Doable blurs the line between posting and working. Today you hire
           someone to move boxes. Tomorrow you pick up a gig and earn. Pay with
           cash or online — your choice, every time.
         </motion.p>
