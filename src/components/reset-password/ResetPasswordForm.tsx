@@ -3,7 +3,7 @@ import { resetPasswordAction } from "@/actions/auth/authAction";
 import ResetPasswordSchema from "@/schema/resetPasswordValidation";
 import { Loader2, X } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
@@ -20,6 +20,7 @@ type ResetPasswordFormProps = {
 
 const ResetPasswordForm = ({ token, email }: ResetPasswordFormProps) => {
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
 
   const form = useAppForm({
     defaultValues: {
@@ -42,7 +43,7 @@ const ResetPasswordForm = ({ token, email }: ResetPasswordFormProps) => {
       });
       if (res?.success) {
         toast.success("Password reset successfully. Please sign in.");
-        redirect("/login");
+        router.push("/login");
       } else {
         setServerError(
           res?.message || "Failed to reset password. Please try again.",

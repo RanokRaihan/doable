@@ -1,3 +1,4 @@
+import OnboardingBanner from "@/components/profile/OnboardingBanner";
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 
 export default function ProfileLayout({
@@ -7,7 +8,8 @@ export default function ProfileLayout({
 }) {
   return (
     <div data-profile-layout className="min-h-screen ">
-      <div className="mx-auto max-w-6xl px-4 pt-24 pb-8">
+      <div className="mx-auto max-w-6xl px-4 pt-24 pb-8 space-y-6">
+        <OnboardingBanner />
         <div className="flex flex-col md:flex-row gap-6 md:items-start">
           <ProfileSidebar />
           <main className="flex-1 min-w-0">{children}</main>

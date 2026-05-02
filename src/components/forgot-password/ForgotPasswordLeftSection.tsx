@@ -28,7 +28,7 @@ const ForgotPasswordLeftSection = () => {
             <Sparkles className="w-6 h-6 text-blue-400" />
           </div>
           <Link href="/" className="text-2xl font-bold text-white">
-            Get It Done
+            Doable
           </Link>
         </div>
 
@@ -54,7 +54,9 @@ const ForgotPasswordLeftSection = () => {
               <div className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               </div>
-              <span className="text-slate-300">Enter your registered email</span>
+              <span className="text-slate-300">
+                Enter your registered email
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center">
@@ -68,16 +70,14 @@ const ForgotPasswordLeftSection = () => {
               <div className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
               </div>
-              <span className="text-slate-300">
-                Link expires in 15 minutes
-              </span>
+              <span className="text-slate-300">Link expires in 15 minutes</span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="text-sm text-slate-500">
-          © 2026 Get It Done. All rights reserved.
+          © 2026 Doable. All rights reserved.
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ const testimonials = [
   },
   {
     content:
-      "GetItDone has completely changed how I work. I pick up tasks on my weekends and make an extra $800/month assembling furniture. The instant payout is a game changer.",
+      "Doable has completely changed how I work. I pick up tasks on my weekends and make an extra $800/month assembling furniture. The instant payout is a game changer.",
     author: "Marcus Johnson",
     role: "Super Helper",
     image:

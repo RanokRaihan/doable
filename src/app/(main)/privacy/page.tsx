@@ -6,9 +6,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | GetItDone",
+  title: "Privacy Policy | Doable",
   description:
-    "Learn how GetItDone collects, uses, and protects your personal information when you use our task marketplace platform.",
+    "Learn how Doable collects, uses, and protects your personal information when you use our task marketplace platform.",
 };
 
 export default function PrivacyPolicyPage() {

@@ -1,6 +1,7 @@
 import { getMyProfileAction } from "@/actions/user/userAction";
 import UpdateInformationForm from "@/components/profile/UpdateInformationForm";
 import { AlertCircle, Pencil } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function UpdateInformationPage() {
   const result = await getMyProfileAction();
@@ -22,7 +23,12 @@ export default async function UpdateInformationPage() {
       </div>
     );
   }
-
+  if (result?.data?.emailVerified === false) {
+    redirect("/verify-email");
+  }
+  if (result?.data?.profileStatus === "INCOMPLETE") {
+    redirect("/complete-profile");
+  }
   const { name, dateOfBirth, phone, address, bio, gender } = result.data;
   console.log({ oldData: { name, dateOfBirth, phone, address, bio, gender } });
 

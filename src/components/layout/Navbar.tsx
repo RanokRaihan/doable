@@ -75,7 +75,7 @@ const Navbar = () => {
               <Zap size={20} className="fill-current" />
             </div>
             <span className="text-xl font-bold bg-clip-text text-transparent bg-linear  -to-r from-gray-900 to-gray-700">
-              GetItDone
+              Doable
             </span>
           </Link>
 

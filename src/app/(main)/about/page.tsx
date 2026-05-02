@@ -7,9 +7,9 @@ import { AboutValues } from "@/components/about/AboutValues";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | GetItDone",
+  title: "About Us | Doable",
   description:
-    "GetItDone is a community-powered task marketplace where everyone can post jobs and pick up work. Learn about our mission, values, story, and the numbers behind the platform.",
+    "Doable is a community-powered task marketplace where everyone can post jobs and pick up work. Learn about our mission, values, story, and the numbers behind the platform.",
 };
 
 export default function AboutPage() {

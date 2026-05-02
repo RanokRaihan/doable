@@ -1,9 +1,9 @@
 import { getMyProfileAction } from "@/actions/user/userAction";
+import AvatarUploadDialog from "@/components/profile/AvatarUploadDialog";
 import { cn } from "@/lib/utils";
 import {
   AlertCircle,
   BadgeCheck,
-  Camera,
   CheckCircle2,
   Pencil,
   XCircle,
@@ -99,13 +99,7 @@ export default async function ProfilePage() {
               )}
             </div>
 
-            <Link
-              href="/profile/update-information"
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-blue-600 border border-slate-200 hover:border-blue-300 rounded-lg px-3 py-1.5 transition-colors"
-            >
-              <Camera className="size-3.5" />
-              Update Avatar
-            </Link>
+            <AvatarUploadDialog />
           </div>
 
           {/* Info grid */}

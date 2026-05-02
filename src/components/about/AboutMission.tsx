@@ -53,7 +53,7 @@ export const AboutMission = () => {
             We started because getting help shouldn&apos;t be this hard
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-gray-600">
-            GetItDone exists to make everyday tasks effortless — for the people
+            Doable exists to make everyday tasks effortless — for the people
             posting them and the people doing them.
           </p>
         </AnimatedSection>

@@ -28,7 +28,7 @@ const LoginLeftSection = () => {
             <Sparkles className="w-6 h-6 text-blue-400" />
           </div>
           <Link href="/" className="text-2xl font-bold text-white">
-            Get It Done
+            Doable
           </Link>
         </div>
 
@@ -39,7 +39,7 @@ const LoginLeftSection = () => {
               Welcome back to
               <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400">
-                Get It Done
+                Doable
               </span>
             </h1>
             <p className="text-lg text-slate-400 max-w-md">
@@ -79,7 +79,7 @@ const LoginLeftSection = () => {
 
         {/* Footer */}
         <div className="text-sm text-slate-500">
-          © 2026 Get It Done. All rights reserved.
+          © 2026 Doable. All rights reserved.
         </div>
       </div>
     </div>

@@ -12,9 +12,7 @@ const Footer = () => {
               <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white">
                 <Zap size={20} className="fill-current" />
               </div>
-              <span className="text-xl font-bold text-slate-100">
-                GetItDone
-              </span>
+              <span className="text-xl font-bold text-slate-100">Doable</span>
             </Link>
             <p className="text-slate-400 mb-6 max-w-sm leading-relaxed">
               The modern marketplace for getting tasks completed. Connect with
@@ -155,7 +153,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-500">
-            © {new Date().getFullYear()} GetItDone Inc. All rights reserved.
+            © {new Date().getFullYear()} Doable Inc. All rights reserved.
           </p>
           <div className="flex items-center gap-1 text-sm text-slate-500">
             <span>Made with</span>
