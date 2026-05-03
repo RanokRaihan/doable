@@ -17,20 +17,24 @@ import {
 } from "../ui/dropdown-menu";
 
 const navLinks = [
-  { name: "How it works", href: "/how-it-works" },
   { name: "Browse tasks", href: "/tasks" },
-  { name: "Categories", href: "/#categories" },
-  { name: "FAQ", href: "/#faq" },
+  { name: "How it works", href: "/how-it-works" },
+  { name: "About us", href: "/about" },
 ];
 
 function LogoMark() {
   return (
-    <Link href="/" className="inline-flex items-center gap-2.5 no-underline group">
+    <Link
+      href="/"
+      className="inline-flex items-center gap-2.5 no-underline group"
+    >
       <div
         className="w-7 h-7 rounded-lg bg-ds-ink flex items-center justify-center text-ds-bg font-bold text-[22px] leading-none select-none"
         style={{ fontFamily: "Inter, sans-serif" }}
       >
-        <span style={{ transform: "translateY(-1px)", display: "block" }}>•</span>
+        <span style={{ transform: "translateY(-1px)", display: "block" }}>
+          •
+        </span>
       </div>
       <span className="text-[20px] font-semibold tracking-[-0.02em] text-ds-ink">
         doable
@@ -40,7 +44,12 @@ function LogoMark() {
 }
 
 function getInitials(name: string) {
-  return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 }
 
 const Navbar = () => {
@@ -86,16 +95,25 @@ const Navbar = () => {
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ds-orange">
-                    <span className="text-[14px] font-medium text-ds-ink-2">{user.name}</span>
+                    <span className="text-[14px] font-medium text-ds-ink-2">
+                      {user.name}
+                    </span>
                     <Avatar size="default" className="border border-ds-line-2">
-                      <AvatarImage src={user.image ?? undefined} alt={user.name} />
-                      <AvatarFallback className="text-[12px]">{getInitials(user.name)}</AvatarFallback>
+                      <AvatarImage
+                        src={user.image ?? undefined}
+                        alt={user.name}
+                      />
+                      <AvatarFallback className="text-[12px]">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
                     </Avatar>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="font-normal">
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.email}
+                    </p>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
@@ -105,7 +123,11 @@ const Navbar = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" className="cursor-pointer" onClick={handleLogout}>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    className="cursor-pointer"
+                    onClick={handleLogout}
+                  >
                     <LogOut className="mr-2 size-4" />
                     Log Out
                   </DropdownMenuItem>
@@ -166,7 +188,9 @@ const Navbar = () => {
                   <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-[14px] font-medium text-ds-ink">{user.name}</div>
+                  <div className="text-[14px] font-medium text-ds-ink">
+                    {user.name}
+                  </div>
                   <div className="text-[12px] text-ds-ink-3">{user.email}</div>
                 </div>
               </div>

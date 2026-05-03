@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 const POSTER_STEPS = [
   {
@@ -53,15 +53,26 @@ export default function HowItWorks() {
           {/* Header */}
           <div className="flex justify-between items-end gap-8 flex-wrap">
             <div>
-              <div className="text-[12px] font-medium uppercase tracking-[0.18em] mb-3.5" style={{ color: "rgba(250,250,247,0.6)" }}>
+              <div
+                className="text-[12px] font-medium uppercase tracking-[0.18em] mb-3.5"
+                style={{ color: "rgba(250,250,247,0.6)" }}
+              >
                 How it works
               </div>
               <h2
                 className="font-serif font-normal leading-[1.05] tracking-tight m-0"
-                style={{ fontSize: "clamp(34px, 4vw, 52px)", color: "#fafaf7", textWrap: "balance" } as React.CSSProperties}
+                style={
+                  {
+                    fontSize: "clamp(34px, 4vw, 52px)",
+                    color: "#fafaf7",
+                    textWrap: "balance",
+                  } as React.CSSProperties
+                }
               >
                 One account.{" "}
-                <em className="italic not-italic" style={{ color: "#fdba74" }}>Both sides</em>{" "}
+                <em className="italic" style={{ color: "#fdba74" }}>
+                  Both sides
+                </em>{" "}
                 of the table.
               </h2>
             </div>
@@ -75,10 +86,8 @@ export default function HowItWorks() {
                   key={tab}
                   onClick={() => setMode(tab)}
                   className={cn(
-                    "px-[18px] py-2 rounded-full text-[13px] font-medium border-0 cursor-pointer transition-all",
-                    mode === tab
-                      ? "bg-[#fafaf7] text-ds-ink"
-                      : "bg-transparent"
+                    "px-4.5 py-2 rounded-full text-[13px] font-medium border-0 cursor-pointer transition-all",
+                    mode === tab ? "bg-ds-bg text-ds-ink" : "bg-transparent",
                   )}
                   style={mode !== tab ? { color: "rgba(250,250,247,0.7)" } : {}}
                 >
@@ -96,15 +105,19 @@ export default function HowItWorks() {
                 className="border-t pt-6"
                 style={{ borderColor: "rgba(250,250,247,0.18)" }}
               >
-                <div
-                  className="font-serif italic text-[56px] leading-none text-ds-orange mb-7"
-                >
+                <div className="font-serif italic text-[56px] leading-none text-ds-orange mb-7">
                   {step.num}
                 </div>
-                <h3 className="text-[20px] font-semibold leading-snug tracking-tight m-0 mb-2.5" style={{ color: "#fafaf7" }}>
+                <h3
+                  className="text-[20px] font-semibold leading-snug tracking-tight m-0 mb-2.5"
+                  style={{ color: "#fafaf7" }}
+                >
                   {step.title}
                 </h3>
-                <p className="text-[15px] m-0 leading-relaxed" style={{ color: "rgba(250,250,247,0.7)" }}>
+                <p
+                  className="text-[15px] m-0 leading-relaxed"
+                  style={{ color: "rgba(250,250,247,0.7)" }}
+                >
                   {step.body}
                 </p>
               </div>

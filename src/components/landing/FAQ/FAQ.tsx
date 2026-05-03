@@ -73,12 +73,14 @@ function FAQColumn({
     <div className="bg-white border border-ds-line rounded-3xl p-9">
       <div className="flex items-center gap-3 mb-2">
         <div
-          className="w-9 h-9 rounded-[10px] bg-ds-orange-soft text-ds-orange-ink flex items-center justify-center flex-shrink-0"
+          className="w-9 h-9 rounded-[10px] bg-ds-orange-soft text-ds-orange-ink flex items-center justify-center shrink-0"
           style={iconStyle}
         >
           {icon}
         </div>
-        <h3 className="text-[20px] font-semibold text-ds-ink m-0 tracking-tight">{title}</h3>
+        <h3 className="text-[20px] font-semibold text-ds-ink m-0 tracking-tight">
+          {title}
+        </h3>
       </div>
       <p className="text-[14px] text-ds-ink-2 mt-0 mb-6">{subtitle}</p>
 
@@ -87,12 +89,15 @@ function FAQColumn({
           <AccordionItem
             key={i}
             value={`${accordionId}-${i}`}
-            className={cn("border-ds-line", i === items.length - 1 && "border-b border-ds-line")}
+            className={cn(
+              "border-ds-line",
+              i === items.length - 1 && "border-b border-ds-line",
+            )}
           >
-            <AccordionTrigger className="text-[15px] font-medium text-ds-ink tracking-tight py-[18px] hover:no-underline">
+            <AccordionTrigger className="text-[15px] font-medium text-ds-ink tracking-tight py-4.5 hover:no-underline">
               {item.q}
             </AccordionTrigger>
-            <AccordionContent className="text-[14px] text-ds-ink-2 leading-relaxed pb-[18px]">
+            <AccordionContent className="text-[14px] text-ds-ink-2 leading-relaxed pb-4.5">
               {item.a}
             </AccordionContent>
           </AccordionItem>
@@ -114,14 +119,23 @@ export default function FAQ() {
             </div>
             <h2
               className="font-serif font-normal leading-[1.05] tracking-tight text-ds-ink m-0"
-              style={{ fontSize: "clamp(34px, 4vw, 52px)", textWrap: "balance" } as React.CSSProperties}
+              style={
+                {
+                  fontSize: "clamp(34px, 4vw, 52px)",
+                  textWrap: "balance",
+                } as React.CSSProperties
+              }
             >
-              Two sides,{" "}
-              <em className="italic text-ds-orange not-italic">same answers</em>.
+              Two sides, <em className="italic text-ds-orange">same answers</em>
+              .
             </h2>
           </div>
-          <p className="text-[17px] text-ds-ink-2 m-0" style={{ maxWidth: 480 }}>
-            Whatever side of a task you&apos;re on, here&apos;s what folks ask the most before they sign up.
+          <p
+            className="text-[17px] text-ds-ink-2 m-0"
+            style={{ maxWidth: 480 }}
+          >
+            Whatever side of a task you&apos;re on, here&apos;s what folks ask
+            the most before they sign up.
           </p>
         </div>
 
@@ -133,8 +147,18 @@ export default function FAQ() {
             items={posterFAQs}
             accordionId="poster"
             icon={
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                <path d="M12 5v14" /><path d="M5 12h14" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                width="18"
+                height="18"
+              >
+                <path d="M12 5v14" />
+                <path d="M5 12h14" />
               </svg>
             }
           />
@@ -145,8 +169,18 @@ export default function FAQ() {
             accordionId="helper"
             iconStyle={{ background: "#e0e7ff", color: "#4338ca" }}
             icon={
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                <circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                width="18"
+                height="18"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
               </svg>
             }
           />

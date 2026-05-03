@@ -66,7 +66,7 @@ export default function LandingTaskCard({ task }: { task: Task }) {
 
       {/* Head row */}
       <div className="flex justify-between items-start mb-3.5">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-ds-ink-3">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest text-ds-ink-3">
           <span className="w-1.5 h-1.5 rounded-full bg-ds-orange" />
           {cat.label}
         </span>
@@ -82,7 +82,7 @@ export default function LandingTaskCard({ task }: { task: Task }) {
       </h4>
 
       {/* Description */}
-      <p className="text-[14px] text-ds-ink-2 m-0 mb-[18px] leading-snug flex-1 line-clamp-2">
+      <p className="text-[14px] text-ds-ink-2 m-0 mb-4.5 leading-snug flex-1 line-clamp-2">
         {task.description}
       </p>
 
@@ -90,7 +90,7 @@ export default function LandingTaskCard({ task }: { task: Task }) {
       <div className="flex justify-between items-center pt-3.5 border-t border-ds-line text-[12px] font-medium text-ds-ink-3">
         <span className="flex items-center gap-2 text-ds-ink-2">
           <span
-            className="w-[22px] h-[22px] rounded-full flex items-center justify-center text-white text-[10px] font-semibold flex-shrink-0"
+            className="w-5.5 h-5.5 rounded-full flex items-center justify-center text-white text-[10px] font-semibold shrink-0"
             style={{ background: "linear-gradient(135deg, #fed7aa, #f97316)" }}
           >
             •
