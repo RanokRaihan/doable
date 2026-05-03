@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-02 — Landing page redesigned: warm off-white/orange design system, Instrument Serif headings, 7 new section components; Navbar and Footer rewritten globally; all old landing components deleted
 - 2026-05-02 — Added payment result pages (fail, cancel, refunded) and shared _components/paymentPageHelpers.tsx; all payment result pages now redirect based on session status
 - 2026-05-02 — Updated TaskStatus enum (PAYMENT_PROCESSING → PAYMENT_PENDING + PAYMENT_INITIATED); added CLOSED to ApplicationStatus
 - 2026-04-27 — Restructured context files; full directory map updated to reflect payments, wallet, commission-due, application, and profile areas; tasks page confirmed on real API data; mock tasks removed
@@ -228,7 +229,15 @@ src/
 │   │   └── NavigationProgress.tsx  # Top loading bar during client-side navigation
 │   ├── common/
 │   │   └── TaskCard.tsx            # Reusable task card (used in both browse and profile views)
-│   ├── landing/                    # Landing page section components
+│   ├── landing/                    # Landing page section components (redesigned 2026-05-02)
+│   │   ├── hero/HeroSlider.tsx         # 5-slide hero carousel (client)
+│   │   ├── howItWorks/HowItWorks.tsx   # Dark card with poster/helper tabs (client)
+│   │   ├── recentTasks/RecentTasks.tsx # Recently posted tasks, fetches /task/recently-posted (server)
+│   │   ├── recentTasks/LandingTaskCard.tsx  # Task card variant for landing page
+│   │   ├── categories/Categories.tsx   # 6-category grid linking to /tasks (server)
+│   │   ├── testimonials/Testimonials.tsx   # 3-quote testimonials (server)
+│   │   ├── faq/FAQ.tsx                 # 2-column FAQ accordion with shadcn Accordion (client)
+│   │   └── cta/CTAStrip.tsx            # Dark CTA strip at bottom of landing (server)
 │   ├── about/                      # About page section components
 │   ├── howItWorks/                 # How It Works page section components
 │   ├── login/                      # LoginForm, LoginFormContainer, LoginLeftSection
@@ -483,6 +492,7 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **React cache for `getCurrentUser()`:** Deduplicated per request — multiple Server Components on the same page call it without extra network requests.
 - **`const enum` forbidden:** `isolatedModules: true` in tsconfig. All enums are `const` objects `as const`.
 - **Onboarding gating:** `/post-task` and `/my-tasks` require verified email + complete profile (checked in middleware via `isOnboardingGatedRoute`), in addition to role protection.
+- **Landing page design system (2026-05-02):** Full redesign to warm off-white (#fafaf7) background, orange (#f97316) accent, Instrument Serif headings. Design tokens added to `globals.css` `@theme inline` block as `--color-ds-*` (prefixed to avoid conflict with shadcn's `--accent` and other variables). Navbar and Footer rewritten globally to match — warm glass navbar replaces previous dark/blue scheme. `LandingTaskCard` is a landing-specific variant of the shared `TaskCard`; do NOT merge them — `TaskCard` is used in the tasks browser.
 - **Cloudinary for image uploads:** Task images and avatars are uploaded directly from the client via a signed Cloudinary widget. The signature is generated server-side at `src/app/api/cloudinary-signature/route.ts`.
 - **URL-state for task browser:** Filters, sort, and pagination for `/tasks` are stored in URL search params — enables server-side rendering and shareable URLs without client state.
 - **shadcn/ui mandatory first:** Custom UI components are only created when a shadcn component does not exist for the use case.
