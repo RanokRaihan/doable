@@ -42,18 +42,20 @@ const faqs = [
 
 export const HowItWorksFAQ = () => {
   return (
-    <section className="relative overflow-hidden bg-white py-24">
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <section className="relative overflow-hidden bg-ds-bg py-24">
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1480 }}>
         <AnimatedSection direction="up" className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2
+            className="font-serif font-normal leading-[1.05] tracking-tight text-ds-ink"
+            style={{ fontSize: "clamp(28px, 3vw, 48px)" }}
+          >
             Quick answers
           </h2>
-          <p className="mx-auto mt-4 max-w-lg text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-lg text-[17px] text-ds-ink-2">
             Common process questions. For billing, accounts, and more, visit our{" "}
             <Link
               href="/faq"
-              className="font-semibold text-blue-600 underline-offset-2 hover:underline"
+              className="font-semibold text-ds-orange underline-offset-2 hover:underline"
             >
               full FAQ
             </Link>
@@ -61,20 +63,25 @@ export const HowItWorksFAQ = () => {
           </p>
         </AnimatedSection>
 
-        {/* Accordion */}
         <AnimatedSection direction="up" delay={0.1}>
-          <div className="mx-auto max-w-3xl rounded-2xl border border-gray-100 bg-white px-6 py-2 shadow-lg shadow-gray-200/50">
+          <div
+            className="mx-auto max-w-3xl rounded-2xl border border-ds-line bg-white px-6 py-2"
+            style={{
+              boxShadow:
+                "0 1px 0 rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.04)",
+            }}
+          >
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((item, i) => (
                 <AccordionItem
                   key={i}
                   value={`faq-${i}`}
-                  className="border-b border-gray-100 last:border-none"
+                  className="border-b border-ds-line last:border-none"
                 >
-                  <AccordionTrigger className="py-5 text-left font-semibold text-gray-900 hover:text-blue-600 hover:no-underline">
+                  <AccordionTrigger className="py-5 text-left font-semibold text-ds-ink hover:text-ds-orange hover:no-underline">
                     {item.question}
                   </AccordionTrigger>
-                  <AccordionContent className="pb-5 text-gray-600 leading-relaxed">
+                  <AccordionContent className="pb-5 text-[15px] text-ds-ink-2 leading-relaxed">
                     {item.answer}
                   </AccordionContent>
                 </AccordionItem>

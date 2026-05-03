@@ -73,7 +73,7 @@ const Navbar = () => {
       }}
     >
       <div className="mx-auto px-8" style={{ maxWidth: 1360 }}>
-        <div className="flex items-center justify-between h-[72px]">
+        <div className="flex items-center justify-between h-18">
           <LogoMark />
 
           {/* Desktop nav links */}
@@ -137,14 +137,14 @@ const Navbar = () => {
               <>
                 <Link
                   href="/login"
-                  className="inline-flex items-center h-[38px] px-4 rounded-full text-[14px] font-medium border text-ds-ink bg-transparent hover:bg-ds-bg-2 transition-all no-underline"
+                  className="inline-flex items-center h-9.5 px-4 rounded-full text-[14px] font-medium border text-ds-ink bg-transparent hover:bg-ds-bg-2 transition-all no-underline"
                   style={{ borderColor: "#d8d6cf" }}
                 >
                   Sign in
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center h-[38px] px-4 rounded-full text-[14px] font-medium bg-ds-ink text-ds-bg hover:bg-[#1e293b] transition-all no-underline"
+                  className="inline-flex items-center h-9.5 px-4 rounded-full text-[14px] font-medium bg-ds-ink text-ds-bg hover:bg-[#1e293b] transition-all no-underline"
                 >
                   Get started
                 </Link>

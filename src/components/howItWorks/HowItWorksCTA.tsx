@@ -1,56 +1,47 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRight, Briefcase, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import { AnimatedSection } from "./AnimatedSection";
 
 export const HowItWorksCTA = () => {
   return (
-    <section className="relative overflow-hidden bg-slate-900 py-24">
-      {/* Background blobs */}
-      <div className="absolute -top-16 left-1/4 h-64 w-64 -translate-x-1/2 rounded-full bg-blue-600 opacity-15 mix-blend-overlay blur-3xl" />
-      <div className="absolute -bottom-16 right-1/4 h-64 w-64 translate-x-1/2 rounded-full bg-purple-600 opacity-15 mix-blend-overlay blur-3xl" />
-      <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-600 opacity-5 mix-blend-overlay blur-[120px]" />
+    <section className="relative overflow-hidden bg-ds-ink py-24">
+      <div className="absolute -top-16 left-1/4 h-64 w-64 -translate-x-1/2 rounded-full bg-ds-orange opacity-10 blur-3xl" />
+      <div className="absolute -bottom-16 right-1/4 h-64 w-64 translate-x-1/2 rounded-full bg-ds-orange-soft opacity-20 blur-3xl" />
 
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1480 }}>
         <AnimatedSection direction="up" className="text-center">
-          <h2 className="mx-auto max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+          <h2
+            className="mx-auto max-w-3xl font-serif font-normal leading-[1.05] tracking-tight text-white"
+            style={{ fontSize: "clamp(32px, 3.5vw, 52px)" }}
+          >
             Ready to get things done?
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-slate-300">
+          <p className="mx-auto mt-6 max-w-xl text-[17px] text-white/70">
             Join thousands of people who post tasks and pick up work every day.
             Sign up in 60 seconds — no credit card needed to start.
           </p>
 
-          {/* Dual CTAs */}
           <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button
-              size="lg"
-              className="h-14 gap-3 rounded-full bg-blue-600 px-8 text-base font-semibold text-white shadow-lg shadow-blue-500/30 transition-all duration-200 hover:bg-blue-500 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5"
-              asChild
+            <Link
+              href="/register"
+              className="inline-flex h-[52px] items-center gap-3 rounded-full bg-ds-orange px-8 text-[15px] font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90"
             >
-              <Link href="/register">
-                <ClipboardList size={19} />
-                Post a Task
-                <ArrowRight size={17} />
-              </Link>
-            </Button>
+              <ClipboardList size={19} />
+              Post a Task
+              <ArrowRight size={17} />
+            </Link>
 
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-14 gap-3 rounded-full border-emerald-500/50 bg-emerald-900/30 px-8 text-base font-semibold text-emerald-300 shadow-lg shadow-emerald-500/10 transition-all duration-200 hover:bg-emerald-900/50 hover:text-emerald-200 hover:border-emerald-400 hover:-translate-y-0.5"
-              asChild
+            <Link
+              href="/register?role=helper"
+              className="inline-flex h-[52px] items-center gap-3 rounded-full border border-white/25 px-8 text-[15px] font-semibold text-white/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10"
             >
-              <Link href="/register?role=helper">
-                <Briefcase size={19} />
-                Become a Worker
-                <ArrowRight size={17} />
-              </Link>
-            </Button>
+              <Briefcase size={19} />
+              Become a Worker
+              <ArrowRight size={17} />
+            </Link>
           </div>
 
-          {/* Fine print */}
-          <p className="mt-6 text-sm text-slate-500">
+          <p className="mt-6 text-[13px] text-white/40">
             Free to join · No monthly fees · Withdraw earnings anytime
           </p>
         </AnimatedSection>
