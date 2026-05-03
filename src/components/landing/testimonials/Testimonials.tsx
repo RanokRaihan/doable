@@ -43,7 +43,7 @@ export default function Testimonials() {
               style={{ fontSize: "clamp(34px, 4vw, 52px)", textWrap: "balance" } as React.CSSProperties}
             >
               People are{" "}
-              <em className="italic text-ds-orange not-italic">getting things done</em>.
+              <em className="italic text-ds-orange">getting things done</em>.
             </h2>
           </div>
           <p className="text-[17px] text-ds-ink-2 m-0" style={{ maxWidth: 480 }}>
@@ -71,7 +71,7 @@ export default function Testimonials() {
               </blockquote>
               <div className="flex items-center gap-3 pt-5 border-t border-ds-line">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-[14px] font-semibold flex-shrink-0"
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-[14px] font-semibold shrink-0"
                   style={t.avatarStyle}
                 >
                   {t.initial}
@@ -80,7 +80,7 @@ export default function Testimonials() {
                   <div className="text-[14px] font-semibold text-ds-ink leading-tight">{t.name}</div>
                   <div className="text-[12px] text-ds-ink-3 font-medium mt-0.5">{t.location}</div>
                 </div>
-                <span className="text-[11px] font-medium uppercase tracking-[0.1em] text-ds-orange-ink bg-ds-orange-soft px-2.5 py-1.5 rounded-full">
+                <span className="text-[11px] font-medium uppercase tracking-widest text-ds-orange-ink bg-ds-orange-soft px-2.5 py-1.5 rounded-full">
                   {t.role}
                 </span>
               </div>
