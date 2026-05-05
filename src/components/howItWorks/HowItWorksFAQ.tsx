@@ -43,7 +43,7 @@ const faqs = [
 export const HowItWorksFAQ = () => {
   return (
     <section className="relative overflow-hidden bg-ds-bg py-24">
-      <div className="relative mx-auto px-8" style={{ maxWidth: 1480 }}>
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1360 }}>
         <AnimatedSection direction="up" className="mb-12 text-center">
           <h2
             className="font-serif font-normal leading-[1.05] tracking-tight text-ds-ink"

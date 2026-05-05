@@ -8,7 +8,7 @@ export const AboutCTA = () => {
       <div className="absolute -top-16 left-1/4 h-64 w-64 -translate-x-1/2 rounded-full bg-ds-orange opacity-10 blur-3xl" />
       <div className="absolute -bottom-16 right-1/4 h-64 w-64 translate-x-1/2 rounded-full bg-ds-orange-soft opacity-20 blur-3xl" />
 
-      <div className="relative mx-auto px-8" style={{ maxWidth: 1480 }}>
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1360 }}>
         <AnimatedSection direction="up" className="text-center">
           <h2
             className="mx-auto max-w-3xl font-serif font-normal leading-[1.05] tracking-tight text-white"

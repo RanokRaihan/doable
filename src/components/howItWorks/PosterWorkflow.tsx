@@ -54,7 +54,7 @@ export const PosterWorkflow = () => {
       id="poster-workflow"
       className="relative overflow-hidden bg-white py-24"
     >
-      <div className="relative mx-auto px-8" style={{ maxWidth: 1480 }}>
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1360 }}>
         <AnimatedSection direction="up" className="mb-16 text-center">
           <span className="mb-4 inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-ds-orange-ink bg-ds-orange-soft px-3 py-2 rounded-full">
             <span className="w-1.5 h-1.5 rounded-full bg-ds-orange" />

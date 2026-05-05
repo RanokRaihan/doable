@@ -128,6 +128,11 @@
   --sidebar-ring: oklch(0.408 0.123 38.172);
 }
 
+@utility container {
+  margin-inline: auto;
+  max-width: 1360px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

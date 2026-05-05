@@ -8,7 +8,7 @@ export const AboutHero = () => {
       <div className="absolute top-10 left-1/4 h-80 w-80 -translate-x-1/2 rounded-full bg-ds-orange-soft opacity-60 blur-[120px]" />
       <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-ds-orange-soft opacity-40 blur-[100px]" />
 
-      <div className="relative mx-auto px-8" style={{ maxWidth: 1480 }}>
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1360 }}>
         <motion.div
           className="mb-6 flex justify-center"
           initial={{ opacity: 0, y: 18 }}

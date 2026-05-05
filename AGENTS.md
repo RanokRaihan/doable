@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-03 — Auth pages redesigned: dark editorial left panel (ticket cards, Instrument Serif headings, orange tokens), warm off-white right form panel; PasswordStrengthMeter added; register password now requires 1 letter + 1 number
 - 2026-05-02 — Landing page redesigned: warm off-white/orange design system, Instrument Serif headings, 7 new section components; Navbar and Footer rewritten globally; all old landing components deleted
 - 2026-05-02 — Added payment result pages (fail, cancel, refunded) and shared _components/paymentPageHelpers.tsx; all payment result pages now redirect based on session status
 - 2026-05-02 — Updated TaskStatus enum (PAYMENT_PROCESSING → PAYMENT_PENDING + PAYMENT_INITIATED); added CLOSED to ApplicationStatus
@@ -241,7 +242,7 @@ src/
 │   ├── about/                      # About page section components
 │   ├── howItWorks/                 # How It Works page section components
 │   ├── login/                      # LoginForm, LoginFormContainer, LoginLeftSection
-│   ├── register/                   # RegisterForm, RegisterFormContainer, RegisterLeftSection
+│   ├── register/                   # RegisterForm, RegisterFormContainer, RegisterLeftSection, PasswordStrengthMeter
 │   ├── forgot-password/            # ForgotPasswordForm, container, left section
 │   ├── reset-password/             # ResetPasswordForm, container, left section
 │   ├── verify-email/               # VerifyEmailCheck, VerifyEmailPrompt
@@ -484,6 +485,7 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 
 ## Architectural Decisions
 
+- **Auth page design system:** Login/register pages use the same warm off-white/orange tokens as the landing page. Left panel is dark (`bg-ds-ink`) with editorial ticket cards and Instrument Serif headings; right panel is `bg-ds-bg` with no Card wrapper. Submit buttons styled via CSS descendant selector override on the container `[&_button[type=submit]]:*`.
 - **Frontend-only architecture:** All persistence delegated to a separate backend API at `BACKEND_URL`. This frontend never writes to a database directly.
 - **HTTP-only cookie auth:** JWT tokens stored in HTTP-only cookies (not localStorage) to prevent XSS token theft. Refresh handled in Next.js middleware before requests reach Server Components.
 - **`x-refreshed-access-token` header:** On token refresh, middleware forwards the new token as a response header so Server Components can use it within the same request cycle before the cookie propagates to the client.

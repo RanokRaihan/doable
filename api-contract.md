@@ -690,6 +690,7 @@ Response `data` (status 201):
 {
   id: string;
   email: string;
+  ``;
   name: string;
   role: UserRole; // always "USER" on registration
   createdAt: string;
