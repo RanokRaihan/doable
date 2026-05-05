@@ -6,6 +6,7 @@ import { ApiResponse } from "@/lib/api/types";
 import {
   CreatedTask,
   MyPostedTask,
+  Task,
   TaskCategoryType,
   TaskDetails,
   TaskImage,
@@ -146,10 +147,17 @@ const updateTaskAction = async (taskId: string, data: PostTaskPayload) => {
   );
 };
 
+const getRelatedTasksAction = async (taskId: string) => {
+  return actionHandler(() =>
+    apiClient.get<ApiResponse<Task[]>>(`/task/${taskId}/related`),
+  );
+};
+
 export {
   postTaskAction,
   postTaskImagesAction,
   getTaskAction,
+  getRelatedTasksAction,
   getMyPostedTasksAction,
   getAllTasksAction,
   getMyPostedTaskAction,

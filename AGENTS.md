@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-04 — Unified TaskCard: LandingTaskCard renamed/moved to src/components/common/TaskCard.tsx (replaces old card); used in landing, browse, and related tasks; related tasks now fetched from /task/:id/related via getRelatedTasksAction
 - 2026-05-03 — Auth pages redesigned: dark editorial left panel (ticket cards, Instrument Serif headings, orange tokens), warm off-white right form panel; PasswordStrengthMeter added; register password now requires 1 letter + 1 number
 - 2026-05-02 — Landing page redesigned: warm off-white/orange design system, Instrument Serif headings, 7 new section components; Navbar and Footer rewritten globally; all old landing components deleted
 - 2026-05-02 — Added payment result pages (fail, cancel, refunded) and shared _components/paymentPageHelpers.tsx; all payment result pages now redirect based on session status
@@ -229,12 +230,11 @@ src/
 │   │   ├── Footer.tsx
 │   │   └── NavigationProgress.tsx  # Top loading bar during client-side navigation
 │   ├── common/
-│   │   └── TaskCard.tsx            # Reusable task card (used in both browse and profile views)
+│   │   └── TaskCard.tsx            # Unified task card (warm DS style) — used in landing, browse, and related tasks
 │   ├── landing/                    # Landing page section components (redesigned 2026-05-02)
 │   │   ├── hero/HeroSlider.tsx         # 5-slide hero carousel (client)
 │   │   ├── howItWorks/HowItWorks.tsx   # Dark card with poster/helper tabs (client)
 │   │   ├── recentTasks/RecentTasks.tsx # Recently posted tasks, fetches /task/recently-posted (server)
-│   │   ├── recentTasks/LandingTaskCard.tsx  # Task card variant for landing page
 │   │   ├── categories/Categories.tsx   # 6-category grid linking to /tasks (server)
 │   │   ├── testimonials/Testimonials.tsx   # 3-quote testimonials (server)
 │   │   ├── faq/FAQ.tsx                 # 2-column FAQ accordion with shadcn Accordion (client)
@@ -494,7 +494,7 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **React cache for `getCurrentUser()`:** Deduplicated per request — multiple Server Components on the same page call it without extra network requests.
 - **`const enum` forbidden:** `isolatedModules: true` in tsconfig. All enums are `const` objects `as const`.
 - **Onboarding gating:** `/post-task` and `/my-tasks` require verified email + complete profile (checked in middleware via `isOnboardingGatedRoute`), in addition to role protection.
-- **Landing page design system (2026-05-02):** Full redesign to warm off-white (#fafaf7) background, orange (#f97316) accent, Instrument Serif headings. Design tokens added to `globals.css` `@theme inline` block as `--color-ds-*` (prefixed to avoid conflict with shadcn's `--accent` and other variables). Navbar and Footer rewritten globally to match — warm glass navbar replaces previous dark/blue scheme. `LandingTaskCard` is a landing-specific variant of the shared `TaskCard`; do NOT merge them — `TaskCard` is used in the tasks browser.
+- **Landing page design system (2026-05-02):** Full redesign to warm off-white (#fafaf7) background, orange (#f97316) accent, Instrument Serif headings. Design tokens added to `globals.css` `@theme inline` block as `--color-ds-*` (prefixed to avoid conflict with shadcn's `--accent` and other variables). Navbar and Footer rewritten globally to match — warm glass navbar replaces previous dark/blue scheme. `TaskCard` in `src/components/common/TaskCard.tsx` is the single unified card (warm DS style) used across landing, browse, and related tasks sections.
 - **Cloudinary for image uploads:** Task images and avatars are uploaded directly from the client via a signed Cloudinary widget. The signature is generated server-side at `src/app/api/cloudinary-signature/route.ts`.
 - **URL-state for task browser:** Filters, sort, and pagination for `/tasks` are stored in URL search params — enables server-side rendering and shareable URLs without client state.
 - **shadcn/ui mandatory first:** Custom UI components are only created when a shadcn component does not exist for the use case.

@@ -40,7 +40,7 @@ export default function PasswordStrengthMeter({
           <div
             key={i}
             className={cn(
-              "h-[3px] flex-1 rounded-full transition-colors duration-200",
+              "h-0.75 flex-1 rounded-full transition-colors duration-200",
               strength >= i && strength > 0
                 ? segmentColors[strength]
                 : "bg-ds-line",
