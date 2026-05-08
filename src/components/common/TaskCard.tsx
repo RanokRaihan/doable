@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Task, TaskCategoryType } from "@/lib/types";
+import type { Task, TaskCategoryType, TaskPriorityType } from "@/lib/types";
 
 const categoryConfig: Record<
   TaskCategoryType,
@@ -17,6 +17,13 @@ const categoryConfig: Record<
   OTHER: { label: "Other", gradient: "linear-gradient(135deg, #f1f5f9, #e2e8f0)" },
 };
 
+const priorityConfig: Record<TaskPriorityType, { label: string; dot: string; text: string }> = {
+  URGENT: { label: "Urgent", dot: "bg-red-500", text: "text-red-600" },
+  HIGH:   { label: "High",   dot: "bg-orange-500", text: "text-orange-600" },
+  MEDIUM: { label: "Medium", dot: "bg-yellow-500", text: "text-yellow-600" },
+  LOW:    { label: "Low",    dot: "bg-green-500", text: "text-green-600" },
+};
+
 function relativeTime(dateString: string): string {
   const diff = Date.now() - new Date(dateString).getTime();
   const mins = Math.floor(diff / 60000);
@@ -29,6 +36,7 @@ function relativeTime(dateString: string): string {
 
 export default function TaskCard({ task }: { task: Task }) {
   const cat = categoryConfig[task.category] ?? categoryConfig.OTHER;
+  const pri = priorityConfig[task.priority] ?? priorityConfig.LOW;
   const imageUrl = task.images && task.images.length > 0 ? task.images[0].url : null;
   const locationShort = task.location?.split(",")[0] ?? "Nearby";
 
@@ -66,9 +74,9 @@ export default function TaskCard({ task }: { task: Task }) {
 
       {/* Head row */}
       <div className="flex justify-between items-start mb-3.5">
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest text-ds-ink-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-ds-orange" />
-          {cat.label}
+        <span className={`inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest ${pri.text}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${pri.dot}`} />
+          {pri.label}
         </span>
         <span className="text-[18px] font-semibold text-ds-ink tracking-tight leading-none">
           ${task.baseCompensation}
