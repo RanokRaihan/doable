@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-09 — Deleted api-contract.md; all three agent instruction files (CLAUDE.md, AGENTS.md, copilot-instructions.md) now point to api-contracts/ directory
 - 2026-05-04 — Unified TaskCard: LandingTaskCard renamed/moved to src/components/common/TaskCard.tsx (replaces old card); used in landing, browse, and related tasks; related tasks now fetched from /task/:id/related via getRelatedTasksAction
 - 2026-05-03 — Auth pages redesigned: dark editorial left panel (ticket cards, Instrument Serif headings, orange tokens), warm off-white right form panel; PasswordStrengthMeter added; register password now requires 1 letter + 1 number
 - 2026-05-02 — Landing page redesigned: warm off-white/orange design system, Instrument Serif headings, 7 new section components; Navbar and Footer rewritten globally; all old landing components deleted
@@ -13,7 +14,7 @@
 
 A Next.js task-marketplace where users post tasks and workers accept them. This file is the authoritative directory map, tech stack reference, and architectural decision log for AI agents working in this repo.
 
-Before working on anything that touches the backend (API calls, auth flow, types, response shapes), read `api-contract.md` in the repo root.
+Before working on anything that touches the backend (API calls, auth flow, types, response shapes), read the `api-contracts/` directory. Start with `api-contracts/index.md` for an overview, then open the relevant module file. Cross-cutting concerns live in `api-contracts/shared.md`.
 
 ---
 

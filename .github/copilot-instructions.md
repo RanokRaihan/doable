@@ -2,7 +2,7 @@
 
 Canonical agent instructions and project rules live in /CLAUDE.md.
 Project map, file directory, and architectural decisions live in /AGENTS.md.
-All API contracts and shared types live in /api-contract.md.
+All API contracts and shared types live in /api-contracts/ (start with /api-contracts/index.md; cross-cutting concerns in /api-contracts/shared.md).
 Read all three before starting any task.
 
 ## Mandatory Post-Task Protocol
