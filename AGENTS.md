@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-09 — Withdrawal module implemented: 11 server actions, 13 components, 10 pages/routes, 5 Zod schemas, types, and sidebar link added
 - 2026-05-09 — Deleted api-contract.md; all three agent instruction files (CLAUDE.md, AGENTS.md, copilot-instructions.md) now point to api-contracts/ directory
 - 2026-05-04 — Unified TaskCard: LandingTaskCard renamed/moved to src/components/common/TaskCard.tsx (replaces old card); used in landing, browse, and related tasks; related tasks now fetched from /task/:id/related via getRelatedTasksAction
 - 2026-05-03 — Auth pages redesigned: dark editorial left panel (ticket cards, Instrument Serif headings, orange tokens), warm off-white right form panel; PasswordStrengthMeter added; register password now requires 1 letter + 1 number
@@ -145,12 +146,34 @@ src/
 │           │   └── [id]/
 │           │       ├── page.tsx        # Wallet transaction detail
 │           │       └── loading.tsx
-│           └── commission-due/
-│               ├── page.tsx            # Commissions owed to platform
-│               ├── loading.tsx
-│               └── [dueId]/
-│                   ├── page.tsx        # Commission due detail + pay action
-│                   └── loading.tsx
+│           ├── commission-due/
+│           │   ├── page.tsx            # Commissions owed to platform
+│           │   ├── loading.tsx
+│           │   └── [dueId]/
+│           │       ├── page.tsx        # Commission due detail + pay action
+│           │       └── loading.tsx
+│           └── withdrawal/
+│               ├── page.tsx            # Redirects to /profile/withdrawal/methods
+│               ├── (tabbed)/
+│               │   ├── layout.tsx      # Mounts <WithdrawalTabNav> + page header
+│               │   ├── methods/
+│               │   │   ├── page.tsx    # Withdrawal methods list (WithdrawalMethodsClient)
+│               │   │   └── loading.tsx
+│               │   └── requests/
+│               │       ├── page.tsx    # Withdrawal requests list; fetches requests + methods + wallet in parallel
+│               │       └── loading.tsx
+│               ├── methods/
+│               │   ├── new/page.tsx    # Create withdrawal method form
+│               │   └── [id]/
+│               │       ├── page.tsx    # Method detail (WithdrawalMethodDetail)
+│               │       ├── loading.tsx
+│               │       └── edit/page.tsx  # Edit method form
+│               └── requests/
+│                   ├── new/page.tsx    # Create withdrawal request; shows info banner if no methods
+│                   └── [id]/
+│                       ├── page.tsx    # Request detail (WithdrawalRequestDetail)
+│                       ├── loading.tsx
+│                       └── edit/page.tsx  # Edit request (PENDING guard at page level)
 │
 ├── actions/                        # Server Actions — "use server", one action per file
 │   ├── auth/
@@ -181,13 +204,25 @@ src/
 │   ├── user/
 │   │   ├── getPublicProfileAction.ts
 │   │   └── userAction.ts           # Update profile, complete profile, change password, avatar
-│   └── wallet/
-│       ├── getCommissionDueAction.ts
-│       ├── getCommissionsDueAction.ts
-│       ├── getMyWalletAction.ts
-│       ├── getWalletTransactionAction.ts
-│       ├── getWalletTransactionsAction.ts
-│       └── payCommissionDueAction.ts
+│   ├── wallet/
+│   │   ├── getCommissionDueAction.ts
+│   │   ├── getCommissionsDueAction.ts
+│   │   ├── getMyWalletAction.ts
+│   │   ├── getWalletTransactionAction.ts
+│   │   ├── getWalletTransactionsAction.ts
+│   │   └── payCommissionDueAction.ts
+│   └── withdrawal/
+│       ├── getWithdrawalMethodsAction.ts   # GET /withdrawal/my-methods (paginated + filterable)
+│       ├── getWithdrawalMethodAction.ts    # GET /withdrawal/my-methods/:id
+│       ├── createWithdrawalMethodAction.ts # POST /withdrawal/my-methods
+│       ├── updateWithdrawalMethodAction.ts # PATCH /withdrawal/my-methods/:id
+│       ├── setDefaultWithdrawalMethodAction.ts # PATCH /withdrawal/my-methods/:id/set-default
+│       ├── deleteWithdrawalMethodAction.ts # DELETE /withdrawal/my-methods/:id
+│       ├── getWithdrawalRequestsAction.ts  # GET /withdrawal/my-requests (paginated + filterable)
+│       ├── getWithdrawalRequestAction.ts   # GET /withdrawal/my-requests/:id
+│       ├── createWithdrawalRequestAction.ts # POST /withdrawal/my-requests
+│       ├── editWithdrawalRequestAction.ts  # PATCH /withdrawal/my-requests/:id
+│       └── cancelWithdrawalRequestAction.ts # PATCH /withdrawal/my-requests/:id/cancel
 │
 ├── lib/
 │   ├── config.ts                   # env + cookieConfig — SERVER-ONLY (imports server-only)
@@ -268,7 +303,22 @@ src/
 │       ├── tasks/                  # My tasks management components (owner view)
 │       ├── payments/               # Payment history components
 │       ├── wallet/                 # Wallet + transaction components
-│       └── commission-due/         # Commission due management components
+│       ├── commission-due/         # Commission due management components
+│       └── withdrawal/
+│           ├── WithdrawalTabNav.tsx            # Tab nav: Methods / Requests (client, usePathname)
+│           ├── WithdrawalStatusBadge.tsx       # Status badge for all 5 withdrawal statuses
+│           ├── methods/
+│           │   ├── WithdrawalMethodCard.tsx    # Compact method card (server) — links to detail
+│           │   ├── WithdrawalMethodsClient.tsx # List client: filter, sort, pagination, empty state
+│           │   ├── WithdrawalMethodDetail.tsx  # Full detail view with Set Default / Edit / Delete actions
+│           │   ├── WithdrawalMethodForm.tsx    # Reusable create/edit form; bank fields shown conditionally
+│           │   └── DeleteWithdrawalMethodDialog.tsx  # AlertDialog; handles "has pending requests" 400 error
+│           └── requests/
+│               ├── WithdrawalRequestCard.tsx   # Compact request card (server) — amount, status, method, date
+│               ├── WithdrawalRequestsClient.tsx # List client: wallet balance display, status filter, sort, pagination
+│               ├── WithdrawalRequestDetail.tsx  # Full detail view; rejection/cancellation info; PENDING-only actions
+│               ├── WithdrawalRequestForm.tsx    # Reusable create/edit form; method selector hidden in edit mode
+│               └── CancelWithdrawalRequestDialog.tsx # AlertDialog with optional reason textarea
 │
 ├── providers/
 │   └── AuthProvider.tsx            # Client context — holds LoggedinUser | null state
@@ -284,7 +334,12 @@ src/
 │   ├── postTaskValidation.ts
 │   ├── applyTaskValidation.ts
 │   ├── rejectApplicationValidation.ts
-│   └── withdrawApplicationValidation.ts
+│   ├── withdrawApplicationValidation.ts
+│   ├── createWithdrawalMethodValidation.ts   # BANK cross-field rule: bankName required when methodType=BANK
+│   ├── updateWithdrawalMethodValidation.ts   # All fields optional; at least one required
+│   ├── createWithdrawalRequestValidation.ts  # withdrawalMethodId + amount (min 10) + note?
+│   ├── editWithdrawalRequestValidation.ts    # amount? + note?; at least one required
+│   └── cancelWithdrawalRequestValidation.ts  # cancellationReason? (max 500)
 │
 ├── content/
 │   ├── privacy-policy.md           # Content for /privacy, rendered by <MarkdownArticle>
@@ -461,6 +516,8 @@ Key enums (all `const` objects `as const`):
 - `WalletTransactionType`: `CREDIT | DEBIT`
 - `WalletTransactionCategory`: `TASK_PAYMENT | DIRECT_COMMISSION_DEDUCTION | COMMISSION_PAYMENT | WITHDRAWAL | REFUND | ADJUSTMENT`
 - `WalletTransactionStatus`: `PENDING | COMPLETED | FAILED | REVERSED`
+- `WithdrawalStatus`: `PENDING | APPROVED | COMPLETED | REJECTED | CANCELLED`
+- `WithdrawalMethodType`: `BANK | MOBILE_BANKING`
 
 Key type notes:
 
@@ -499,3 +556,4 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **Cloudinary for image uploads:** Task images and avatars are uploaded directly from the client via a signed Cloudinary widget. The signature is generated server-side at `src/app/api/cloudinary-signature/route.ts`.
 - **URL-state for task browser:** Filters, sort, and pagination for `/tasks` are stored in URL search params — enables server-side rendering and shareable URLs without client state.
 - **shadcn/ui mandatory first:** Custom UI components are only created when a shadcn component does not exist for the use case.
+- **Withdrawal module (2026-05-09):** Uses the `(tabbed)` route-group pattern (matching payments) for the Methods / Requests list views. Create/edit/detail operations use dedicated pages outside the tabbed group (no tab nav on those pages). PENDING-only guard for edit/cancel is enforced at the page level (shows an error block if status ≠ PENDING) — not just by hiding buttons. `amount` fields are typed `string` (Decimal) from the API and parsed to `number` only inside form components before validation. Delete is blocked gracefully when pending requests exist — the 400 error is caught and shown as a Sonner toast without re-opening the dialog.

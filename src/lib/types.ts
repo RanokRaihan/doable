@@ -500,6 +500,103 @@ export interface WalletTransactionDetailResponse {
   timestamp: string;
 }
 
+// Withdrawal Status
+export const WithdrawalStatus = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  COMPLETED: "COMPLETED",
+  REJECTED: "REJECTED",
+  CANCELLED: "CANCELLED",
+} as const;
+export type WithdrawalStatusType =
+  (typeof WithdrawalStatus)[keyof typeof WithdrawalStatus];
+
+// Withdrawal Method Type
+export const WithdrawalMethodType = {
+  BANK: "BANK",
+  MOBILE_BANKING: "MOBILE_BANKING",
+} as const;
+export type WithdrawalMethodTypeType =
+  (typeof WithdrawalMethodType)[keyof typeof WithdrawalMethodType];
+
+export type WithdrawalMethodSortField = "createdAt" | "updatedAt";
+export type WithdrawalRequestSortField = "amount" | "createdAt" | "updatedAt";
+
+export interface WithdrawalMethod {
+  id: string;
+  walletId: string;
+  methodType: WithdrawalMethodTypeType;
+  accountNumber: string;
+  accountName: string;
+  bankName: string | null;
+  branchName: string | null;
+  routingNumber: string | null;
+  isDefault: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WithdrawalRequest {
+  id: string;
+  walletId: string;
+  withdrawalMethodId: string;
+  amount: string;
+  status: WithdrawalStatusType;
+  note: string | null;
+  cancellationReason: string | null;
+  rejectionReason: string | null;
+  rejectedBy: string | null;
+  rejectedAt: string | null;
+  refWalletTnxId: string | null;
+  processedAt: string | null;
+  cancelledAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WithdrawalRequestWithMethod extends WithdrawalRequest {
+  withdrawalMethod: WithdrawalMethod;
+}
+
+export interface WithdrawalMethodResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: WithdrawalMethod;
+  timestamp: string;
+}
+
+export interface WithdrawalMethodsListResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: {
+    data: WithdrawalMethod[];
+    meta: PaginationMeta;
+  };
+  timestamp: string;
+}
+
+export interface WithdrawalRequestResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: WithdrawalRequestWithMethod;
+  timestamp: string;
+}
+
+export interface WithdrawalRequestsListResponse {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: {
+    data: WithdrawalRequestWithMethod[];
+    meta: PaginationMeta;
+  };
+  timestamp: string;
+}
+
 // Payment list & detail types
 export type PaymentSortField = "amount" | "createdAt" | "updatedAt";
 
