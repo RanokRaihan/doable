@@ -5,47 +5,56 @@ import { useRouter } from "next/navigation";
 import { Building2, Hash, MapPin, Route, User } from "lucide-react";
 import { toast } from "sonner";
 
-import createWithdrawalMethodAction from "@/actions/withdrawal/createWithdrawalMethodAction";
+import updateWithdrawalMethodAction from "@/actions/withdrawal/updateWithdrawalMethodAction";
 import ServerErrorDisplay from "@/components/form/ServerErrorDisplay";
 import { useAppForm } from "@/components/form/hooks";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
-import createWithdrawalMethodValidation from "@/schema/createWithdrawalMethodValidation";
+import { WithdrawalMethod } from "@/lib/types";
+import updateWithdrawalMethodValidation from "@/schema/updateWithdrawalMethodValidation";
 
-export function WithdrawalMethodForm() {
+interface WithdrawalMethodEditFormProps {
+  methodId: string;
+  defaultValues: WithdrawalMethod;
+  redirectTo?: string;
+}
+
+export function WithdrawalMethodEditForm({
+  methodId,
+  defaultValues,
+  redirectTo,
+}: WithdrawalMethodEditFormProps) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const form = useAppForm({
     defaultValues: {
-      methodType: "BANK" as "BANK" | "MOBILE_BANKING",
-      accountName: "",
-      accountNumber: "",
-      bankName: "",
-      branchName: "",
-      routingNumber: "",
-      isDefault: false,
+      methodType: defaultValues.methodType as "BANK" | "MOBILE_BANKING",
+      accountName: defaultValues.accountName,
+      accountNumber: defaultValues.accountNumber,
+      bankName: defaultValues.bankName ?? "",
+      branchName: defaultValues.branchName ?? "",
+      routingNumber: defaultValues.routingNumber ?? "",
     },
-    validators: { onSubmit: createWithdrawalMethodValidation },
+    validators: { onSubmit: updateWithdrawalMethodValidation },
     onSubmit: async ({ value }) => {
       setServerError(null);
 
-      const result = await createWithdrawalMethodAction({
+      const result = await updateWithdrawalMethodAction(methodId, {
         methodType: value.methodType,
         accountName: value.accountName,
         accountNumber: value.accountNumber,
         bankName: value.bankName,
         branchName: value.branchName,
         routingNumber: value.routingNumber,
-        isDefault: value.isDefault,
       });
 
       if (result.success) {
-        toast.success("Withdrawal method added");
-        router.push("/profile/withdrawal/methods");
+        toast.success("Withdrawal method updated");
+        router.push(redirectTo ?? `/profile/withdrawal/methods/${methodId}`);
       } else {
-        setServerError("message" in result ? result.message : "Creation failed");
+        setServerError("message" in result ? result.message : "Update failed");
       }
     },
   });
@@ -129,12 +138,6 @@ export function WithdrawalMethodForm() {
           )}
         </form.Subscribe>
 
-        <form.AppField name="isDefault">
-          {(field) => (
-            <field.Checkbox label="Set as default withdrawal method" />
-          )}
-        </form.AppField>
-
         {serverError && (
           <ServerErrorDisplay
             serverError={serverError}
@@ -146,7 +149,7 @@ export function WithdrawalMethodForm() {
           {(isSubmitting) => (
             <div className="flex items-center gap-3">
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Adding…" : "Add Method"}
+                {isSubmitting ? "Saving…" : "Save Changes"}
               </Button>
               <Button type="button" variant="ghost" onClick={() => router.back()}>
                 Cancel

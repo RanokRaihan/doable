@@ -2,7 +2,7 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import getWithdrawalMethodAction from "@/actions/withdrawal/getWithdrawalMethodAction";
-import { WithdrawalMethodForm } from "@/components/profile/withdrawal/methods/WithdrawalMethodForm";
+import { WithdrawalMethodEditForm } from "@/components/profile/withdrawal/methods/WithdrawalMethodEditForm";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { WithdrawalMethodResponse } from "@/lib/types";
 
@@ -64,10 +64,9 @@ export default async function EditWithdrawalMethodPage({ params }: PageProps) {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <WithdrawalMethodForm
-          mode="edit"
-          defaultValues={method}
+        <WithdrawalMethodEditForm
           methodId={id}
+          defaultValues={method}
           redirectTo={`/profile/withdrawal/methods/${id}`}
         />
       </div>

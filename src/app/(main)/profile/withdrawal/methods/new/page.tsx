@@ -29,7 +29,7 @@ export default async function NewWithdrawalMethodPage() {
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <WithdrawalMethodForm mode="create" />
+        <WithdrawalMethodForm />
       </div>
     </div>
   );
