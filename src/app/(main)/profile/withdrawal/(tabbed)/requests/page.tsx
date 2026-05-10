@@ -26,7 +26,9 @@ const VALID_STATUSES: WithdrawalStatusType[] = [
   "CANCELLED",
 ];
 
-export default async function WithdrawalRequestsPage({ searchParams }: PageProps) {
+export default async function WithdrawalRequestsPage({
+  searchParams,
+}: PageProps) {
   await requireAuth();
   const params = await searchParams;
 
@@ -43,16 +45,22 @@ export default async function WithdrawalRequestsPage({ searchParams }: PageProps
 
   const [requestsResult, methodsResult, walletResult] = await Promise.all([
     getWithdrawalRequestsAction({ page, limit, sortBy, sortOrder, status }),
-    getWithdrawalMethodsAction({ limit: 100 }),
+    getWithdrawalMethodsAction(),
     getMyWalletAction(),
   ]);
-
+  console.log("requestsResult", {
+    requestsResult,
+    methodsResult,
+    walletResult,
+  });
   if (!requestsResult.success) {
     return (
       <div className="flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 text-red-700">
         <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
         <div>
-          <p className="font-semibold text-sm">Failed to load withdrawal requests</p>
+          <p className="font-semibold text-sm">
+            Failed to load withdrawal requests
+          </p>
           <p className="text-sm mt-0.5 text-red-600">
             {"message" in requestsResult
               ? requestsResult.message

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import cancelWithdrawalRequestAction from "@/actions/withdrawal/cancelWithdrawalRequestAction";
@@ -38,11 +38,17 @@ export function CancelWithdrawalRequestDialog({
   const router = useRouter();
   const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleCancel = async () => {
+  const handleCancel = async (e: React.MouseEvent) => {
+    if (reason.trim().length < 10) {
+      e.preventDefault();
+      setError("Please provide at least 10 characters.");
+      return;
+    }
     setIsLoading(true);
     const result = await cancelWithdrawalRequestAction(requestId, {
-      cancellationReason: reason.trim() || undefined,
+      cancellationReason: reason.trim(),
     });
     setIsLoading(false);
 
@@ -53,8 +59,8 @@ export function CancelWithdrawalRequestDialog({
       router.push("/profile/withdrawal/requests");
     } else {
       toast.error(
-        "message" in result
-          ? result.message
+        "errorSources" in result && result.errorSources
+          ? result.errorSources[0].message
           : "Failed to cancel withdrawal request",
       );
     }
@@ -76,25 +82,38 @@ export function CancelWithdrawalRequestDialog({
         </AlertDialogHeader>
 
         <div className="space-y-1.5">
-          <Label htmlFor="cancellationReason" className="text-sm text-slate-700">
+          <Label
+            htmlFor="cancellationReason"
+            className="text-sm text-slate-700"
+          >
             Reason (optional)
           </Label>
           <Textarea
             id="cancellationReason"
             value={reason}
-            onChange={(e) => setReason(e.target.value)}
+            onChange={(e) => {
+              setReason(e.target.value);
+              if (error) setError("");
+            }}
             placeholder="Why are you cancelling this request?"
             maxLength={500}
             rows={3}
             className="resize-none"
           />
-          <p className="text-xs text-slate-400 text-right">
-            {reason.length}/500
-          </p>
+          <div className="flex items-center justify-between">
+            {error ? (
+              <p className="text-xs text-destructive">{error}</p>
+            ) : (
+              <span />
+            )}
+            <p className="text-xs text-slate-400">{reason.length}/500</p>
+          </div>
         </div>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Keep Request</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>
+            Keep Request
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleCancel}
             disabled={isLoading}
