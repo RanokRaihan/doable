@@ -14,12 +14,12 @@ interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function WithdrawalMethodsPage({ searchParams }: PageProps) {
+export default async function WithdrawalMethodsPage({
+  searchParams,
+}: PageProps) {
   await requireAuth();
   const params = await searchParams;
 
-  const page = Number(params.page) || 1;
-  const limit = Number(params.limit) || 10;
   const sortBy = (params.sortBy as WithdrawalMethodSortField) || "createdAt";
   const sortOrder = (params.sortOrder as SortOrder) || "desc";
   const rawMethodType =
@@ -30,8 +30,6 @@ export default async function WithdrawalMethodsPage({ searchParams }: PageProps)
       : undefined;
 
   const result = await getWithdrawalMethodsAction({
-    page,
-    limit,
     sortBy,
     sortOrder,
     methodType,
@@ -42,22 +40,25 @@ export default async function WithdrawalMethodsPage({ searchParams }: PageProps)
       <div className="flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 text-red-700">
         <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
         <div>
-          <p className="font-semibold text-sm">Failed to load withdrawal methods</p>
+          <p className="font-semibold text-sm">
+            Failed to load withdrawal methods
+          </p>
           <p className="text-sm mt-0.5 text-red-600">
-            {"message" in result ? result.message : "An unexpected error occurred."}
+            {"message" in result
+              ? result.message
+              : "An unexpected error occurred."}
           </p>
         </div>
       </div>
     );
   }
 
-  const { data: methods, meta } = (result as WithdrawalMethodsListResponse).data;
-  const currentFilters = { page, limit, sortBy, sortOrder, methodType };
+  const methods = (result as WithdrawalMethodsListResponse).data;
+  const currentFilters = { sortBy, sortOrder, methodType };
 
   return (
     <WithdrawalMethodsClient
       methods={methods}
-      meta={meta}
       currentFilters={currentFilters}
     />
   );

@@ -571,10 +571,8 @@ export interface WithdrawalMethodsListResponse {
   success: boolean;
   message: string;
   statusCode: number;
-  data: {
-    data: WithdrawalMethod[];
-    meta: PaginationMeta;
-  };
+  data: WithdrawalMethod[];
+  meta: PaginationMeta;
   timestamp: string;
 }
 
@@ -590,10 +588,8 @@ export interface WithdrawalRequestsListResponse {
   success: boolean;
   message: string;
   statusCode: number;
-  data: {
-    data: WithdrawalRequestWithMethod[];
-    meta: PaginationMeta;
-  };
+  data: WithdrawalRequestWithMethod[];
+  meta: PaginationMeta;
   timestamp: string;
 }
 

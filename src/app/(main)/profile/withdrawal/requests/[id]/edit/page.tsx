@@ -79,7 +79,7 @@ export default async function EditWithdrawalRequestPage({ params }: PageProps) {
   ]);
 
   const methods = methodsResult.success
-    ? (methodsResult as WithdrawalMethodsListResponse).data.data
+    ? (methodsResult as WithdrawalMethodsListResponse).data
     : [];
 
   const walletBalance = walletResult.success

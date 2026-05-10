@@ -12,7 +12,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { WithdrawalMethodCard } from "@/components/profile/withdrawal/methods/WithdrawalMethodCard";
-import { TaskPagination } from "@/components/tasks/TaskPagination";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,7 +22,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type {
-  PaginationMeta,
   SortOrder,
   WithdrawalMethod,
   WithdrawalMethodSortField,
@@ -32,8 +30,6 @@ import type {
 import { cn } from "@/lib/utils";
 
 interface CurrentFilters {
-  page: number;
-  limit: number;
   sortBy: WithdrawalMethodSortField;
   sortOrder: SortOrder;
   methodType?: WithdrawalMethodTypeType;
@@ -41,7 +37,6 @@ interface CurrentFilters {
 
 interface WithdrawalMethodsClientProps {
   methods: WithdrawalMethod[];
-  meta: PaginationMeta;
   currentFilters: CurrentFilters;
 }
 
@@ -62,7 +57,6 @@ const sortFieldOptions: { value: WithdrawalMethodSortField; label: string }[] =
 
 export function WithdrawalMethodsClient({
   methods,
-  meta,
   currentFilters,
 }: WithdrawalMethodsClientProps) {
   const router = useRouter();
@@ -72,8 +66,6 @@ export function WithdrawalMethodsClient({
     const merged = { ...currentFilters, ...updates };
     const params = new URLSearchParams();
 
-    if (merged.page !== 1) params.set("page", String(merged.page));
-    if (merged.limit !== 10) params.set("limit", String(merged.limit));
     if (merged.sortBy !== "createdAt") params.set("sortBy", merged.sortBy);
     if (merged.sortOrder !== "desc") params.set("sortOrder", merged.sortOrder);
     if (merged.methodType) params.set("methodType", merged.methodType);
@@ -84,21 +76,15 @@ export function WithdrawalMethodsClient({
 
   const handleMethodTypeChange = (
     methodType: WithdrawalMethodTypeType | undefined,
-  ) => updateURL({ methodType, page: 1 });
+  ) => updateURL({ methodType });
 
   const handleSortFieldChange = (field: WithdrawalMethodSortField) =>
-    updateURL({ sortBy: field, page: 1 });
+    updateURL({ sortBy: field });
 
   const handleSortOrderToggle = () =>
     updateURL({
       sortOrder: currentFilters.sortOrder === "asc" ? "desc" : "asc",
-      page: 1,
     });
-
-  const handlePageChange = (page: number) => {
-    updateURL({ page });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   const currentTypeOption = methodTypeOptions.find(
     (m) => m.value === currentFilters.methodType,
@@ -112,7 +98,7 @@ export function WithdrawalMethodsClient({
     <div className="space-y-5">
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm text-slate-500">
-          {meta?.total} method{meta?.total !== 1 ? "s" : ""} total
+          {methods.length} method{methods.length !== 1 ? "s" : ""}
         </p>
         <Button asChild size="sm">
           <Link href="/profile/withdrawal/methods/new">
@@ -224,11 +210,6 @@ export function WithdrawalMethodsClient({
         </div>
       )}
 
-      {meta.total > 0 && (
-        <div className="border-t border-slate-100 pt-4">
-          <TaskPagination meta={meta} onPageChange={handlePageChange} />
-        </div>
-      )}
     </div>
   );
 }

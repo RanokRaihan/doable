@@ -63,12 +63,12 @@ export default async function WithdrawalRequestsPage({ searchParams }: PageProps
     );
   }
 
-  const { data: requests, meta } = (
-    requestsResult as WithdrawalRequestsListResponse
-  ).data;
+  const requestsTyped = requestsResult as WithdrawalRequestsListResponse;
+  const requests = requestsTyped.data;
+  const meta = requestsTyped.meta;
 
   const methods = methodsResult.success
-    ? (methodsResult as WithdrawalMethodsListResponse).data.data
+    ? (methodsResult as WithdrawalMethodsListResponse).data
     : [];
 
   const walletBalance = walletResult.success

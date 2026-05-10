@@ -17,7 +17,7 @@ export default async function NewWithdrawalRequestPage() {
   ]);
 
   const methods = methodsResult.success
-    ? (methodsResult as WithdrawalMethodsListResponse).data.data
+    ? (methodsResult as WithdrawalMethodsListResponse).data
     : [];
 
   const walletBalance = walletResult.success

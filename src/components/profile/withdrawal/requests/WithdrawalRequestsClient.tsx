@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import {
   AlertCircle,
   Check,
@@ -11,6 +9,8 @@ import {
   SortDesc,
   Wallet,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 import { WithdrawalRequestCard } from "@/components/profile/withdrawal/requests/WithdrawalRequestCard";
 import { TaskPagination } from "@/components/tasks/TaskPagination";
@@ -56,15 +56,17 @@ interface WithdrawalRequestsClientProps {
   methods: WithdrawalMethod[];
 }
 
-const statusOptions: { value: WithdrawalStatusType | undefined; label: string }[] =
-  [
-    { value: undefined, label: "All Statuses" },
-    { value: "PENDING", label: "Pending" },
-    { value: "APPROVED", label: "Approved" },
-    { value: "COMPLETED", label: "Completed" },
-    { value: "REJECTED", label: "Rejected" },
-    { value: "CANCELLED", label: "Cancelled" },
-  ];
+const statusOptions: {
+  value: WithdrawalStatusType | undefined;
+  label: string;
+}[] = [
+  { value: undefined, label: "All Statuses" },
+  { value: "PENDING", label: "Pending" },
+  { value: "APPROVED", label: "Approved" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "REJECTED", label: "Rejected" },
+  { value: "CANCELLED", label: "Cancelled" },
+];
 
 const sortFieldOptions: { value: WithdrawalRequestSortField; label: string }[] =
   [
@@ -73,10 +75,10 @@ const sortFieldOptions: { value: WithdrawalRequestSortField; label: string }[] =
     { value: "amount", label: "Amount" },
   ];
 
-function formatAmount(amount: string) {
-  const num = parseFloat(amount);
-  return `৳ ${num.toLocaleString("en-BD", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
+// function formatAmount(amount: string) {
+//   const num = parseFloat(amount);
+//   return `৳ ${num.toLocaleString("en-BD", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+// }
 
 export function WithdrawalRequestsClient({
   requests,
@@ -85,6 +87,13 @@ export function WithdrawalRequestsClient({
   walletBalance,
   methods,
 }: WithdrawalRequestsClientProps) {
+  console.log("Current Filters:", {
+    requests,
+    meta,
+    currentFilters,
+    walletBalance,
+    methods,
+  });
   const router = useRouter();
   const pathname = usePathname();
 
@@ -199,7 +208,7 @@ export function WithdrawalRequestsClient({
 
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <p className="text-sm text-slate-500">
-          {meta.total} request{meta.total !== 1 ? "s" : ""} total
+          {meta?.total} request{meta?.total !== 1 ? "s" : ""} total
         </p>
         {hasFilter && (
           <Badge
@@ -336,7 +345,7 @@ export function WithdrawalRequestsClient({
         </div>
       )}
 
-      {meta.total > 0 && (
+      {meta?.total > 0 && (
         <div className="border-t border-slate-100 pt-4">
           <TaskPagination meta={meta} onPageChange={handlePageChange} />
         </div>
