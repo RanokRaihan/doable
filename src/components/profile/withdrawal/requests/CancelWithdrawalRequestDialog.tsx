@@ -86,7 +86,7 @@ export function CancelWithdrawalRequestDialog({
             htmlFor="cancellationReason"
             className="text-sm text-slate-700"
           >
-            Reason (optional)
+            Reason (required, min 10 characters)
           </Label>
           <Textarea
             id="cancellationReason"

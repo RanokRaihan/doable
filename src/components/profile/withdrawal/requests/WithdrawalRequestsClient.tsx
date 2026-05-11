@@ -87,13 +87,6 @@ export function WithdrawalRequestsClient({
   walletBalance,
   methods,
 }: WithdrawalRequestsClientProps) {
-  console.log("Current Filters:", {
-    requests,
-    meta,
-    currentFilters,
-    walletBalance,
-    methods,
-  });
   const router = useRouter();
   const pathname = usePathname();
 

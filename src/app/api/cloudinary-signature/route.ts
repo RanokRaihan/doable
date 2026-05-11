@@ -1,9 +1,15 @@
 import crypto from "crypto";
+import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
 export async function GET() {
+  const user = await getCurrentUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;

@@ -48,11 +48,6 @@ export default async function WithdrawalRequestsPage({
     getWithdrawalMethodsAction(),
     getMyWalletAction(),
   ]);
-  console.log("requestsResult", {
-    requestsResult,
-    methodsResult,
-    walletResult,
-  });
   if (!requestsResult.success) {
     return (
       <div className="flex items-start gap-3 p-4 rounded-xl border border-red-200 bg-red-50 text-red-700">

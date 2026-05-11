@@ -7,7 +7,6 @@ export default async function LoginPage({
   searchParams: Promise<{ callbackUrl?: string }>;
 }) {
   const { callbackUrl } = await searchParams;
-  console.log("LoginPage searchParams:", { callbackUrl });
   return (
     <main className="h-screen flex">
       <LoginLeftSection />

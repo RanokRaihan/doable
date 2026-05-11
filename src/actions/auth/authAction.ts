@@ -58,6 +58,11 @@ const RegisterAction = async (registerData: RegisterData) => {
 };
 
 const logoutAction = async () => {
+  try {
+    await apiClient.post<ApiResponse<null>>("/auth/logout", {}, { skipAuth: true });
+  } catch {
+    // Best-effort: local tokens are cleared regardless
+  }
   await clearTokens();
   return { success: true };
 };

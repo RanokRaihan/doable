@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-10 — Resolved audit findings: C-1 (Cloudinary auth guard), C-2 (BACKEND_URL URL construction), H-1 (proxy cookie via response.cookies), H-2 (updateWithdrawalMethod optional fields), H-4 (cancel reason label), M-1 (removed 10 console.logs), M-3 (logout calls backend), L-1/L-2 (AGENTS.md stale docs); implemented deleteTaskAction (I-1)
 - 2026-05-09 — Withdrawal module implemented: 11 server actions, 13 components, 10 pages/routes, 5 Zod schemas, types, and sidebar link added
 - 2026-05-09 — Deleted api-contract.md; all three agent instruction files (CLAUDE.md, AGENTS.md, copilot-instructions.md) now point to api-contracts/ directory
 - 2026-05-04 — Unified TaskCard: LandingTaskCard renamed/moved to src/components/common/TaskCard.tsx (replaces old card); used in landing, browse, and related tasks; related tasks now fetched from /task/:id/related via getRelatedTasksAction
@@ -197,10 +198,11 @@ src/
 │   ├── task/
 │   │   ├── applyTaskAction.ts
 │   │   ├── approveCompletionAction.ts
+│   │   ├── deleteTaskAction.ts     # DELETE /task/delete-task/:taskId — soft-delete owned task
 │   │   ├── markTaskCompletedAction.ts
 │   │   ├── markTaskInProgressAction.ts
 │   │   ├── requestRevisionAction.ts
-│   │   └── taskAction.ts           # Post task, edit task, delete task, get tasks
+│   │   └── taskAction.ts           # Post task, edit task, get tasks
 │   ├── user/
 │   │   ├── getPublicProfileAction.ts
 │   │   └── userAction.ts           # Update profile, complete profile, change password, avatar
@@ -507,7 +509,7 @@ Key enums (all `const` objects `as const`):
 
 - `TaskPriority`: `LOW | MEDIUM | HIGH | URGENT`
 - `TaskCategory`: `DELIVERY | CLEANING | REPAIR | TUTORING | GARDENING | MOVING | PET_CARE | TECH_SUPPORT | OTHER`
-- `TaskStatus`: `DRAFT | OPEN | ASSIGNED | IN_PROGRESS | PENDING_REVIEW | PAYMENT_PROCESSING | COMPLETED | PAYMENT_FAILED | DISPUTED | CANCELLED | EXPIRED | REFUNDED`
+- `TaskStatus`: `DRAFT | OPEN | ASSIGNED | IN_PROGRESS | PENDING_REVIEW | PAYMENT_PENDING | PAYMENT_INITIATED | COMPLETED | PAYMENT_FAILED | DISPUTED | CANCELLED | EXPIRED | REFUNDED`
 - `ApplicationStatus`: `PENDING | APPROVED | REJECTED | WITHDRAWN`
 - `PaymentMethod`: `ONLINE | CASH`
 - `PaymentStatus`: `PENDING | COMPLETED | FAILED | CANCELLED | REFUNDED`
@@ -537,7 +539,7 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **Auth page layout:** `<main className="h-screen flex">` — left branding (`hidden lg:flex lg:w-1/2`) fixed at viewport height; right form (`w-full lg:w-1/2 overflow-y-auto`) scrolls internally.
 - **Animations:** Framer Motion for complex sequences; `tw-animate-css` for CSS-only transitions.
 - **Markdown pages:** `<MarkdownArticle>` (`src/components/ui/MarkdownArticle.tsx`) renders `.md` files from `src/content/`.
-- **Images:** Only `images.unsplash.com` is whitelisted in `next.config.ts`. Add new hosts there if needed.
+- **Images:** `images.unsplash.com` and `res.cloudinary.com` are whitelisted in `next.config.ts`. Add new hosts there if needed.
 
 ---
 
