@@ -22,8 +22,11 @@ const UpdateProfileSchema = z.object({
   }, "You must be at least 13 years old"),
   phone: z.string().trim().refine((val) => {
     if (!val) return true;
-    return /^01\d{9}$/.test(val);
-  }, "Phone must be 11 digits, start with 01 and contain only numbers"),
+    return (
+      /^01\d{9}$/.test(val) ||
+      /^\+?1?\s?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}$/.test(val)
+    );
+  }, "Enter a valid Bangladesh (01XXXXXXXXX) or US phone number"),
   address: z
     .string()
     .trim()

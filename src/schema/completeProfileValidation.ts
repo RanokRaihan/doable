@@ -14,10 +14,12 @@ const CompleteProfileSchema = z.object({
   phone: z
     .string()
     .trim()
-    .regex(/^01\d{9}$/, {
-      message:
-        "Phone must be 11 digits, start with 01 and contain only numbers",
-    }),
+    .refine(
+      (val) =>
+        /^01\d{9}$/.test(val) ||
+        /^\+?1?\s?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}$/.test(val),
+      "Enter a valid Bangladesh (01XXXXXXXXX) or US phone number",
+    ),
   address: z
     .string()
     .trim()

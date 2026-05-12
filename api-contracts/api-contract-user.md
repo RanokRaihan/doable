@@ -129,7 +129,7 @@ Request:
   dateOfBirth: string;  // ISO date, coerced to Date
   gender: Gender;       // "MALE" | "FEMALE" | "OTHER"
   address: string;      // min 1, max 255 chars
-  phone: string;        // regex: /^01\d{9}$/ (11-digit Bangladesh mobile)
+  phone: string;        // BD: /^01\d{9}$/ or US: 10-digit with optional +1 prefix
   bio?: string;         // max 500 chars
 }
 ```
@@ -171,7 +171,7 @@ Request (all optional):
   dateOfBirth?: string;  // ISO date
   gender?: Gender;
   address?: string;      // min 1, max 255 chars
-  phone?: string;        // regex: /^01\d{9}$/
+  phone?: string;        // BD: /^01\d{9}$/ or US: 10-digit with optional +1 prefix
   bio?: string;          // max 500 chars
 }
 ```
@@ -335,6 +335,8 @@ const publicRoutes = [
 
 This route has no auth, no pagination, and returns every user in the database. Must be removed before production.
 
-### Phone validation is Bangladesh-specific
+### Phone validation accepts Bangladesh and US formats
 
-The phone regex `/^01\d{9}$/` matches 11-digit Bangladeshi mobile numbers starting with `01`. Non-BD phone formats will fail validation.
+Two formats are accepted:
+- **Bangladesh:** `/^01\d{9}$/` — 11-digit mobile number starting with `01`
+- **US:** `/^\+?1?\s?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}$/` — 10-digit number, optionally prefixed with `+1` or `1`, with common separators (spaces, dashes, dots, parentheses)
