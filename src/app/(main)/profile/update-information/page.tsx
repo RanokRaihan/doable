@@ -30,7 +30,6 @@ export default async function UpdateInformationPage() {
     redirect("/complete-profile");
   }
   const { name, dateOfBirth, phone, address, bio, gender } = result.data;
-  console.log({ oldData: { name, dateOfBirth, phone, address, bio, gender } });
 
   return (
     <div className="max-w-xl">

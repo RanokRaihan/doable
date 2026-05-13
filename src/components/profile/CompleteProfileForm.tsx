@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { BackendError } from "@/lib/api/types";
 import { useAuth } from "@/providers/AuthProvider";
 import CompleteProfileSchema from "@/schema/completeProfileValidation";
 import { Loader2, X } from "lucide-react";
@@ -68,12 +69,12 @@ export default function CompleteProfileForm({
         refreshUser();
         router.push(callbackUrl || "/profile");
       } else {
-        console.error("Failed to complete profile:", result);
-        setServerError(
-          "message" in result
-            ? result.message
-            : "Something went wrong. Please try again.",
-        );
+        const errorRes = result as BackendError;
+        const errMsg =
+          errorRes?.errorSources && errorRes.errorSources.length > 0
+            ? errorRes.errorSources.map((src) => src.message).join(", ")
+            : errorRes.message || "Failed to complete profile";
+        setServerError(errMsg);
       }
     },
   });

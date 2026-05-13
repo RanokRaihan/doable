@@ -2,12 +2,11 @@
 
 import { logoutAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
-import { LogOut, Menu, User, X, Zap } from "lucide-react";
+import { LogOut, Menu, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,17 +15,45 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Separator } from "../ui/separator";
 
-const navbarLinks = [
-  { name: "Browse Tasks", href: "/tasks" },
-  { name: "How it Works", href: "/how-it-works" },
-  { name: "About Us", href: "/about" },
+const navLinks = [
+  { name: "Browse tasks", href: "/tasks" },
+  { name: "How it works", href: "/how-it-works" },
+  { name: "About us", href: "/about" },
 ];
 
+function LogoMark() {
+  return (
+    <Link
+      href="/"
+      className="inline-flex items-center gap-2.5 no-underline group"
+    >
+      <div
+        className="w-7 h-7 rounded-lg bg-ds-ink flex items-center justify-center text-ds-bg font-bold text-[22px] leading-none select-none"
+        style={{ fontFamily: "Inter, sans-serif" }}
+      >
+        <span style={{ transform: "translateY(-1px)", display: "block" }}>
+          •
+        </span>
+      </div>
+      <span className="text-[20px] font-semibold tracking-[-0.02em] text-ds-ink">
+        doable
+      </span>
+    </Link>
+  );
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { user, isAuthenticated, clearUser } = useAuth();
   const router = useRouter();
 
@@ -36,78 +63,47 @@ const Navbar = () => {
     router.refresh();
   };
 
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
-  // Effect to handle scroll state for the glass effect
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300${
-        isScrolled
-          ? "bg-white/80 backdrop-blur-md border-b border-gray-100 py-3 shadow-sm"
-          : "bg-transparent py-5"
-      }`}
+    <header
+      className="sticky top-0 z-50 border-b"
+      style={{
+        backdropFilter: "blur(12px)",
+        background: "rgba(250,250,247,0.82)",
+        borderColor: "#e7e5df",
+      }}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* replace with actual logo later */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white">
-              <Zap size={20} className="fill-current" />
-            </div>
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-linear  -to-r from-gray-900 to-gray-700">
-              Doable
-            </span>
-          </Link>
+      <div className="mx-auto px-8" style={{ maxWidth: 1360 }}>
+        <div className="flex items-center justify-between h-18">
+          <LogoMark />
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navbarLinks.map((link) => (
+          {/* Desktop nav links */}
+          <nav className="hidden md:flex items-center gap-7">
+            {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+                className="text-[14px] font-medium text-ds-ink-2 hover:text-ds-ink transition-colors no-underline"
               >
                 {link.name}
               </Link>
             ))}
-          </div>
+          </nav>
 
-          {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center gap-2.5">
             {isAuthenticated && user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
-                    <span className="text-sm font-medium text-gray-700">
+                  <button className="flex items-center gap-2 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ds-orange">
+                    <span className="text-[14px] font-medium text-ds-ink-2">
                       {user.name}
                     </span>
-                    <Avatar size="default" className="border border-gray-300 ">
+                    <Avatar size="default" className="border border-ds-line-2">
                       <AvatarImage
-                        className="p-1"
                         src={user.image ?? undefined}
                         alt={user.name}
                       />
-                      <AvatarFallback className="p-1">
+                      <AvatarFallback className="text-[12px]">
                         {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -115,11 +111,9 @@ const Navbar = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col gap-1">
-                      <p className="text-xs text-muted-foreground">
-                        {user.email}
-                      </p>
-                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {user.email}
+                    </p>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
@@ -143,93 +137,101 @@ const Navbar = () => {
               <>
                 <Link
                   href="/login"
-                  className="text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
+                  className="inline-flex items-center h-9.5 px-4 rounded-full text-[14px] font-medium border text-ds-ink bg-transparent hover:bg-ds-bg-2 transition-all no-underline"
+                  style={{ borderColor: "#d8d6cf" }}
                 >
-                  Log In
-                </Link>
-                <Button asChild variant="default" className="rounded-full">
-                  <Link href="/register">Join Now</Link>
-                </Button>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-gray-600"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-xl p-4 flex flex-col gap-4 animate-in slide-in-from-top-5">
-            {navbarLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-              >
-                {link.name}
-              </Link>
-            ))}
-
-            <Separator />
-
-            {isAuthenticated && user ? (
-              <>
-                <div className="flex items-center gap-3 p-2">
-                  <Avatar size="default">
-                    <AvatarImage
-                      src={user.image ?? undefined}
-                      alt={user.name}
-                    />
-                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-900">
-                      {user.name}
-                    </span>
-                    <span className="text-xs text-gray-500">{user.email}</span>
-                  </div>
-                </div>
-                <Link
-                  href="/profile"
-                  className="flex items-center gap-2 p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-                >
-                  <User size={16} />
-                  Profile
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 p-2 text-red-600 hover:bg-red-50 rounded-lg text-left"
-                >
-                  <LogOut size={16} />
-                  Log Out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
-                >
-                  Log In
+                  Sign in
                 </Link>
                 <Link
                   href="/register"
-                  className="p-2 text-center bg-blue-600 text-white rounded-lg font-medium"
+                  className="inline-flex items-center h-9.5 px-4 rounded-full text-[14px] font-medium bg-ds-ink text-ds-bg hover:bg-[#1e293b] transition-all no-underline"
                 >
-                  Join Now
+                  Get started
                 </Link>
               </>
             )}
           </div>
-        )}
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden p-2 text-ds-ink-2 hover:text-ds-ink transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
-    </nav>
+
+      {/* Mobile dropdown */}
+      {mobileOpen && (
+        <div
+          className="md:hidden border-t px-8 py-4 flex flex-col gap-1"
+          style={{ background: "#fafaf7", borderColor: "#e7e5df" }}
+        >
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              className="px-3 py-2.5 text-[14px] font-medium text-ds-ink-2 hover:text-ds-ink hover:bg-ds-bg-2 rounded-xl transition-colors no-underline"
+            >
+              {link.name}
+            </Link>
+          ))}
+          <div className="border-t my-3" style={{ borderColor: "#e7e5df" }} />
+          {isAuthenticated && user ? (
+            <>
+              <div className="flex items-center gap-3 px-3 py-2">
+                <Avatar size="default">
+                  <AvatarImage src={user.image ?? undefined} alt={user.name} />
+                  <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="text-[14px] font-medium text-ds-ink">
+                    {user.name}
+                  </div>
+                  <div className="text-[12px] text-ds-ink-3">{user.email}</div>
+                </div>
+              </div>
+              <Link
+                href="/profile"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 px-3 py-2.5 text-[14px] font-medium text-ds-ink-2 hover:bg-ds-bg-2 rounded-xl no-underline"
+              >
+                <User size={16} />
+                Profile
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2.5 text-[14px] font-medium text-red-600 hover:bg-red-50 rounded-xl text-left"
+              >
+                <LogOut size={16} />
+                Log Out
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2 pt-1">
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="h-11 flex items-center justify-center rounded-full border text-[14px] font-medium text-ds-ink no-underline"
+                style={{ borderColor: "#d8d6cf" }}
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                onClick={() => setMobileOpen(false)}
+                className="h-11 flex items-center justify-center rounded-full bg-ds-ink text-ds-bg text-[14px] font-medium no-underline"
+              >
+                Get started
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+    </header>
   );
 };
 

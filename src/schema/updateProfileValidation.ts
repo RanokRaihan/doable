@@ -1,5 +1,13 @@
 import z from "zod";
-
+const phoneSchema = z.string().refine(
+  (val) => {
+    const digitsOnly = val.replace(/\D/g, "");
+    return digitsOnly.length === 10 || digitsOnly.length === 11;
+  },
+  {
+    message: "Phone number must be a valid US or BD phone number ",
+  },
+);
 const UpdateProfileSchema = z.object({
   name: z
     .string()
@@ -20,10 +28,8 @@ const UpdateProfileSchema = z.object({
     minAge.setFullYear(minAge.getFullYear() - 13);
     return date <= minAge;
   }, "You must be at least 13 years old"),
-  phone: z.string().trim().refine((val) => {
-    if (!val) return true;
-    return /^01\d{9}$/.test(val);
-  }, "Phone must be 11 digits, start with 01 and contain only numbers"),
+  phone: phoneSchema,
+
   address: z
     .string()
     .trim()

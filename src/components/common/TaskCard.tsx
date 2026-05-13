@@ -1,150 +1,112 @@
-import { Badge } from "@/components/ui/badge";
-import { Task, TaskCategoryType, TaskPriorityType } from "@/lib/types";
-import { Calendar, DollarSign, MapPin } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-
-const categoryImages: Record<string, string> = {
-  DELIVERY:
-    "https://images.unsplash.com/photo-1568765631485-8f38a474bba3?q=80&w=600&auto=format&fit=crop",
-  CLEANING:
-    "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop",
-  REPAIR:
-    "https://images.unsplash.com/photo-1581578731117-104f2a41272c?q=80&w=600&auto=format&fit=crop",
-  TUTORING:
-    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=600&auto=format&fit=crop",
-  GARDENING:
-    "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=600&auto=format&fit=crop",
-  MOVING:
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=600&auto=format&fit=crop",
-  PET_CARE:
-    "https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=600&auto=format&fit=crop",
-  TECH_SUPPORT:
-    "https://images.unsplash.com/photo-1537432376769-00f5c2f4c8d2?q=80&w=600&auto=format&fit=crop",
-  OTHER:
-    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=600&auto=format&fit=crop",
-};
+import Image from "next/image";
+import type { Task, TaskCategoryType, TaskPriorityType } from "@/lib/types";
 
 const categoryConfig: Record<
   TaskCategoryType,
-  { label: string; color: string }
+  { label: string; gradient: string }
 > = {
-  DELIVERY: { label: "Delivery", color: "bg-blue-500" },
-  CLEANING: { label: "Cleaning", color: "bg-cyan-500" },
-  REPAIR: { label: "Repair", color: "bg-orange-500" },
-  TUTORING: { label: "Tutoring", color: "bg-purple-500" },
-  GARDENING: { label: "Gardening", color: "bg-green-500" },
-  MOVING: { label: "Moving", color: "bg-amber-500" },
-  PET_CARE: { label: "Pet Care", color: "bg-pink-500" },
-  TECH_SUPPORT: { label: "Tech Support", color: "bg-indigo-500" },
-  OTHER: { label: "Other", color: "bg-gray-500" },
+  DELIVERY: { label: "Delivery", gradient: "linear-gradient(135deg, #ffe4d0, #fed7aa)" },
+  CLEANING: { label: "Cleaning", gradient: "linear-gradient(135deg, #d0f4ff, #bae6fd)" },
+  REPAIR: { label: "Repair", gradient: "linear-gradient(135deg, #fde9b0, #fde68a)" },
+  TUTORING: { label: "Tutoring", gradient: "linear-gradient(135deg, #dde4ff, #c7d2fe)" },
+  GARDENING: { label: "Gardening", gradient: "linear-gradient(135deg, #d7f4e2, #bbf7d0)" },
+  MOVING: { label: "Moving", gradient: "linear-gradient(135deg, #ffe4d0, #fed7aa)" },
+  PET_CARE: { label: "Pet care", gradient: "linear-gradient(135deg, #d7f4e2, #bbf7d0)" },
+  TECH_SUPPORT: { label: "Tech support", gradient: "linear-gradient(135deg, #fde9b0, #fde68a)" },
+  OTHER: { label: "Other", gradient: "linear-gradient(135deg, #f1f5f9, #e2e8f0)" },
 };
 
-const priorityConfig: Record<
-  TaskPriorityType,
-  { label: string; className: string }
-> = {
-  URGENT: {
-    label: "Urgent",
-    className: "bg-red-100 text-red-700 border-red-200",
-  },
-  HIGH: {
-    label: "High",
-    className: "bg-orange-100 text-orange-700 border-orange-200",
-  },
-  MEDIUM: {
-    label: "Medium",
-    className: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  },
-  LOW: {
-    label: "Low",
-    className: "bg-green-100 text-green-700 border-green-200",
-  },
+const priorityConfig: Record<TaskPriorityType, { label: string; dot: string; text: string }> = {
+  URGENT: { label: "Urgent", dot: "bg-red-500", text: "text-red-600" },
+  HIGH:   { label: "High",   dot: "bg-orange-500", text: "text-orange-600" },
+  MEDIUM: { label: "Medium", dot: "bg-yellow-500", text: "text-yellow-600" },
+  LOW:    { label: "Low",    dot: "bg-green-500", text: "text-green-600" },
 };
 
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+function relativeTime(dateString: string): string {
+  const diff = Date.now() - new Date(dateString).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
 
-const TaskCard = ({ task }: { task: Task }) => {
-  const imageUrl =
-    task.images && task.images.length > 0
-      ? task.images[0].url
-      : (categoryImages[task.category] ?? categoryImages.OTHER);
-
-  const cat = categoryConfig[task.category];
-  const pri = priorityConfig[task.priority];
+export default function TaskCard({ task }: { task: Task }) {
+  const cat = categoryConfig[task.category] ?? categoryConfig.OTHER;
+  const pri = priorityConfig[task.priority] ?? priorityConfig.LOW;
+  const imageUrl = task.images && task.images.length > 0 ? task.images[0].url : null;
+  const locationShort = task.location?.split(",")[0] ?? "Nearby";
 
   return (
-    <div className="group flex flex-col rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 h-full">
-      {/* Image */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden">
-        <Image
-          src={imageUrl}
-          alt={task.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
-
-        {cat && (
-          <span
-            className={`absolute top-3 left-3 ${cat.color} text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm`}
-          >
-            {cat.label}
-          </span>
+    <Link
+      href={`/tasks/${task.id}`}
+      className="bg-white border border-ds-line rounded-2xl p-5 flex flex-col cursor-pointer transition-all duration-150 hover:-translate-y-0.5 group no-underline"
+      style={{ boxShadow: "0 1px 0 rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.04)" }}
+    >
+      {/* Thumbnail */}
+      <div
+        className="relative rounded-xl mb-4 overflow-hidden border border-ds-line"
+        style={{ aspectRatio: "16 / 10", marginTop: -4 }}
+      >
+        {imageUrl ? (
+          <Image src={imageUrl} alt={task.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 25vw" />
+        ) : (
+          <>
+            <div className="absolute inset-0" style={{ background: cat.gradient }} />
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "repeating-linear-gradient(135deg, rgba(15,23,42,0.04) 0 1px, transparent 1px 12px)",
+              }}
+            />
+          </>
         )}
-      </div>
-
-      {/* Body */}
-      <div className="flex flex-col flex-1 p-4 gap-2">
-        {/* Priority */}
-        {pri && (
-          <Badge
-            variant="outline"
-            className={`self-start text-xs font-medium ${pri.className}`}
-          >
-            {pri.label}
-          </Badge>
-        )}
-
-        {/* Title */}
-        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
-          {task.title}
-        </h3>
-
-        {/* Meta */}
-        <div className="mt-auto pt-2 flex flex-col gap-1 text-xs text-gray-500">
-          <span className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 shrink-0" />
-            <span className="line-clamp-1">{task.location}</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 shrink-0" />
-            {formatDate(task.scheduledAt)}
-          </span>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100">
-        <span className="flex items-center gap-0.5 text-base font-bold text-gray-900">
-          <DollarSign className="w-4 h-4 text-primary" />
-          {task.baseCompensation}
-        </span>
-        <Link
-          href={`/tasks/${task.id}`}
-          className="text-xs font-semibold text-blue-600 group-hover:underline underline-offset-2"
+        <span
+          className="absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10px] font-medium tracking-[0.04em]"
+          style={{ background: "rgba(255,255,255,0.92)", color: "#475569", fontFamily: "ui-monospace, monospace" }}
         >
-          View details →
-        </Link>
+          {cat.label.toLowerCase()}
+        </span>
       </div>
-    </div>
-  );
-};
 
-export default TaskCard;
+      {/* Head row */}
+      <div className="flex justify-between items-start mb-3.5">
+        <span className={`inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-widest ${pri.text}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${pri.dot}`} />
+          {pri.label}
+        </span>
+        <span className="text-[18px] font-semibold text-ds-ink tracking-tight leading-none">
+          ${task.baseCompensation}
+          <span className="text-[12px] font-medium text-ds-ink-3 ml-0.5">/task</span>
+        </span>
+      </div>
+
+      {/* Title */}
+      <h4 className="text-[16px] font-semibold text-ds-ink leading-snug tracking-tight m-0 mb-2 line-clamp-2 group-hover:text-ds-orange transition-colors">
+        {task.title}
+      </h4>
+
+      {/* Description */}
+      <p className="text-[14px] text-ds-ink-2 m-0 mb-4.5 leading-snug flex-1 line-clamp-2">
+        {task.description}
+      </p>
+
+      {/* Meta */}
+      <div className="flex justify-between items-center pt-3.5 border-t border-ds-line text-[12px] font-medium text-ds-ink-3">
+        <span className="flex items-center gap-2 text-ds-ink-2">
+          <span
+            className="w-5.5 h-5.5 rounded-full flex items-center justify-center text-white text-[10px] font-semibold shrink-0"
+            style={{ background: "linear-gradient(135deg, #fed7aa, #f97316)" }}
+          >
+            •
+          </span>
+          {locationShort}
+        </span>
+        <span>Posted {relativeTime(task.createdAt)}</span>
+      </div>
+    </Link>
+  );
+}

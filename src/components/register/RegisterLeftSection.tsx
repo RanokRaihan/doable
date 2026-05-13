@@ -1,88 +1,159 @@
-import { CheckCircle2, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 
 const RegisterLeftSection = () => {
   return (
-    <div className="hidden lg:flex lg:w-1/2 bg-slate-900 relative overflow-hidden">
-      {/* Subtle Background Elements */}
-      <div className="absolute inset-0">
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-br from-slate-900 via-slate-800 to-slate-900" />
-        {/* Subtle grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-        {/* Soft accent gradients */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-      </div>
+    <aside className="hidden lg:flex lg:w-[52%] flex-col bg-ds-ink relative overflow-hidden h-full isolate">
+      {/* Hairline orange accent strip */}
+      <div
+        className="absolute left-0 right-0 top-0 h-[4px] z-10"
+        style={{
+          background:
+            "linear-gradient(90deg, #F97316 0 28%, transparent 28% 32%, rgba(250,250,247,0.18) 32% 100%)",
+        }}
+      />
+      {/* Subtle dot field */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(250,250,247,0.08) 1px, transparent 1px)",
+          backgroundSize: "22px 22px",
+          maskImage:
+            "linear-gradient(180deg, transparent, #000 10%, #000 90%, transparent)",
+        }}
+      />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col justify-between p-12 w-full">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/10 border border-white/10 rounded-xl flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-blue-400" />
-          </div>
-          <Link href="/" className="text-2xl font-bold text-white">
-            Doable
+      <div className="relative z-10 flex flex-col h-full p-8 xl:p-12">
+        {/* Top bar */}
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 no-underline">
+            <span className="w-7 h-7 rounded-lg bg-ds-bg text-ds-ink grid place-items-center text-[22px] leading-none font-bold flex-shrink-0">
+              •
+            </span>
+            <span className="text-[20px] font-semibold tracking-tight text-ds-bg leading-none">
+              doable
+            </span>
+          </Link>
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-[13px] font-medium text-white/70 px-3.5 py-2 rounded-full border border-white/[0.18] hover:bg-white/[0.06] hover:text-white transition-colors no-underline"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+            Back home
           </Link>
         </div>
 
-        {/* Main Content */}
-        <div className="space-y-8">
-          <div>
-            <h1 className="text-4xl xl:text-5xl font-bold leading-tight mb-4 text-white">
-              Create your account on
-              <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-emerald-400">
-                Doable
-              </span>
-            </h1>
-            <p className="text-lg text-slate-400 max-w-md">
-              Join our trusted community to post tasks, find skilled helpers,
-              and manage everything in one place.
-            </p>
+        {/* Mid content */}
+        <div className="flex-1 flex flex-col justify-center py-6 max-w-[520px] min-h-0">
+          {/* Eyebrow */}
+          <div className="inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-[#FDBA74] bg-orange-500/[0.14] px-3 py-2 rounded-full w-fit mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-ds-orange flex-shrink-0" />
+            Join doable
           </div>
 
-          {/* Features */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <h1 className="font-serif text-[clamp(34px,3.4vw,50px)] leading-[1.05] tracking-[-0.02em] text-ds-bg mb-4">
+            Small jobs,{" "}
+            <em className="italic text-[#FDBA74] font-normal">
+              big help
+            </em>
+            . Right around the corner.
+          </h1>
+
+          <p className="text-[15px] text-white/70 mb-7 max-w-[460px]">
+            Post a task in 60 seconds, or pick up small jobs nearby on your own
+            schedule. One account does both.
+          </p>
+
+          {/* Ticket cards */}
+          <div className="space-y-2.5 max-w-[460px]">
+            <div className="flex items-center gap-3.5 bg-white/[0.05] border border-white/[0.14] border-l-[3px] border-l-ds-orange rounded-[4px] px-4 py-3">
+              <div className="font-serif italic text-[26px] leading-none text-[#FDBA74] w-14 flex-shrink-0">
+                01
               </div>
-              <span className="text-slate-300">
-                Set up your profile in minutes
-              </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13.5px] font-semibold text-ds-bg leading-snug tracking-[-0.005em]">
+                  Post a task in 60 seconds
+                </div>
+                <div className="text-[11px] font-medium font-mono text-white/50 mt-1 uppercase tracking-[0.08em]">
+                  Free to post · matches in ~14 min
+                </div>
+              </div>
+              <div className="text-[14px] font-semibold px-2.5 py-1.5 rounded bg-emerald-500/[0.16] text-emerald-300 whitespace-nowrap flex-shrink-0">
+                free
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+
+            <div className="flex items-center gap-3.5 bg-white/[0.05] border border-white/[0.14] border-l-[3px] border-l-ds-orange rounded-[4px] px-4 py-3">
+              <div className="font-serif italic text-[26px] leading-none text-[#FDBA74] w-14 flex-shrink-0">
+                02
               </div>
-              <span className="text-slate-300">
-                Connect with verified local helpers
-              </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13.5px] font-semibold text-ds-bg leading-snug tracking-[-0.005em]">
+                  Earn on your own schedule
+                </div>
+                <div className="text-[11px] font-medium font-mono text-white/50 mt-1 uppercase tracking-[0.08em]">
+                  $0 helper fee · payouts &lt; 5 min
+                </div>
+              </div>
+              <div className="text-[14px] font-semibold px-2.5 py-1.5 rounded bg-emerald-500/[0.16] text-emerald-300 whitespace-nowrap flex-shrink-0">
+                $0 fee
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center justify-center">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+
+            <div className="flex items-center gap-3.5 bg-white/[0.05] border border-white/30 border-l-[3px] border-l-white/30 rounded-[4px] px-4 py-3">
+              <div className="font-serif italic text-[26px] leading-none text-white/55 w-14 flex-shrink-0">
+                03
               </div>
-              <span className="text-slate-300">
-                Track every task from one dashboard
-              </span>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13.5px] font-semibold text-ds-bg leading-snug tracking-[-0.005em]">
+                  Vetted, reviewed, neighborly
+                </div>
+                <div className="text-[11px] font-medium font-mono text-white/50 mt-1 uppercase tracking-[0.08em]">
+                  4.9★ avg · escrow protected
+                </div>
+              </div>
+              <div className="text-[14px] font-semibold px-2.5 py-1.5 rounded bg-white/[0.08] text-ds-bg whitespace-nowrap flex-shrink-0">
+                ★ 4.9
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="text-sm text-slate-500">
-          © 2026 Doable. All rights reserved.
+        {/* Bottom stat row */}
+        <div className="flex items-center justify-between gap-6 pt-5 border-t border-white/[0.12]">
+          <div className="flex gap-7">
+            <div>
+              <div className="font-serif italic text-[24px] leading-none text-[#FDBA74]">
+                12,400+
+              </div>
+              <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55 mt-1.5">
+                tasks this week
+              </div>
+            </div>
+            <div>
+              <div className="font-serif italic text-[24px] leading-none text-[#FDBA74]">
+                4.9★
+              </div>
+              <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55 mt-1.5">
+                avg. rating
+              </div>
+            </div>
+            <div>
+              <div className="font-serif italic text-[24px] leading-none text-[#FDBA74]">
+                &lt;5m
+              </div>
+              <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55 mt-1.5">
+                payout time
+              </div>
+            </div>
+          </div>
+          <div className="text-[11px] font-medium font-mono text-white/40 px-2.5 py-1.5 rounded border border-dashed border-white/[0.18] hidden xl:block">
+            v3.2 · local
+          </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 

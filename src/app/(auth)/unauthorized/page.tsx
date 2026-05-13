@@ -1,13 +1,10 @@
 import { getCookie } from "@/actions/common/cookie";
 import { Button } from "@/components/ui/button";
-import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import { ShieldX } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function UnauthorizedPage() {
-  const user = await getCurrentUser();
-  console.log("UnauthorizedPage - current user:", user); // Debug log --- IGNORE ---
   const unauthorizedAttempt = await getCookie("unauthorizedAttempt");
   if (!unauthorizedAttempt) {
     redirect("/");

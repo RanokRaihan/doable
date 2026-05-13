@@ -2,6 +2,13 @@
 
 ## Recent Changes
 
+- 2026-05-11 — Added /api/auth/sign-out route handler; fixed ghost-user stuck-void bug in getCurrentUser.ts (401 + cookies present now force-clears session)
+- 2026-05-10 — Resolved audit findings: C-1 (Cloudinary auth guard), C-2 (BACKEND_URL URL construction), H-1 (proxy cookie via response.cookies), H-2 (updateWithdrawalMethod optional fields), H-4 (cancel reason label), M-1 (removed 10 console.logs), M-3 (logout calls backend), L-1/L-2 (AGENTS.md stale docs); implemented deleteTaskAction (I-1)
+- 2026-05-09 — Withdrawal module implemented: 11 server actions, 13 components, 10 pages/routes, 5 Zod schemas, types, and sidebar link added
+- 2026-05-09 — Deleted api-contract.md; all three agent instruction files (CLAUDE.md, AGENTS.md, copilot-instructions.md) now point to api-contracts/ directory
+- 2026-05-04 — Unified TaskCard: LandingTaskCard renamed/moved to src/components/common/TaskCard.tsx (replaces old card); used in landing, browse, and related tasks; related tasks now fetched from /task/:id/related via getRelatedTasksAction
+- 2026-05-03 — Auth pages redesigned: dark editorial left panel (ticket cards, Instrument Serif headings, orange tokens), warm off-white right form panel; PasswordStrengthMeter added; register password now requires 1 letter + 1 number
+- 2026-05-02 — Landing page redesigned: warm off-white/orange design system, Instrument Serif headings, 7 new section components; Navbar and Footer rewritten globally; all old landing components deleted
 - 2026-05-02 — Added payment result pages (fail, cancel, refunded) and shared _components/paymentPageHelpers.tsx; all payment result pages now redirect based on session status
 - 2026-05-02 — Updated TaskStatus enum (PAYMENT_PROCESSING → PAYMENT_PENDING + PAYMENT_INITIATED); added CLOSED to ApplicationStatus
 - 2026-04-27 — Restructured context files; full directory map updated to reflect payments, wallet, commission-due, application, and profile areas; tasks page confirmed on real API data; mock tasks removed
@@ -10,7 +17,7 @@
 
 A Next.js task-marketplace where users post tasks and workers accept them. This file is the authoritative directory map, tech stack reference, and architectural decision log for AI agents working in this repo.
 
-Before working on anything that touches the backend (API calls, auth flow, types, response shapes), read `api-contract.md` in the repo root.
+Before working on anything that touches the backend (API calls, auth flow, types, response shapes), read the `api-contracts/` directory. Start with `api-contracts/index.md` for an overview, then open the relevant module file. Cross-cutting concerns live in `api-contracts/shared.md`.
 
 ---
 
@@ -63,8 +70,11 @@ src/
 │   ├── globals.css                 # Tailwind v4 base + global styles
 │   ├── not-found.tsx               # 404 page
 │   ├── api/
-│   │   └── cloudinary-signature/
-│   │       └── route.ts            # API route: generates signed Cloudinary upload params
+│   │   ├── cloudinary-signature/
+│   │   │   └── route.ts            # API route: generates signed Cloudinary upload params
+│   │   └── auth/
+│   │       └── sign-out/
+│   │           └── route.ts        # API route: clears auth cookies and redirects to /login (force-logout for ghost users)
 │   ├── (auth)/                     # Auth pages — no shared layout beyond root
 │   │   ├── login/page.tsx
 │   │   ├── register/page.tsx
@@ -141,12 +151,34 @@ src/
 │           │   └── [id]/
 │           │       ├── page.tsx        # Wallet transaction detail
 │           │       └── loading.tsx
-│           └── commission-due/
-│               ├── page.tsx            # Commissions owed to platform
-│               ├── loading.tsx
-│               └── [dueId]/
-│                   ├── page.tsx        # Commission due detail + pay action
-│                   └── loading.tsx
+│           ├── commission-due/
+│           │   ├── page.tsx            # Commissions owed to platform
+│           │   ├── loading.tsx
+│           │   └── [dueId]/
+│           │       ├── page.tsx        # Commission due detail + pay action
+│           │       └── loading.tsx
+│           └── withdrawal/
+│               ├── page.tsx            # Redirects to /profile/withdrawal/methods
+│               ├── (tabbed)/
+│               │   ├── layout.tsx      # Mounts <WithdrawalTabNav> + page header
+│               │   ├── methods/
+│               │   │   ├── page.tsx    # Withdrawal methods list (WithdrawalMethodsClient)
+│               │   │   └── loading.tsx
+│               │   └── requests/
+│               │       ├── page.tsx    # Withdrawal requests list; fetches requests + methods + wallet in parallel
+│               │       └── loading.tsx
+│               ├── methods/
+│               │   ├── new/page.tsx    # Create withdrawal method form
+│               │   └── [id]/
+│               │       ├── page.tsx    # Method detail (WithdrawalMethodDetail)
+│               │       ├── loading.tsx
+│               │       └── edit/page.tsx  # Edit method form
+│               └── requests/
+│                   ├── new/page.tsx    # Create withdrawal request; shows info banner if no methods
+│                   └── [id]/
+│                       ├── page.tsx    # Request detail (WithdrawalRequestDetail)
+│                       ├── loading.tsx
+│                       └── edit/page.tsx  # Edit request (PENDING guard at page level)
 │
 ├── actions/                        # Server Actions — "use server", one action per file
 │   ├── auth/
@@ -170,20 +202,33 @@ src/
 │   ├── task/
 │   │   ├── applyTaskAction.ts
 │   │   ├── approveCompletionAction.ts
+│   │   ├── deleteTaskAction.ts     # DELETE /task/delete-task/:taskId — soft-delete owned task
 │   │   ├── markTaskCompletedAction.ts
 │   │   ├── markTaskInProgressAction.ts
 │   │   ├── requestRevisionAction.ts
-│   │   └── taskAction.ts           # Post task, edit task, delete task, get tasks
+│   │   └── taskAction.ts           # Post task, edit task, get tasks
 │   ├── user/
 │   │   ├── getPublicProfileAction.ts
 │   │   └── userAction.ts           # Update profile, complete profile, change password, avatar
-│   └── wallet/
-│       ├── getCommissionDueAction.ts
-│       ├── getCommissionsDueAction.ts
-│       ├── getMyWalletAction.ts
-│       ├── getWalletTransactionAction.ts
-│       ├── getWalletTransactionsAction.ts
-│       └── payCommissionDueAction.ts
+│   ├── wallet/
+│   │   ├── getCommissionDueAction.ts
+│   │   ├── getCommissionsDueAction.ts
+│   │   ├── getMyWalletAction.ts
+│   │   ├── getWalletTransactionAction.ts
+│   │   ├── getWalletTransactionsAction.ts
+│   │   └── payCommissionDueAction.ts
+│   └── withdrawal/
+│       ├── getWithdrawalMethodsAction.ts   # GET /withdrawal/my-methods (paginated + filterable)
+│       ├── getWithdrawalMethodAction.ts    # GET /withdrawal/my-methods/:id
+│       ├── createWithdrawalMethodAction.ts # POST /withdrawal/my-methods
+│       ├── updateWithdrawalMethodAction.ts # PATCH /withdrawal/my-methods/:id
+│       ├── setDefaultWithdrawalMethodAction.ts # PATCH /withdrawal/my-methods/:id/set-default
+│       ├── deleteWithdrawalMethodAction.ts # DELETE /withdrawal/my-methods/:id
+│       ├── getWithdrawalRequestsAction.ts  # GET /withdrawal/my-requests (paginated + filterable)
+│       ├── getWithdrawalRequestAction.ts   # GET /withdrawal/my-requests/:id
+│       ├── createWithdrawalRequestAction.ts # POST /withdrawal/my-requests
+│       ├── editWithdrawalRequestAction.ts  # PATCH /withdrawal/my-requests/:id
+│       └── cancelWithdrawalRequestAction.ts # PATCH /withdrawal/my-requests/:id/cancel
 │
 ├── lib/
 │   ├── config.ts                   # env + cookieConfig — SERVER-ONLY (imports server-only)
@@ -227,12 +272,19 @@ src/
 │   │   ├── Footer.tsx
 │   │   └── NavigationProgress.tsx  # Top loading bar during client-side navigation
 │   ├── common/
-│   │   └── TaskCard.tsx            # Reusable task card (used in both browse and profile views)
-│   ├── landing/                    # Landing page section components
+│   │   └── TaskCard.tsx            # Unified task card (warm DS style) — used in landing, browse, and related tasks
+│   ├── landing/                    # Landing page section components (redesigned 2026-05-02)
+│   │   ├── hero/HeroSlider.tsx         # 5-slide hero carousel (client)
+│   │   ├── howItWorks/HowItWorks.tsx   # Dark card with poster/helper tabs (client)
+│   │   ├── recentTasks/RecentTasks.tsx # Recently posted tasks, fetches /task/recently-posted (server)
+│   │   ├── categories/Categories.tsx   # 6-category grid linking to /tasks (server)
+│   │   ├── testimonials/Testimonials.tsx   # 3-quote testimonials (server)
+│   │   ├── faq/FAQ.tsx                 # 2-column FAQ accordion with shadcn Accordion (client)
+│   │   └── cta/CTAStrip.tsx            # Dark CTA strip at bottom of landing (server)
 │   ├── about/                      # About page section components
 │   ├── howItWorks/                 # How It Works page section components
 │   ├── login/                      # LoginForm, LoginFormContainer, LoginLeftSection
-│   ├── register/                   # RegisterForm, RegisterFormContainer, RegisterLeftSection
+│   ├── register/                   # RegisterForm, RegisterFormContainer, RegisterLeftSection, PasswordStrengthMeter
 │   ├── forgot-password/            # ForgotPasswordForm, container, left section
 │   ├── reset-password/             # ResetPasswordForm, container, left section
 │   ├── verify-email/               # VerifyEmailCheck, VerifyEmailPrompt
@@ -257,7 +309,22 @@ src/
 │       ├── tasks/                  # My tasks management components (owner view)
 │       ├── payments/               # Payment history components
 │       ├── wallet/                 # Wallet + transaction components
-│       └── commission-due/         # Commission due management components
+│       ├── commission-due/         # Commission due management components
+│       └── withdrawal/
+│           ├── WithdrawalTabNav.tsx            # Tab nav: Methods / Requests (client, usePathname)
+│           ├── WithdrawalStatusBadge.tsx       # Status badge for all 5 withdrawal statuses
+│           ├── methods/
+│           │   ├── WithdrawalMethodCard.tsx    # Compact method card (server) — links to detail
+│           │   ├── WithdrawalMethodsClient.tsx # List client: filter, sort, pagination, empty state
+│           │   ├── WithdrawalMethodDetail.tsx  # Full detail view with Set Default / Edit / Delete actions
+│           │   ├── WithdrawalMethodForm.tsx    # Reusable create/edit form; bank fields shown conditionally
+│           │   └── DeleteWithdrawalMethodDialog.tsx  # AlertDialog; handles "has pending requests" 400 error
+│           └── requests/
+│               ├── WithdrawalRequestCard.tsx   # Compact request card (server) — amount, status, method, date
+│               ├── WithdrawalRequestsClient.tsx # List client: wallet balance display, status filter, sort, pagination
+│               ├── WithdrawalRequestDetail.tsx  # Full detail view; rejection/cancellation info; PENDING-only actions
+│               ├── WithdrawalRequestForm.tsx    # Reusable create/edit form; method selector hidden in edit mode
+│               └── CancelWithdrawalRequestDialog.tsx # AlertDialog with optional reason textarea
 │
 ├── providers/
 │   └── AuthProvider.tsx            # Client context — holds LoggedinUser | null state
@@ -273,7 +340,12 @@ src/
 │   ├── postTaskValidation.ts
 │   ├── applyTaskValidation.ts
 │   ├── rejectApplicationValidation.ts
-│   └── withdrawApplicationValidation.ts
+│   ├── withdrawApplicationValidation.ts
+│   ├── createWithdrawalMethodValidation.ts   # BANK cross-field rule: bankName required when methodType=BANK
+│   ├── updateWithdrawalMethodValidation.ts   # All fields optional; at least one required
+│   ├── createWithdrawalRequestValidation.ts  # withdrawalMethodId + amount (min 10) + note?
+│   ├── editWithdrawalRequestValidation.ts    # amount? + note?; at least one required
+│   └── cancelWithdrawalRequestValidation.ts  # cancellationReason? (max 500)
 │
 ├── content/
 │   ├── privacy-policy.md           # Content for /privacy, rendered by <MarkdownArticle>
@@ -441,7 +513,7 @@ Key enums (all `const` objects `as const`):
 
 - `TaskPriority`: `LOW | MEDIUM | HIGH | URGENT`
 - `TaskCategory`: `DELIVERY | CLEANING | REPAIR | TUTORING | GARDENING | MOVING | PET_CARE | TECH_SUPPORT | OTHER`
-- `TaskStatus`: `DRAFT | OPEN | ASSIGNED | IN_PROGRESS | PENDING_REVIEW | PAYMENT_PROCESSING | COMPLETED | PAYMENT_FAILED | DISPUTED | CANCELLED | EXPIRED | REFUNDED`
+- `TaskStatus`: `DRAFT | OPEN | ASSIGNED | IN_PROGRESS | PENDING_REVIEW | PAYMENT_PENDING | PAYMENT_INITIATED | COMPLETED | PAYMENT_FAILED | DISPUTED | CANCELLED | EXPIRED | REFUNDED`
 - `ApplicationStatus`: `PENDING | APPROVED | REJECTED | WITHDRAWN`
 - `PaymentMethod`: `ONLINE | CASH`
 - `PaymentStatus`: `PENDING | COMPLETED | FAILED | CANCELLED | REFUNDED`
@@ -450,6 +522,8 @@ Key enums (all `const` objects `as const`):
 - `WalletTransactionType`: `CREDIT | DEBIT`
 - `WalletTransactionCategory`: `TASK_PAYMENT | DIRECT_COMMISSION_DEDUCTION | COMMISSION_PAYMENT | WITHDRAWAL | REFUND | ADJUSTMENT`
 - `WalletTransactionStatus`: `PENDING | COMPLETED | FAILED | REVERSED`
+- `WithdrawalStatus`: `PENDING | APPROVED | COMPLETED | REJECTED | CANCELLED`
+- `WithdrawalMethodType`: `BANK | MOBILE_BANKING`
 
 Key type notes:
 
@@ -469,12 +543,13 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **Auth page layout:** `<main className="h-screen flex">` — left branding (`hidden lg:flex lg:w-1/2`) fixed at viewport height; right form (`w-full lg:w-1/2 overflow-y-auto`) scrolls internally.
 - **Animations:** Framer Motion for complex sequences; `tw-animate-css` for CSS-only transitions.
 - **Markdown pages:** `<MarkdownArticle>` (`src/components/ui/MarkdownArticle.tsx`) renders `.md` files from `src/content/`.
-- **Images:** Only `images.unsplash.com` is whitelisted in `next.config.ts`. Add new hosts there if needed.
+- **Images:** `images.unsplash.com` and `res.cloudinary.com` are whitelisted in `next.config.ts`. Add new hosts there if needed.
 
 ---
 
 ## Architectural Decisions
 
+- **Auth page design system:** Login/register pages use the same warm off-white/orange tokens as the landing page. Left panel is dark (`bg-ds-ink`) with editorial ticket cards and Instrument Serif headings; right panel is `bg-ds-bg` with no Card wrapper. Submit buttons styled via CSS descendant selector override on the container `[&_button[type=submit]]:*`.
 - **Frontend-only architecture:** All persistence delegated to a separate backend API at `BACKEND_URL`. This frontend never writes to a database directly.
 - **HTTP-only cookie auth:** JWT tokens stored in HTTP-only cookies (not localStorage) to prevent XSS token theft. Refresh handled in Next.js middleware before requests reach Server Components.
 - **`x-refreshed-access-token` header:** On token refresh, middleware forwards the new token as a response header so Server Components can use it within the same request cycle before the cookie propagates to the client.
@@ -483,6 +558,8 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **React cache for `getCurrentUser()`:** Deduplicated per request — multiple Server Components on the same page call it without extra network requests.
 - **`const enum` forbidden:** `isolatedModules: true` in tsconfig. All enums are `const` objects `as const`.
 - **Onboarding gating:** `/post-task` and `/my-tasks` require verified email + complete profile (checked in middleware via `isOnboardingGatedRoute`), in addition to role protection.
+- **Landing page design system (2026-05-02):** Full redesign to warm off-white (#fafaf7) background, orange (#f97316) accent, Instrument Serif headings. Design tokens added to `globals.css` `@theme inline` block as `--color-ds-*` (prefixed to avoid conflict with shadcn's `--accent` and other variables). Navbar and Footer rewritten globally to match — warm glass navbar replaces previous dark/blue scheme. `TaskCard` in `src/components/common/TaskCard.tsx` is the single unified card (warm DS style) used across landing, browse, and related tasks sections.
 - **Cloudinary for image uploads:** Task images and avatars are uploaded directly from the client via a signed Cloudinary widget. The signature is generated server-side at `src/app/api/cloudinary-signature/route.ts`.
 - **URL-state for task browser:** Filters, sort, and pagination for `/tasks` are stored in URL search params — enables server-side rendering and shareable URLs without client state.
 - **shadcn/ui mandatory first:** Custom UI components are only created when a shadcn component does not exist for the use case.
+- **Withdrawal module (2026-05-09):** Uses the `(tabbed)` route-group pattern (matching payments) for the Methods / Requests list views. Create/edit/detail operations use dedicated pages outside the tabbed group (no tab nav on those pages). PENDING-only guard for edit/cancel is enforced at the page level (shows an error block if status ≠ PENDING) — not just by hiding buttons. `amount` fields are typed `string` (Decimal) from the API and parsed to `number` only inside form components before validation. Delete is blocked gracefully when pending requests exist — the 400 error is caught and shown as a Sonner toast without re-opening the dialog.

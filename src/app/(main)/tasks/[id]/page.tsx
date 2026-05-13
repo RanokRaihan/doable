@@ -1,4 +1,4 @@
-import { getTaskAction } from "@/actions/task/taskAction";
+import { getRelatedTasksAction, getTaskAction } from "@/actions/task/taskAction";
 import { RelatedTasksSection } from "@/components/tasks/detail/RelatedTasksSection";
 import { SafetyCard } from "@/components/tasks/detail/SafetyCard";
 import { TaskInfoCard } from "@/components/tasks/detail/TaskInfoCard";
@@ -16,9 +16,10 @@ interface PageProps {
 
 export default async function TaskDetailsPage({ params }: PageProps) {
   const { id } = await params;
-  const [result, user] = await Promise.all([
+  const [result, user, relatedResult] = await Promise.all([
     getTaskAction(id),
     getCurrentUser(),
+    getRelatedTasksAction(id),
   ]);
 
   if (!result.success || !("data" in result)) {
@@ -31,6 +32,7 @@ export default async function TaskDetailsPage({ params }: PageProps) {
   }
 
   const task = result.data;
+  const relatedTasks = relatedResult.success && "data" in relatedResult ? (relatedResult.data ?? []) : [];
 
   return (
     <div className="min-h-screen bg-gray-50/50 pt-20">
@@ -75,7 +77,7 @@ export default async function TaskDetailsPage({ params }: PageProps) {
           </div>
         </div>
 
-        <RelatedTasksSection />
+        <RelatedTasksSection tasks={relatedTasks} />
       </div>
     </div>
   );

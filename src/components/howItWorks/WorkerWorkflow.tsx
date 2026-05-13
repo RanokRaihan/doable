@@ -52,32 +52,28 @@ export const WorkerWorkflow = () => {
   return (
     <section
       id="worker-workflow"
-      className="relative overflow-hidden bg-gray-50 py-24"
+      className="relative overflow-hidden bg-ds-bg-2 py-24"
     >
-      {/* Subtle background accent */}
-      <div className="absolute -top-32 right-0 h-64 w-64 rounded-full bg-emerald-400 opacity-5 blur-[100px]" />
-      <div className="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-teal-400 opacity-5 blur-[100px]" />
-
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1360 }}>
         <AnimatedSection direction="up" className="mb-16 text-center">
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-600">
+          <span className="mb-4 inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-ds-orange-ink bg-ds-orange-soft px-3 py-2 rounded-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-ds-orange" />
             For Workers
           </span>
-          <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2
+            className="mx-auto mt-4 max-w-2xl font-serif font-normal leading-[1.05] tracking-tight text-ds-ink"
+            style={{ fontSize: "clamp(28px, 3vw, 48px)" }}
+          >
             Turn your free time into{" "}
-            <span className="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              real income
-            </span>
+            <em className="italic text-ds-orange">real income</em>
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-xl text-[17px] text-ds-ink-2">
             The feed looks like Instagram. The offers feel like a chat. The pay
             hits like a paycheck. No shifts, no bosses — just you choosing your
             work.
           </p>
         </AnimatedSection>
 
-        {/* Steps grid */}
         <AnimatedSection stagger staggerDelay={0.1}>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {workerSteps.map((step, i) => (
@@ -87,7 +83,7 @@ export const WorkerWorkflow = () => {
                   icon={step.icon}
                   title={step.title}
                   description={step.description}
-                  accentColor="green"
+                  accentColor="orange"
                   className="h-full"
                 />
               </AnimatedItem>
@@ -95,7 +91,6 @@ export const WorkerWorkflow = () => {
           </div>
         </AnimatedSection>
 
-        {/* Social proof mini-stat strip */}
         <AnimatedSection direction="up" delay={0.2}>
           <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[
@@ -105,12 +100,14 @@ export const WorkerWorkflow = () => {
             ].map(({ value, label }) => (
               <div
                 key={label}
-                className="rounded-2xl border border-emerald-100 bg-white px-6 py-5 text-center shadow-md shadow-emerald-500/5"
+                className="rounded-2xl border border-ds-line bg-white px-6 py-5 text-center"
+                style={{
+                  boxShadow:
+                    "0 1px 0 rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.04)",
+                }}
               >
-                <p className="text-3xl font-extrabold text-emerald-600">
-                  {value}
-                </p>
-                <p className="mt-1 text-sm text-gray-500">{label}</p>
+                <p className="text-3xl font-semibold text-ds-orange">{value}</p>
+                <p className="mt-1 text-[13px] text-ds-ink-3">{label}</p>
               </div>
             ))}
           </div>

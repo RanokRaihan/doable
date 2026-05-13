@@ -40,7 +40,7 @@ npm run lint     # Run ESLint
 
 ## API / Type Questions
 
-Before touching anything that calls the backend, read `api-contract.md` in the repo root. It is the source of truth for endpoint paths, request/response shapes, shared enums, and cookie behavior.
+Before touching anything that calls the backend, read the `api-contracts/` directory in the repo root. Start with `api-contracts/index.md` for an overview, then read the relevant module file (`api-contracts/api-contract-auth.md`, `api-contracts/api-contract-task.md`, etc.). These files are the source of truth for endpoint paths, request/response shapes, shared enums, and cookie behavior. Cross-cutting concerns (error shapes, pagination, Decimal gotchas) are in `api-contracts/shared.md`.
 
 For all domain types, see `src/lib/types.ts`. For auth types, see `src/lib/types/auth/index.ts`.
 

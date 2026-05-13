@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import {
+  ArrowDownToLine,
   ChevronDown,
   ClipboardList,
   CreditCard,
@@ -33,6 +34,7 @@ const navItems = [
   { label: "Applications", href: "/profile/applications", icon: FileText },
   { label: "Reviews", href: "/profile/reviews", icon: Star },
   { label: "Wallet", href: "/profile/wallet", icon: Wallet },
+  { label: "Withdrawal", href: "/profile/withdrawal", icon: ArrowDownToLine },
   { label: "Payments", href: "/profile/payments", icon: CreditCard },
   { label: "Commission Due", href: "/profile/commission-due", icon: Receipt },
   {

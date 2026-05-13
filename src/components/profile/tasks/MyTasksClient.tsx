@@ -13,6 +13,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import deleteTaskAction from "@/actions/task/deleteTaskAction";
 import { MyTaskCard } from "@/components/profile/tasks/MyTaskCard";
 import { TaskPagination } from "@/components/tasks/TaskPagination";
 import { TaskSearch } from "@/components/tasks/TaskSearch";
@@ -143,12 +144,20 @@ export function MyTasksClient({
   const handleDeleteConfirm = async () => {
     if (!deleteTargetId) return;
     setIsDeleting(true);
-    try {
-      // TODO: wire up deleteTaskAction when available
-      toast.info("Delete functionality coming soon.");
-    } finally {
-      setIsDeleting(false);
-      setDeleteTargetId(null);
+    const result = await deleteTaskAction(deleteTargetId);
+    setIsDeleting(false);
+    setDeleteTargetId(null);
+    if (result.success) {
+      toast.success("Task deleted successfully.");
+      router.refresh();
+    } else {
+      toast.error(
+        "errorSources" in result && result.errorSources?.[0]?.message
+          ? result.errorSources[0].message
+          : "message" in result
+            ? result.message
+            : "Failed to delete task.",
+      );
     }
   };
 

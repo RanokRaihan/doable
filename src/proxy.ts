@@ -14,7 +14,6 @@ import {
   isOnboardingGatedRoute,
 } from "@/lib/auth/routes-utils";
 import { NextRequest, NextResponse } from "next/server";
-import { setCookie } from "./actions/common/cookie";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -114,10 +113,14 @@ export async function proxy(request: NextRequest) {
     }
 
     if (!userRole || !requiredRoles.includes(userRole)) {
-      await setCookie("unauthorizedAttempt", "true", { maxAge: 60 });
-      return withRefreshedCookies(
-        NextResponse.redirect(new URL("/unauthorized", request.url)),
+      const response = NextResponse.redirect(
+        new URL("/unauthorized", request.url),
       );
+      response.cookies.set("unauthorizedAttempt", "true", {
+        maxAge: 60,
+        path: "/",
+      });
+      return withRefreshedCookies(response);
     }
 
     // ─── Onboarding gate (after role check passes) ───
