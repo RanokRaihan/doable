@@ -12,6 +12,7 @@ import { useAppForm } from "../form/hooks";
 import ServerErrorDisplay from "../form/ServerErrorDisplay";
 import { Button } from "../ui/button";
 import { FieldGroup } from "../ui/field";
+import PasswordStrengthMeter from "./PasswordStrengthMeter";
 
 type FormData = z.infer<typeof RegisterSchema>;
 
@@ -104,7 +105,14 @@ const RegisterForm = ({ callbackUrl }: { callbackUrl?: string }) => {
         </form.AppField>
 
         <form.AppField name="password">
-          {(field) => <field.PasswordInput showForgotPassword={false} />}
+          {(field) => (
+            <>
+              <field.PasswordInput showForgotPassword={false} />
+              <form.Subscribe selector={(state) => state.values.password}>
+                {(pw) => <PasswordStrengthMeter password={pw} />}
+              </form.Subscribe>
+            </>
+          )}
         </form.AppField>
 
         <form.AppField name="confirmPassword">

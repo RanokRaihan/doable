@@ -32,7 +32,6 @@ export function ApplyTaskDialog({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  console.log("Base compensation for task:", baseCompensation);
   const form = useAppForm({
     defaultValues: {
       message: "",
@@ -45,7 +44,6 @@ export function ApplyTaskDialog({
       const result = await applyTaskAction(taskId, value);
       if (!result.success) {
         const error = result as BackendError;
-        console.log("Application submission error:", error);
         if (error.errorSources && error?.errorSources?.length > 0) {
           setServerError(error.errorSources[0].message);
         } else {

@@ -1,104 +1,130 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, ClipboardList, ShieldCheck, Users } from "lucide-react";
-import Link from "next/link";
+"use client";
 
-const steps = [
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
+const POSTER_STEPS = [
   {
-    icon: ClipboardList,
-    title: "1. Post your task",
-    description:
-      "Tell us what you need done, when you need it, and your budget. It's free to post and takes less than 2 minutes.",
-    gradient: "from-blue-500 to-indigo-500",
-    iconColor: "text-blue-600", // Added specific text color for the icon
+    num: "01",
+    title: "Describe your task",
+    body: "Tell us what needs doing, when, and where. A photo helps. Most posts take under a minute to write.",
   },
   {
-    icon: Users,
-    title: "2. Review offers",
-    description:
-      "Get offers from skilled helpers nearby. Compare their profiles, ratings, and prices to choose the best fit.",
-    gradient: "from-purple-500 to-pink-500",
-    iconColor: "text-purple-600",
+    num: "02",
+    title: "Pick your helper",
+    body: "Vetted neighbors apply with a short intro and their price. Compare ratings, pick the one that fits.",
   },
   {
-    icon: ShieldCheck,
-    title: "3. Doable",
-    description:
-      "Your payment is held securely in escrow. Only release the funds once you are 100% satisfied with the work.",
-    gradient: "from-emerald-500 to-teal-500",
-    iconColor: "text-emerald-600",
+    num: "03",
+    title: "Pay when it's done",
+    body: "Funds sit in escrow until you confirm. Tap done, leave a review, and you're set until next time.",
   },
 ];
 
-const HowItWorks = () => {
+const HELPER_STEPS = [
+  {
+    num: "01",
+    title: "Find a task you're good at",
+    body: "Filter by category, distance, and pay. New tasks drop every minute, so check back often.",
+  },
+  {
+    num: "02",
+    title: "Apply in 30 seconds",
+    body: "Send a short intro and your price. Best fit wins — no bidding wars, no race-to-the-bottom.",
+  },
+  {
+    num: "03",
+    title: "Show up, get paid",
+    body: "Do the task, mark it complete, get paid in minutes. Build a profile that lands you the next gig.",
+  },
+];
+
+export default function HowItWorks() {
+  const [mode, setMode] = useState<"poster" | "helper">("poster");
+  const steps = mode === "poster" ? POSTER_STEPS : HELPER_STEPS;
+
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-20">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            How it works
-          </h2>
-          <p className="text-lg text-gray-600">
-            Getting help shouldn&apos;t be complicated. We&apos;ve streamlined
-            the process to be fast, safe, and transparent.
-          </p>
-        </div>
-
-        {/* Steps Grid */}
-        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-          {/* Decorative Connecting Line (Desktop Only) */}
-          <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-linear-to-r from-gray-200 via-blue-200 to-gray-200 -z-10"></div>
-
-          {steps.map((step, index) => (
-            <div key={index} className="relative group">
-              {/* Step Icon */}
-              <div className="relative mx-auto w-24 h-24 mb-8">
-                {/* Glowing background effect */}
-                <div
-                  className={`absolute inset-0 rounded-full bg-linear-to-br ${step.gradient} opacity-10 blur-xl group-hover:opacity-30 transition-opacity duration-500`}
-                ></div>
-
-                <div className="relative w-full h-full bg-white rounded-full border border-gray-100 shadow-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
-                  {/* FIX: Use standard text color instead of bg-clip-text */}
-                  <step.icon
-                    size={36}
-                    className={step.iconColor}
-                    strokeWidth={1.5}
-                  />
-                </div>
-
-                {/* Step Number Badge */}
-                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm  shadow-sm">
-                  {index + 1}
-                </div>
+    <section className="py-24 bg-ds-bg" id="how">
+      <div className="mx-auto px-8" style={{ maxWidth: 1360 }}>
+        <div
+          className="rounded-3xl px-7 py-14 md:px-16 md:py-20"
+          style={{ background: "#0f172a", color: "#fafaf7" }}
+        >
+          {/* Header */}
+          <div className="flex justify-between items-end gap-8 flex-wrap">
+            <div>
+              <div
+                className="text-[12px] font-medium uppercase tracking-[0.18em] mb-3.5"
+                style={{ color: "rgba(250,250,247,0.6)" }}
+              >
+                How it works
               </div>
-
-              {/* Text Content */}
-              <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
-                {step.title.split(". ")[1]}
-              </h3>
-              <p className="text-gray-600 leading-relaxed px-4">
-                {step.description}
-              </p>
+              <h2
+                className="font-serif font-normal leading-[1.05] tracking-tight m-0"
+                style={
+                  {
+                    fontSize: "clamp(34px, 4vw, 52px)",
+                    color: "#fafaf7",
+                    textWrap: "balance",
+                  } as React.CSSProperties
+                }
+              >
+                One account.{" "}
+                <em className="italic" style={{ color: "#fdba74" }}>
+                  Both sides
+                </em>{" "}
+                of the table.
+              </h2>
             </div>
-          ))}
-        </div>
+            {/* Tabs */}
+            <div
+              className="inline-flex p-1 rounded-full"
+              style={{ background: "rgba(250,250,247,0.08)" }}
+            >
+              {(["poster", "helper"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setMode(tab)}
+                  className={cn(
+                    "px-4.5 py-2 rounded-full text-[13px] font-medium border-0 cursor-pointer transition-all",
+                    mode === tab ? "bg-ds-bg text-ds-ink" : "bg-transparent",
+                  )}
+                  style={mode !== tab ? { color: "rgba(250,250,247,0.7)" } : {}}
+                >
+                  {tab === "poster" ? "I'm posting" : "I'm helping"}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-20 text-center">
-          <Button size="lg" variant="default" asChild>
-            <Link href="/post-task">
-              Start your first task
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </Button>
-          <p className="mt-4 text-sm text-gray-500">
-            No credit card required to post a task.
-          </p>
+          {/* Steps grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-14">
+            {steps.map((step) => (
+              <div
+                key={step.num}
+                className="border-t pt-6"
+                style={{ borderColor: "rgba(250,250,247,0.18)" }}
+              >
+                <div className="font-serif italic text-[56px] leading-none text-ds-orange mb-7">
+                  {step.num}
+                </div>
+                <h3
+                  className="text-[20px] font-semibold leading-snug tracking-tight m-0 mb-2.5"
+                  style={{ color: "#fafaf7" }}
+                >
+                  {step.title}
+                </h3>
+                <p
+                  className="text-[15px] m-0 leading-relaxed"
+                  style={{ color: "rgba(250,250,247,0.7)" }}
+                >
+                  {step.body}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default HowItWorks;
+}

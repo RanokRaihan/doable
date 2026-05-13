@@ -1,21 +1,21 @@
-import BecomeHelper from "@/components/landing/becomeHelper/BecomeHelper";
-import CategoryGrid from "@/components/landing/category/CategoryGrid";
-import FAQ from "@/components/landing/FAQ/FAQ";
-import Hero from "@/components/landing/hero/HeroSection";
+import CTAStrip from "@/components/landing/cta/CTAStrip";
+import Categories from "@/components/landing/categories/Categories";
+import FAQ from "@/components/landing/faq/FAQ";
+import HeroSlider from "@/components/landing/hero/HeroSlider";
 import HowItWorks from "@/components/landing/howItWorks/HowItWorks";
-import LiveFeed from "@/components/landing/liveFeed/LiveFeed";
-import Testimonials from "@/components/landing/testimonial/Testimonials";
+import RecentTasks from "@/components/landing/recentTasks/RecentTasks";
+import Testimonials from "@/components/landing/testimonials/Testimonials";
 
 export default function Home() {
   return (
-    <main>
-      <Hero />
+    <main className="bg-ds-bg">
+      <HeroSlider />
       <HowItWorks />
-      <LiveFeed />
-      <CategoryGrid />
+      <RecentTasks />
+      <Categories />
       <Testimonials />
       <FAQ />
-      <BecomeHelper />
+      <CTAStrip />
     </main>
   );
 }

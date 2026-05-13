@@ -37,7 +37,8 @@ export async function refreshTokens(
   refreshToken: string,
 ): Promise<RefreshedTokens | null> {
   try {
-    const response = await fetch(`${env.backendUrl}api/v1/auth/refresh-token`, {
+    const url = new URL("api/v1/auth/refresh-token", env.backendUrl).toString();
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

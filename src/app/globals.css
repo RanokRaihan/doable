@@ -9,6 +9,19 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  /* Design system tokens */
+  --color-ds-bg: #fafaf7;
+  --color-ds-bg-2: #f2f1ec;
+  --color-ds-ink: #0f172a;
+  --color-ds-ink-2: #475569;
+  --color-ds-ink-3: #94a3b8;
+  --color-ds-line: #e7e5df;
+  --color-ds-line-2: #d8d6cf;
+  --color-ds-orange: #f97316;
+  --color-ds-orange-ink: #c2410c;
+  --color-ds-orange-soft: #fff1e6;
+  --color-ds-green: #10b981;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -113,6 +126,11 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.408 0.123 38.172);
+}
+
+@utility container {
+  margin-inline: auto;
+  max-width: 1360px;
 }
 
 @layer base {

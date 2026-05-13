@@ -40,7 +40,6 @@ type Props = Pick<
 >;
 
 export default function UpdateInformationForm(props: Props) {
-  console.log("Initial form values:", props); // Debug log to check initial values
   const [serverError, setServerError] = useState<string | null>(null);
   const { refreshUser } = useAuth();
 

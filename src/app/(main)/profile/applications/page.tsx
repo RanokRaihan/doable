@@ -47,7 +47,6 @@ export default async function ApplicationsPage({ searchParams }: PageProps) {
       </div>
     );
   }
-  console.log("applications result: ", result.data[0].task);
   const { data: applications, meta } = result as ApplicationsResponse;
   const currentFilters = { page, limit, sortBy, sortOrder, status };
 

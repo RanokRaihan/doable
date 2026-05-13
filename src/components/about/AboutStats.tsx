@@ -1,58 +1,24 @@
 "use client";
 
 import { AnimatedSection } from "@/components/howItWorks/AnimatedSection";
-import { cn } from "@/lib/utils";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 const stats = [
-  {
-    value: 50_000,
-    suffix: "+",
-    label: "Tasks completed",
-    color: "text-blue-600",
-  },
-  {
-    value: 12_000,
-    suffix: "+",
-    label: "Active community members",
-    color: "text-purple-600",
-  },
-  {
-    value: 4.9,
-    suffix: "★",
-    label: "Average platform rating",
-    color: "text-amber-500",
-  },
-  {
-    value: 95,
-    suffix: "%",
-    label: "Tasks completed on time",
-    color: "text-emerald-600",
-  },
+  { value: 50_000, suffix: "+", label: "Tasks completed" },
+  { value: 12_000, suffix: "+", label: "Active community members" },
+  { value: 4.9, suffix: "★", label: "Average platform rating" },
+  { value: 95, suffix: "%", label: "Tasks completed on time" },
 ];
 
-const CountUp = ({
-  value,
-  suffix,
-  color,
-}: {
-  value: number;
-  suffix: string;
-  color: string;
-}) => {
+const CountUp = ({ value, suffix }: { value: number; suffix: string }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
-
-  // Determine display precision based on whether it contains a decimal
   const isDecimal = value % 1 !== 0;
   const displayValue = isDecimal ? value.toFixed(1) : value.toLocaleString();
 
   return (
-    <span
-      ref={ref}
-      className={cn("text-4xl font-extrabold sm:text-5xl", color)}
-    >
+    <span ref={ref} className="text-4xl font-semibold text-ds-orange sm:text-5xl">
       {inView ? (
         <motion.span
           initial={{ opacity: 0, y: 12 }}
@@ -74,16 +40,17 @@ const CountUp = ({
 
 export const AboutStats = () => {
   return (
-    <section className="relative overflow-hidden bg-white py-24">
-      {/* Subtle blob */}
-      <div className="absolute left-1/2 top-0 h-64 w-lg -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-200 opacity-10 blur-[120px]" />
-
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-ds-bg py-24">
+      <div className="relative mx-auto px-8" style={{ maxWidth: 1360 }}>
         <AnimatedSection direction="up" className="mb-16 text-center">
-          <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-gray-500">
+          <span className="mb-4 inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.14em] text-ds-orange-ink bg-ds-orange-soft px-3 py-2 rounded-full">
+            <span className="w-1.5 h-1.5 rounded-full bg-ds-orange" />
             By The Numbers
           </span>
-          <h2 className="mx-auto mt-4 max-w-2xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2
+            className="mx-auto mt-4 max-w-2xl font-serif font-normal leading-[1.05] tracking-tight text-ds-ink"
+            style={{ fontSize: "clamp(28px, 3vw, 48px)" }}
+          >
             Real impact, real community
           </h2>
         </AnimatedSection>
@@ -92,14 +59,14 @@ export const AboutStats = () => {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-lg shadow-gray-200/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="rounded-2xl border border-ds-line bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1"
+              style={{
+                boxShadow:
+                  "0 1px 0 rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.04)",
+              }}
             >
-              <CountUp
-                value={stat.value}
-                suffix={stat.suffix}
-                color={stat.color}
-              />
-              <p className="mt-2 text-sm font-medium text-gray-500">
+              <CountUp value={stat.value} suffix={stat.suffix} />
+              <p className="mt-2 text-[13px] font-medium text-ds-ink-3">
                 {stat.label}
               </p>
             </div>
