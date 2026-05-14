@@ -22,7 +22,7 @@ type Step = "selecting" | "cropping" | "uploading";
 async function uploadToCloudinary(
   file: File,
 ): Promise<{ url: string; publicId: string }> {
-  const sigRes = await fetch("/api/cloudinary-signature");
+  const sigRes = await fetch("/api/cloudinary-signature?type=avatar");
   if (!sigRes.ok) throw new Error("Failed to get upload signature");
   const { signature, timestamp, apiKey, cloudName, folder } =
     await sigRes.json();

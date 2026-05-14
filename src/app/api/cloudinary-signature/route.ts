@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -21,8 +21,12 @@ export async function GET() {
     );
   }
 
+  const type = new URL(request.url).searchParams.get("type");
   const timestamp = Math.round(Date.now() / 1000);
-  const folder = "doable/tasks";
+  const folder =
+    type === "avatar"
+      ? (process.env.CLOUDINARY_AVATAR_FOLDER ?? "doable/avatars")
+      : (process.env.CLOUDINARY_FOLDER ?? "doable/tasks");
 
   // Signature string: all parameters sorted alphabetically + API secret
   const paramsToSign = `folder=${folder}&timestamp=${timestamp}`;
