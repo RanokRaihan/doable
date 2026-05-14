@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import CTAStrip from "@/components/landing/cta/CTAStrip";
 import Categories from "@/components/landing/categories/Categories";
+import CTAStrip from "@/components/landing/cta/CTAStrip";
 import FAQ from "@/components/landing/FAQ/FAQ";
 import HeroSlider from "@/components/landing/hero/HeroSlider";
 import HowItWorks from "@/components/landing/howItWorks/HowItWorks";
 import RecentTasks from "@/components/landing/recentTasks/RecentTasks";
 import Testimonials from "@/components/landing/testimonials/Testimonials";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Doable — Find Help, Get Things Done",
