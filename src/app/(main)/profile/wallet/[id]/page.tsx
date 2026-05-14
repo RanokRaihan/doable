@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ShieldOff, Wallet } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Transaction Detail",
+  description: "View the details of a wallet transaction.",
+};
 
 import getWalletTransactionAction from "@/actions/wallet/getWalletTransactionAction";
 import { WalletTransactionDetail } from "@/components/profile/wallet/WalletTransactionDetail";

@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { ChangePasswordForm } from "@/components/profile/ChangePasswordForm";
 import { KeyRound } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Change Password",
+  description: "Update your Doable account password.",
+};
 
 export default function ChangePasswordPage() {
   return (

@@ -7,9 +7,15 @@ import { AboutValues } from "@/components/about/AboutValues";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us | Doable",
+  title: "About Us",
   description:
-    "Doable is a community-powered task marketplace where everyone can post jobs and pick up work. Learn about our mission, values, story, and the numbers behind the platform.",
+    "Doable is a community-powered task marketplace where anyone can post jobs and pick up work. Learn about our mission, values, story, and the people behind the platform.",
+  openGraph: {
+    title: "About Doable",
+    description:
+      "Learn about our mission, values, and the community-powered marketplace connecting task posters with skilled helpers.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "About Doable" }],
+  },
 };
 
 export default function AboutPage() {

@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { getCookie } from "@/actions/common/cookie";
 import { Button } from "@/components/ui/button";
 import { ShieldX } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Access Denied",
+  description: "You do not have permission to view this page.",
+  robots: { index: false },
+};
 
 export default async function UnauthorizedPage() {
   const unauthorizedAttempt = await getCookie("unauthorizedAttempt");

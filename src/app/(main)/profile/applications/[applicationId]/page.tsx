@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   ArrowLeft,
   Banknote,
@@ -9,6 +10,11 @@ import {
   ShieldOff,
   User,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "My Application",
+  description: "View the details of your task application and available actions.",
+};
 import Link from "next/link";
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";

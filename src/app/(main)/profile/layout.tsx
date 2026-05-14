@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import OnboardingBanner from "@/components/profile/OnboardingBanner";
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default function ProfileLayout({
   children,

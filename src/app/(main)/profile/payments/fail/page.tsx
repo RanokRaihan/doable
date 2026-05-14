@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import getPaymentSessionAction from "@/actions/payment/getPaymentSessionAction";
+
+export const metadata: Metadata = {
+  title: "Payment Failed",
+  description: "Your payment could not be processed. Please try again.",
+};
 import {
   FetchErrorState,
   ParticipantsSection,

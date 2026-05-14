@@ -6,9 +6,15 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Doable",
+  title: "Terms of Service",
   description:
     "Read Doable's Terms of Service to understand your rights and responsibilities when using our task marketplace platform.",
+  openGraph: {
+    title: "Terms of Service | Doable",
+    description:
+      "Understand your rights and responsibilities as a Doable community member.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Doable Terms of Service" }],
+  },
 };
 
 export default function TermsOfServicePage() {

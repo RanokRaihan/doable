@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { getTaskApplicationsAction } from "@/actions/task/applyTaskAction";
+
+export const metadata: Metadata = {
+  title: "Task Applicants",
+  description: "Review and manage applicants for your posted task.",
+};
 import { getMyPostedTaskAction } from "@/actions/task/taskAction";
 import { TaskApplicationsClient } from "@/components/profile/tasks/TaskApplicationsClient";
 import {

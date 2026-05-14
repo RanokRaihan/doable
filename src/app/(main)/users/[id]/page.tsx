@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type {
   PublicReview,
   PublicTask,
@@ -19,6 +20,29 @@ import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const result = await getPublicProfileAction(id);
+  if (!result.success || !("data" in result)) {
+    return { title: "User Not Found" };
+  }
+  const profile = result.data;
+  const description = profile.bio
+    ? profile.bio.slice(0, 150).replace(/\s+\S*$/, "") + "…"
+    : `View ${profile.name}'s tasks and reviews on Doable.`;
+  return {
+    title: profile.name,
+    description,
+    openGraph: {
+      title: `${profile.name} | Doable`,
+      description,
+      images: profile.image
+        ? [{ url: profile.image, width: 400, height: 400, alt: profile.name }]
+        : [{ url: "/og-image.png", width: 1200, height: 630, alt: profile.name }],
+    },
+  };
 }
 
 const STATUS_STYLES: Record<string, string> = {

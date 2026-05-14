@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { getMyPostedTaskAction } from "@/actions/task/taskAction";
+
+export const metadata: Metadata = {
+  title: "Task Details",
+  description: "View and manage your posted task.",
+};
 import { OwnerTaskSidebarCard } from "@/components/profile/tasks/OwnerTaskSidebarCard";
 import { TaskBadges } from "@/components/tasks/detail/TaskBadges";
 import { TaskMetaGrid } from "@/components/tasks/detail/TaskMetaGrid";

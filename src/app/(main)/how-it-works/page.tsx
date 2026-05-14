@@ -8,9 +8,15 @@ import { WorkerWorkflow } from "@/components/howItWorks/WorkerWorkflow";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How It Works | Doable",
+  title: "How It Works",
   description:
-    "Learn how Doable works for both job posters and workers. Post a task in minutes, receive offers, pay with cash or online — and earn money on your own schedule.",
+    "Learn how Doable works for both task posters and helpers. Post a task in minutes, receive offers, pay with cash or online — and earn money on your own schedule.",
+  openGraph: {
+    title: "How Doable Works",
+    description:
+      "Post a task in minutes, receive offers, and pay securely. Or sign up as a helper and earn money on your schedule.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "How Doable Works" }],
+  },
 };
 
 export default function HowItWorksPage() {

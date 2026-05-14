@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 
 import { getMyApplicationsAction } from "@/actions/task/applyTaskAction";
+
+export const metadata: Metadata = {
+  title: "My Applications",
+  description: "Track the tasks you have applied to work on.",
+};
 import { ApplicationsClient } from "@/components/profile/applications/ApplicationsClient";
 import {
   ApplicationSortField,

@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import getMyWalletAction from "@/actions/wallet/getMyWalletAction";
 import getWithdrawalMethodsAction from "@/actions/withdrawal/getWithdrawalMethodsAction";
+
+export const metadata: Metadata = {
+  title: "Edit Withdrawal Request",
+  description: "Update the amount or note on a pending withdrawal request.",
+};
 import getWithdrawalRequestAction from "@/actions/withdrawal/getWithdrawalRequestAction";
 import { WithdrawalRequestForm } from "@/components/profile/withdrawal/requests/WithdrawalRequestForm";
 import { requireAuth } from "@/lib/auth/requireAuth";

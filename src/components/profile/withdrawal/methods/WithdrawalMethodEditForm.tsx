@@ -37,7 +37,8 @@ export function WithdrawalMethodEditForm({
       branchName: defaultValues.branchName ?? "",
       routingNumber: defaultValues.routingNumber ?? "",
     },
-    validators: { onSubmit: updateWithdrawalMethodValidation },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    validators: { onSubmit: updateWithdrawalMethodValidation as any },
     onSubmit: async ({ value }) => {
       setServerError(null);
 

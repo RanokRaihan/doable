@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -12,6 +13,11 @@ import {
   User,
   Wrench,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Payment Detail",
+  description: "View the details of a payment transaction.",
+};
 
 import getPaymentDetailAction from "@/actions/payment/getPaymentDetailAction";
 import { Badge } from "@/components/ui/badge";

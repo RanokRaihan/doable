@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import getPaymentSessionAction from "@/actions/payment/getPaymentSessionAction";
+
+export const metadata: Metadata = {
+  title: "Payment Successful",
+  description: "Your payment was processed successfully.",
+};
 import {
   FetchErrorState,
   ParticipantsSection,

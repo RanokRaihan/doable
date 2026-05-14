@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { getMyProfileAction } from "@/actions/user/userAction";
 import AvatarUploadDialog from "@/components/profile/AvatarUploadDialog";
+
+export const metadata: Metadata = {
+  title: "My Profile",
+  description: "View and manage your Doable profile, avatar, and account details.",
+};
 import { cn } from "@/lib/utils";
 import {
   AlertCircle,

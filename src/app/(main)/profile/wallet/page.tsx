@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 
 import getMyWalletAction from "@/actions/wallet/getMyWalletAction";
+
+export const metadata: Metadata = {
+  title: "My Wallet",
+  description: "View your Doable wallet balance and transaction history.",
+};
 import getWalletTransactionsAction from "@/actions/wallet/getWalletTransactionsAction";
 import { WalletSummaryCard } from "@/components/profile/wallet/WalletSummaryCard";
 import { WalletTransactionsClient } from "@/components/profile/wallet/WalletTransactionsClient";

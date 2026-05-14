@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import getMyWalletAction from "@/actions/wallet/getMyWalletAction";
 import getWithdrawalMethodsAction from "@/actions/withdrawal/getWithdrawalMethodsAction";
+
+export const metadata: Metadata = {
+  title: "New Withdrawal Request",
+  description: "Submit a request to withdraw funds from your Doable wallet.",
+};
 import { WithdrawalRequestForm } from "@/components/profile/withdrawal/requests/WithdrawalRequestForm";
 import { Button } from "@/components/ui/button";
 import { requireAuth } from "@/lib/auth/requireAuth";

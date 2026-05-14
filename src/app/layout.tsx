@@ -25,8 +25,37 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Doable - Helper Marketplace",
-  description: "A marketplace to find helpers for your tasks.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  ),
+  title: {
+    default: "Doable — Find Help, Get Things Done",
+    template: "%s | Doable",
+  },
+  description:
+    "Doable is a community-powered task marketplace. Post tasks, hire trusted local helpers, or earn money doing work on your own schedule.",
+  openGraph: {
+    type: "website",
+    siteName: "Doable",
+    title: "Doable — Find Help, Get Things Done",
+    description:
+      "Post tasks, hire trusted local helpers, or earn money doing work on your own schedule.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Doable — Task Marketplace",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Doable — Find Help, Get Things Done",
+    description:
+      "Post tasks, hire trusted local helpers, or earn money doing work on your own schedule.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default async function RootLayout({

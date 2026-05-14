@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -10,6 +11,11 @@ import {
   User,
   Wrench,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Commission Detail",
+  description: "View and pay a commission owed to the Doable platform.",
+};
 
 import getCommissionDueAction from "@/actions/wallet/getCommissionDueAction";
 import { Badge } from "@/components/ui/badge";

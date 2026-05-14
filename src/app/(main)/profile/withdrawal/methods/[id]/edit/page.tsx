@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import getWithdrawalMethodAction from "@/actions/withdrawal/getWithdrawalMethodAction";
+
+export const metadata: Metadata = {
+  title: "Edit Withdrawal Method",
+  description: "Update your bank or mobile banking withdrawal method.",
+};
 import { WithdrawalMethodEditForm } from "@/components/profile/withdrawal/methods/WithdrawalMethodEditForm";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { WithdrawalMethodResponse } from "@/lib/types";

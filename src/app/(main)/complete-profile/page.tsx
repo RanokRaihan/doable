@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import CompleteProfileForm from "@/components/profile/CompleteProfileForm";
 import { requireAuth } from "@/lib/auth/requireAuth";
+
+export const metadata: Metadata = {
+  title: "Complete Your Profile",
+  description: "Add a few more details to unlock all Doable features, including posting and applying for tasks.",
+  robots: { index: false },
+};
 
 interface PageProps {
   searchParams: Promise<{ callbackUrl?: string }>;

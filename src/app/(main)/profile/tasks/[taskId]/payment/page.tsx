@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { AlertCircle, ArrowLeft, MapPin, User } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Initiate Payment",
+  description: "Choose your payment method and complete the payment for your task.",
+};
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";
 import { getMyPostedTaskAction } from "@/actions/task/taskAction";

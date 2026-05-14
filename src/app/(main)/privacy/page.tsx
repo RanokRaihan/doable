@@ -6,9 +6,15 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Doable",
+  title: "Privacy Policy",
   description:
     "Learn how Doable collects, uses, and protects your personal information when you use our task marketplace platform.",
+  openGraph: {
+    title: "Privacy Policy | Doable",
+    description:
+      "We believe your privacy is a fundamental right. Read how Doable handles your data.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Doable Privacy Policy" }],
+  },
 };
 
 export default function PrivacyPolicyPage() {

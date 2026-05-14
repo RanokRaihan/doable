@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Page Not Found",
+  description: "The page you are looking for does not exist. Browse tasks or return to the Doable home page.",
+  robots: { index: false },
+};
 
 export default function NotFound() {
   return (

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   ArrowLeft,
   Calendar,
@@ -8,6 +9,11 @@ import {
   ShieldOff,
   User,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Application Detail",
+  description: "Review and manage a worker application for your task.",
+};
 import Link from "next/link";
 
 import getApplicationDetailsAction from "@/actions/application/getApplicationDetailsAction";

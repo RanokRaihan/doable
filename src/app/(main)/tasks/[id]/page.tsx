@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getRelatedTasksAction, getTaskAction } from "@/actions/task/taskAction";
 import { RelatedTasksSection } from "@/components/tasks/detail/RelatedTasksSection";
 import { SafetyCard } from "@/components/tasks/detail/SafetyCard";
@@ -12,6 +13,29 @@ import { notFound } from "next/navigation";
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const result = await getTaskAction(id);
+  if (!result.success || !("data" in result)) {
+    return { title: "Task Not Found" };
+  }
+  const task = result.data;
+  const description = task.description
+    ? task.description.slice(0, 150).replace(/\s+\S*$/, "") + "…"
+    : `${task.category} task paying $${parseFloat(task.baseCompensation).toLocaleString()}.`;
+  return {
+    title: task.title,
+    description,
+    openGraph: {
+      title: task.title,
+      description,
+      images: task.images?.[0]
+        ? [{ url: task.images[0].url, width: 1200, height: 630, alt: task.title }]
+        : [{ url: "/og-image.png", width: 1200, height: 630, alt: task.title }],
+    },
+  };
 }
 
 export default async function TaskDetailsPage({ params }: PageProps) {

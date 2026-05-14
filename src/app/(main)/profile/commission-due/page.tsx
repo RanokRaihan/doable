@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 
 import getCommissionsDueAction from "@/actions/wallet/getCommissionsDueAction";
+
+export const metadata: Metadata = {
+  title: "Commission Due",
+  description: "View and pay the platform commissions owed on your completed tasks.",
+};
 import { CommissionsDueClient } from "@/components/profile/commission-due/CommissionsDueClient";
 import {
   CommissionDueSortField,

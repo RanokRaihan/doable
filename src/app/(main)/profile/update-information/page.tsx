@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { getMyProfileAction } from "@/actions/user/userAction";
 import UpdateInformationForm from "@/components/profile/UpdateInformationForm";
 import { AlertCircle, Pencil } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Update Information",
+  description: "Edit your Doable profile information, bio, and contact details.",
+};
 import { redirect } from "next/navigation";
 
 export default async function UpdateInformationPage() {

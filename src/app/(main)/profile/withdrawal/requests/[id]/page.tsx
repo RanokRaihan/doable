@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import getWithdrawalRequestAction from "@/actions/withdrawal/getWithdrawalRequestAction";
+
+export const metadata: Metadata = {
+  title: "Withdrawal Request",
+  description: "View the details and status of a withdrawal request.",
+};
 import { WithdrawalRequestDetail } from "@/components/profile/withdrawal/requests/WithdrawalRequestDetail";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { WithdrawalRequestResponse } from "@/lib/types";

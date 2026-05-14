@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import PostTaskForm from "@/components/post-task/PostTaskForm";
 import { ClipboardList } from "lucide-react";
 
-export const metadata = {
-  title: "Post a Task — Doable",
-  description: "Describe your task and connect with skilled helpers nearby.",
+export const metadata: Metadata = {
+  title: "Post a Task",
+  description:
+    "Describe your task, set your budget, and connect with skilled local helpers in minutes.",
+  robots: { index: false },
 };
 
 export default function PostTaskPage() {

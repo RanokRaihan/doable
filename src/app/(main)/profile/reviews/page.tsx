@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Reviews",
+  description: "See the reviews and ratings you have received on Doable.",
+};
+
 export default function ReviewsPage() {
   return (
     <div>

@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { getMyPostedTaskAction } from "@/actions/task/taskAction";
 import { EditTaskForm } from "@/components/profile/tasks/EditTaskForm";
+
+export const metadata: Metadata = {
+  title: "Edit Task",
+  description: "Update the details of your posted task.",
+};
 import { Button } from "@/components/ui/button";
 import { AlertCircle, ArrowLeft, Lock } from "lucide-react";
 import Link from "next/link";

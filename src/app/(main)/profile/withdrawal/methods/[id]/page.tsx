@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Withdrawal Method",
+  description: "View and manage a withdrawal method.",
+};
 
 import getWithdrawalMethodAction from "@/actions/withdrawal/getWithdrawalMethodAction";
 import { WithdrawalMethodDetail } from "@/components/profile/withdrawal/methods/WithdrawalMethodDetail";

@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 
 import getPaymentsReceivedAction from "@/actions/payment/getPaymentsReceivedAction";
+
+export const metadata: Metadata = {
+  title: "Payments Received",
+  description: "View all payments you have received for completed tasks.",
+};
 import { PaymentsReceivedClient } from "@/components/profile/payments/PaymentsReceivedClient";
 import type {
   PaymentMethodType,

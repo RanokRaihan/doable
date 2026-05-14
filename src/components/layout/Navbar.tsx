@@ -3,6 +3,7 @@
 import { logoutAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
 import { LogOut, Menu, User, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,12 +30,13 @@ function LogoMark() {
       className="inline-flex items-center gap-2.5 no-underline group"
     >
       <div
-        className="w-7 h-7 rounded-lg bg-ds-ink flex items-center justify-center text-ds-bg font-bold text-[22px] leading-none select-none"
+        className="w-7 h-7 rounded-lg bg-white  flex items-center justify-center text-ds-bg font-bold text-[22px] leading-none select-none"
         style={{ fontFamily: "Inter, sans-serif" }}
       >
-        <span style={{ transform: "translateY(-1px)", display: "block" }}>
+        <Image src="/logo.png" alt="Logo" width={28} height={28} />
+        {/* <span style={{ transform: "translateY(-1px)", display: "block" }}>
           •
-        </span>
+        </span> */}
       </div>
       <span className="text-[20px] font-semibold tracking-[-0.02em] text-ds-ink">
         doable

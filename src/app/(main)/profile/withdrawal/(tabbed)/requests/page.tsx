@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 
 import getMyWalletAction from "@/actions/wallet/getMyWalletAction";
 import getWithdrawalMethodsAction from "@/actions/withdrawal/getWithdrawalMethodsAction";
 import getWithdrawalRequestsAction from "@/actions/withdrawal/getWithdrawalRequestsAction";
+
+export const metadata: Metadata = {
+  title: "Withdrawal Requests",
+  description: "View and manage your withdrawal requests.",
+};
 import { WithdrawalRequestsClient } from "@/components/profile/withdrawal/requests/WithdrawalRequestsClient";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import {

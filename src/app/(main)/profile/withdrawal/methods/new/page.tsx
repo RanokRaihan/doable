@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { WithdrawalMethodForm } from "@/components/profile/withdrawal/methods/WithdrawalMethodForm";
+
+export const metadata: Metadata = {
+  title: "Add Withdrawal Method",
+  description: "Add a new bank or mobile banking account for withdrawals.",
+};
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export default async function NewWithdrawalMethodPage() {

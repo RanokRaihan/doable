@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getAllTasksAction } from "@/actions/task/taskAction";
 import TaskCard from "@/components/common/TaskCard";
 import { FiltersBarSkeleton } from "@/components/tasks/browse/FiltersBarSkeleton";
@@ -13,6 +14,18 @@ import {
 import { AlertCircle, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Browse Tasks",
+  description:
+    "Browse hundreds of tasks posted by people near you. Filter by category, priority, or search for exactly what you want to work on.",
+  openGraph: {
+    title: "Browse Tasks | Doable",
+    description:
+      "Browse hundreds of local tasks. Find work that fits your skills and schedule.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Browse Tasks on Doable" }],
+  },
+};
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

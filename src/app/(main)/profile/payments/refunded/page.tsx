@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import getPaymentSessionAction from "@/actions/payment/getPaymentSessionAction";
+
+export const metadata: Metadata = {
+  title: "Payment Refunded",
+  description: "Your payment has been refunded. Please allow a few days for it to appear.",
+};
 import {
   FetchErrorState,
   ParticipantsSection,

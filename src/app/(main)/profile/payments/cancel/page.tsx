@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import getPaymentSessionAction from "@/actions/payment/getPaymentSessionAction";
+
+export const metadata: Metadata = {
+  title: "Payment Cancelled",
+  description: "Your payment was cancelled. Return to your task to try again.",
+};
 import {
   FetchErrorState,
   ParticipantsSection,

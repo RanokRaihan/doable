@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-05-13 — Added title/description metadata to every page; root layout uses title template + OG image (public/og-image.png 1200×630); generateMetadata for tasks/[id] and users/[id]; noindex on auth/profile/private pages; fixed pre-existing FAQ import casing and WithdrawalMethodEditForm validator type cast
 - 2026-05-11 — Added /api/auth/sign-out route handler; fixed ghost-user stuck-void bug in getCurrentUser.ts (401 + cookies present now force-clears session)
 - 2026-05-10 — Resolved audit findings: C-1 (Cloudinary auth guard), C-2 (BACKEND_URL URL construction), H-1 (proxy cookie via response.cookies), H-2 (updateWithdrawalMethod optional fields), H-4 (cancel reason label), M-1 (removed 10 console.logs), M-3 (logout calls backend), L-1/L-2 (AGENTS.md stale docs); implemented deleteTaskAction (I-1)
 - 2026-05-09 — Withdrawal module implemented: 11 server actions, 13 components, 10 pages/routes, 5 Zod schemas, types, and sidebar link added

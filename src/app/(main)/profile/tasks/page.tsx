@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 
 import { MyTasksClient } from "@/components/profile/tasks/MyTasksClient";
+
+export const metadata: Metadata = {
+  title: "My Tasks",
+  description: "Manage the tasks you have posted on Doable.",
+};
 import { getMyPostedTasksAction } from "@/actions/task/taskAction";
 import {
   TasksResponse,

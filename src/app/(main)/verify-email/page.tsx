@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { sendVerificationEmailAction } from "@/actions/auth/authAction";
 import VerifyEmailCheck from "@/components/verify-email/VerifyEmailCheck";
 import VerifyEmailPrompt from "@/components/verify-email/VerifyEmailPrompt";
 import { getEmailVerificationStatus } from "@/lib/auth/getEmailVerificationStatus";
 import { requireAuth } from "@/lib/auth/requireAuth";
+
+export const metadata: Metadata = {
+  title: "Verify Your Email",
+  description: "Verify your email address to unlock all Doable features.",
+  robots: { index: false },
+};
 
 interface PageProps {
   searchParams: Promise<{ token?: string; callbackUrl?: string }>;
