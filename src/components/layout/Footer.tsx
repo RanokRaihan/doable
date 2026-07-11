@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const footerColumns = [
@@ -32,13 +33,11 @@ const footerColumns = [
 
 function LogoMark() {
   return (
-    <Link href="/" className="inline-flex items-center gap-2.5 no-underline group">
-      <div
-        className="w-7 h-7 rounded-lg bg-ds-ink flex items-center justify-center text-ds-bg font-bold text-[22px] leading-none select-none"
-        style={{ fontFamily: "Inter, sans-serif" }}
-      >
-        <span style={{ transform: "translateY(-1px)", display: "block" }}>•</span>
-      </div>
+    <Link
+      href="/"
+      className="inline-flex items-center gap-2.5 no-underline group"
+    >
+      <Image src="/logo.png" alt="Doable logo" width={28} height={28} />
       <span className="text-[20px] font-semibold tracking-[-0.02em] text-ds-ink">
         doable
       </span>
@@ -58,8 +57,12 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <LogoMark />
-            <p className="text-[14px] text-ds-ink-2 mt-4 leading-relaxed" style={{ maxWidth: 300 }}>
-              Small jobs, big help. The neighborhood task platform where everyone wins.
+            <p
+              className="text-[14px] text-ds-ink-2 mt-4 leading-relaxed"
+              style={{ maxWidth: 300 }}
+            >
+              Small jobs, big help. The neighborhood task platform where
+              everyone wins.
             </p>
           </div>
 
@@ -89,8 +92,18 @@ export default function Footer() {
         >
           <span>© 2026 doable, inc. All rights reserved.</span>
           <div className="flex gap-4">
-            <Link href="/privacy" className="text-ds-ink-3 hover:text-ds-ink no-underline transition-colors">Privacy</Link>
-            <Link href="/terms" className="text-ds-ink-3 hover:text-ds-ink no-underline transition-colors">Terms</Link>
+            <Link
+              href="/privacy"
+              className="text-ds-ink-3 hover:text-ds-ink no-underline transition-colors"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="text-ds-ink-3 hover:text-ds-ink no-underline transition-colors"
+            >
+              Terms
+            </Link>
             <span>Cookies</span>
           </div>
         </div>

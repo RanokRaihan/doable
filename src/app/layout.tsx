@@ -1,12 +1,11 @@
 import { AuthProvider } from "@/providers/AuthProvider";
 
-import { NavigationProgress } from "@/components/layout/NavigationProgress";
 import { Toaster } from "@/components/ui/sonner";
 import { getCurrentUser } from "@/lib/auth/getCurrentUser";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -71,7 +70,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} antialiased`}
       >
         <AuthProvider initialUser={user}>
-          <NavigationProgress />
+          <NextTopLoader showSpinner={false} />
           {children}
           <Toaster position="top-center" duration={3500} richColors />
         </AuthProvider>
