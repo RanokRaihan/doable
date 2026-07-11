@@ -23,6 +23,17 @@ export const env = {
   isProduction: process.env.NODE_ENV === "production",
 } as const;
 
+export const demoUsers = {
+  demoUser1: {
+    email: optionalEnv("DEMO_USER_1_EMAIL", ""),
+    password: optionalEnv("DEMO_USER_1_PASSWORD", ""),
+  },
+  demoUser2: {
+    email: optionalEnv("DEMO_USER_2_EMAIL", ""),
+    password: optionalEnv("DEMO_USER_2_PASSWORD", ""),
+  },
+} as const;
+
 export const cookieConfig = {
   accessTokenMaxAge: optionalIntEnv("ACCESS_TOKEN_MAX_AGE", 15 * 60),
   refreshTokenMaxAge: optionalIntEnv("REFRESH_TOKEN_MAX_AGE", 7 * 24 * 60 * 60),

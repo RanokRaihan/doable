@@ -1,5 +1,6 @@
 "use server";
 
+import { demoUsers } from "@/lib/config";
 import { LoggedinUser, RegisteredUser } from "@/lib/types/auth";
 import { apiClient, ApiResponse } from "../../lib/api";
 import { actionHandler } from "../../lib/api/actionHandler";
@@ -38,6 +39,16 @@ const LoginAction = async (loginData: LoginData) => {
   }
 
   return result;
+};
+
+type DemoUserKey = keyof typeof demoUsers;
+
+const demoLoginAction = async (userKey: DemoUserKey) => {
+  const credentials = demoUsers[userKey];
+  if (!credentials.email || !credentials.password) {
+    return { success: false as const, message: "Demo login is not configured." };
+  }
+  return LoginAction({ email: credentials.email, password: credentials.password });
 };
 
 const RegisterAction = async (registerData: RegisterData) => {
@@ -170,6 +181,7 @@ const resetPasswordAction = async (data: ResetPasswordData) => {
 export {
   changePasswordAction,
   completeProfileAction,
+  demoLoginAction,
   forgotPasswordAction,
   LoginAction,
   logoutAction,

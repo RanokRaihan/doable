@@ -1,4 +1,5 @@
-import { CheckCircle2, Sparkles } from "lucide-react";
+import { CheckCircle2, ChevronLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const ForgotPasswordLeftSection = () => {
@@ -23,12 +24,19 @@ const ForgotPasswordLeftSection = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col justify-between p-12 w-full">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/10 border border-white/10 rounded-xl flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-blue-400" />
-          </div>
-          <Link href="/" className="text-2xl font-bold text-white">
-            Doable
+        <div className="flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5 no-underline">
+            <Image src="/logo.png" alt="Doable Logo" width={40} height={40} />
+            <span className="text-[20px] font-semibold tracking-tight text-ds-bg leading-none">
+              doable
+            </span>
+          </Link>
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-[13px] font-medium text-white/70 px-3.5 py-2 rounded-full border border-white/18 hover:bg-white/6 hover:text-white transition-colors no-underline"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+            Back home
           </Link>
         </div>
 
