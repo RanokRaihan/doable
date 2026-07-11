@@ -2,6 +2,7 @@
 
 ## Recent Changes
 
+- 2026-07-11 — Added demo-user one-click login: `DemoLogin.tsx` (client) renders two buttons on the login page, calling new `demoLoginAction` (wraps `LoginAction` with server-only credentials from `env.demoUsers` in config.ts, sourced from `DEMO_USER_1/2_EMAIL/PASSWORD` env vars)
 - 2026-05-13 — Added title/description metadata to every page; root layout uses title template + OG image (public/og-image.png 1200×630); generateMetadata for tasks/[id] and users/[id]; noindex on auth/profile/private pages; fixed pre-existing FAQ import casing and WithdrawalMethodEditForm validator type cast
 - 2026-05-11 — Added /api/auth/sign-out route handler; fixed ghost-user stuck-void bug in getCurrentUser.ts (401 + cookies present now force-clears session)
 - 2026-05-10 — Resolved audit findings: C-1 (Cloudinary auth guard), C-2 (BACKEND_URL URL construction), H-1 (proxy cookie via response.cookies), H-2 (updateWithdrawalMethod optional fields), H-4 (cancel reason label), M-1 (removed 10 console.logs), M-3 (logout calls backend), L-1/L-2 (AGENTS.md stale docs); implemented deleteTaskAction (I-1)
@@ -284,7 +285,7 @@ src/
 │   │   └── cta/CTAStrip.tsx            # Dark CTA strip at bottom of landing (server)
 │   ├── about/                      # About page section components
 │   ├── howItWorks/                 # How It Works page section components
-│   ├── login/                      # LoginForm, LoginFormContainer, LoginLeftSection
+│   ├── login/                      # LoginForm, LoginFormContainer, LoginLeftSection, DemoLogin (demo-user quick login)
 │   ├── register/                   # RegisterForm, RegisterFormContainer, RegisterLeftSection, PasswordStrengthMeter
 │   ├── forgot-password/            # ForgotPasswordForm, container, left section
 │   ├── reset-password/             # ResetPasswordForm, container, left section
@@ -563,4 +564,5 @@ Auth types (`src/lib/types/auth/index.ts`): `LoggedinUser` (has `profileStatus`,
 - **Cloudinary for image uploads:** Task images and avatars are uploaded directly from the client via a signed Cloudinary widget. The signature is generated server-side at `src/app/api/cloudinary-signature/route.ts`.
 - **URL-state for task browser:** Filters, sort, and pagination for `/tasks` are stored in URL search params — enables server-side rendering and shareable URLs without client state.
 - **shadcn/ui mandatory first:** Custom UI components are only created when a shadcn component does not exist for the use case.
+- **Demo-user login (2026-07-11):** `demoLoginAction` (`src/actions/auth/authAction.ts`) is a thin wrapper around `LoginAction` — it resolves credentials server-side from `env.demoUsers` (config.ts, backed by `DEMO_USER_1/2_EMAIL/PASSWORD`) and never sends them to the client; the client component only sends which demo user key was clicked. Missing/unset credentials degrade gracefully (button click returns a "not configured" error) rather than crashing the app.
 - **Withdrawal module (2026-05-09):** Uses the `(tabbed)` route-group pattern (matching payments) for the Methods / Requests list views. Create/edit/detail operations use dedicated pages outside the tabbed group (no tab nav on those pages). PENDING-only guard for edit/cancel is enforced at the page level (shows an error block if status ≠ PENDING) — not just by hiding buttons. `amount` fields are typed `string` (Decimal) from the API and parsed to `number` only inside form components before validation. Delete is blocked gracefully when pending requests exist — the 400 error is caught and shown as a Sonner toast without re-opening the dialog.

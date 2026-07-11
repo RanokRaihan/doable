@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DemoLogin from "./DemoLogin";
 import LoginForm from "./LoginForm";
 
 const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
@@ -25,12 +26,8 @@ const LoginFormContainer = ({ callbackUrl }: { callbackUrl?: string }) => {
             </p>
           </div>
 
-          {/* Divider */}
-          {/* <div className="flex items-center gap-3.5 my-4 text-[11px] font-medium uppercase tracking-[0.14em] text-ds-ink-3">
-            <div className="flex-1 h-px bg-ds-line" />
-            or with email
-            <div className="flex-1 h-px bg-ds-line" />
-          </div> */}
+          {/* Demo login */}
+          <DemoLogin callbackUrl={callbackUrl} />
 
           {/* Form */}
           <LoginForm callbackUrl={callbackUrl} />
