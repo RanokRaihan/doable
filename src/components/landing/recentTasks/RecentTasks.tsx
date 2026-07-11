@@ -1,8 +1,8 @@
+import TaskCard from "@/components/common/TaskCard";
 import { apiClient } from "@/lib/api/client";
 import type { ApiResponse } from "@/lib/api/types";
 import type { Task } from "@/lib/types";
 import Link from "next/link";
-import TaskCard from "@/components/common/TaskCard";
 
 async function getRecentTasks(): Promise<Task[]> {
   try {
@@ -18,7 +18,7 @@ async function getRecentTasks(): Promise<Task[]> {
 
 export default async function RecentTasks() {
   const tasks = await getRecentTasks();
-
+  console.log("RecentTasks tasks:", tasks);
   return (
     <section className="pt-8 pb-24 bg-ds-bg" id="tasks">
       <div className="mx-auto px-8" style={{ maxWidth: 1360 }}>
