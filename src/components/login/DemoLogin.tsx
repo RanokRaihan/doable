@@ -1,7 +1,7 @@
 "use client";
 import { demoLoginAction } from "@/actions/auth/authAction";
 import { useAuth } from "@/providers/AuthProvider";
-import { Loader2 } from "lucide-react";
+import { CircleUser, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -29,30 +29,41 @@ const DemoLogin = ({ callbackUrl }: { callbackUrl?: string }) => {
 
   return (
     <div className="mb-4">
+      <p className="text-[13px] font-semibold text-ds-ink mb-1">
+        Try it instantly
+      </p>
+      <p className="text-[13px] text-ds-ink-2 mb-3">
+        Skip the form — sign in as a sample user to explore the app.
+      </p>
+
       <div className="grid grid-cols-2 gap-2.5">
         <Button
           type="button"
           variant="outline"
-          className="rounded-full"
+          className="rounded-full  text-ds-orange border-ds-orange"
           disabled={loadingKey !== null}
           onClick={() => handleDemoLogin("demoUser1")}
         >
-          {loadingKey === "demoUser1" && (
+          {loadingKey === "demoUser1" ? (
             <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <CircleUser className="size-4" />
           )}
-          Continue as Demo User 1
+          Demo Sign in 1
         </Button>
         <Button
           type="button"
           variant="outline"
-          className="rounded-full"
+          className="rounded-full  text-ds-orange border-ds-orange"
           disabled={loadingKey !== null}
           onClick={() => handleDemoLogin("demoUser2")}
         >
-          {loadingKey === "demoUser2" && (
+          {loadingKey === "demoUser2" ? (
             <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <CircleUser className="size-4" />
           )}
-          Continue as Demo User 2
+          Demo Sign in 2
         </Button>
       </div>
 
